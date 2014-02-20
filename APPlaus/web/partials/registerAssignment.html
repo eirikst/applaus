@@ -1,28 +1,90 @@
-<div ng-swipe-left="changeView('userFront')">
-    <p>
-        Velg oppgave
-        <select data-ng-options="assignment.name for assignment in assignments"
-                data-ng-model="selectedOption"
-                id ="as_select" name="as_select" class="form-control">
-        </select>
-    </p>
-    <p>{{selectedOption.description}}
+<div ng-swipe-left="changeView('userFront')" >
+      
+     <div style="background-color:white">
+        <div class="container">
+            <accordion>
+                <p><br/></p>
+                <accordion-group is-open="isopen"  class="accordion">
+                    <accordion-heading >
+                        <div class="text-center">
+                            Legg til ny type oppgave <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </div>
+                    </accordion-heading>
+                    <p>
+                        Navn: 
+                        <input type="text" placeholder="Navn på oppgave">
+                    </p>
+
+                    <p>
+                        Poeng:
+                        <input type="text" placeholder="Antall poeng">
+                    </p>
+
+                    <p>
+                        Beskrivelse:
+                        <textarea placeholder="Skriv beskrivlse for oppgave" class="form-control" maxlength="100"></textarea>
+                    </p>
+
+                    <p>
+                        <a data-ng-click="createAssignment()"
+                          class="btn btn-primary btn-lg" role="button">
+                            Registrer
+                        </a>
+                    </p>
+                </<accordion-group>
+            </accordion>
+
+            <accordion>
+                <accordion-group is-open="isopen"  class="accordion">
+                    <accordion-heading >
+                        <div class="text-center">
+                            Registrer ny oppgave <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </div>
+                    </accordion-heading>
+                    <p>
+                        Velg oppgave
+                        <select data-ng-options="selectedOption.title for selectedOption in selectedOptions"
+                                data-ng-model="selectedOption" class="form-control">
+                        </select>
+                    </p>
+                    <p>
+                        {{selectedOption.desc}}<br/>
+                        Oppgaven gir {{selectedOption.points}} poeng
+                    </p>
+                    <p>
+                        Beskriv oppgave
+                        <textarea  data-ng-model='description' id="as_desc" name="as_desc" class="form-control" maxlength="100"></textarea>
+                    </p>
+                    <p>
+                        Velg dato
+                        <br>
+                        <input type="text" name="as_date" id="as_date" class="datepicker" data-ng-model='date' required>
+                    </p>
+                    <p>
+                        <a data-ng-click="registerAssignment()"
+                          class="btn btn-primary btn-lg" role="button">
+                            Registrer
+                        </a>
+                    </p>
+                </accordion-group>
+            </accordion>
+
+            <accordion close-others="true">
+                <div ng-repeat="assignment in allAssignments">
+                    <accordion-group is-open="isopen"  class="accordion">
+                        <accordion-heading class="accordionhead">
+                            <div class="text-center">
+                                {{assignment.id}} - {{assignment.date_done.$date| date:('dd.MM')}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                            </div>
+                        </accordion-heading>
+                        <p>Kategori:    </p>
+                        <p>Poeng:       </p>
+                        <p>Dato: {{assignment.date_done.$date| date:('dd.MM')}} </p>
+                        <p>Kommentar: {{assignment.comment}} </p>
+                    </accordion-group>
+                </div>
+            </accordion>
+            </div>
         <br>
-        Oppgaven gir {{selectedOption.points}} poeng
-    </p>
-    <p>
-        Beskriv oppgave
-        <textarea  data-ng-model='description' id="as_desc" name="as_desc" class="form-control" maxlength="100"></textarea>
-    </p>
-    <p>
-        Velg dato
-        <br>
-        <input type="text" name="as_date" id="as_date" class="datepicker" data-ng-model='date'>
-    </p>
-    <p>
-        <a data-ng-click="registerAssignment()"
-          class="btn btn-primary btn-lg" role="button">
-            Registrer
-        </a>
-    </p>
+     </div>
 </div>
