@@ -1,0 +1,28 @@
+<div ng-swipe-left="changeView('userFront')">
+    <p>
+        Velg oppgave
+        <select data-ng-options="assignment.name for assignment in assignments"
+                data-ng-model="selectedOption"
+                id ="as_select" name="as_select" class="form-control">
+        </select>
+    </p>
+    <p>{{selectedOption.description}}
+        <br>
+        Oppgaven gir {{selectedOption.points}} poeng
+    </p>
+    <p>
+        Beskriv oppgave
+        <textarea  data-ng-model='description' id="as_desc" name="as_desc" class="form-control" maxlength="100"></textarea>
+    </p>
+    <p>
+        Velg dato
+        <br>
+        <input type="text" name="as_date" id="as_date" class="datepicker" data-ng-model='date'>
+    </p>
+    <p>
+        <a data-ng-click="registerAssignment()"
+          class="btn btn-primary btn-lg" role="button">
+            Registrer
+        </a>
+    </p>
+</div>

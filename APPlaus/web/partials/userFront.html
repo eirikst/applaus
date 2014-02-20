@@ -1,0 +1,153 @@
+<div ng-swipe-left="changeView('contests')" ng-swipe-right="changeView('view1')">
+    
+    <!--Carousel-->
+    <div ng-swipe-right="prevSlide()">
+        <div style="height: 150px">
+            <carousel interval="slideInterval">
+                <slide ng-repeat="slide in slides" active="slide.active">
+                    <div style="height:150px;background:gray">
+                        <div class="carousel-caption">
+                            <h5>{{slide.text}}</h5>
+                            <h1>{{slide.points}}</h1>
+                        </div>
+                    </div>
+                </slide>
+            </carousel>
+        </div>
+    </div>
+    <!--Carousel end-->
+
+    <div style="background-color:white">
+        <div class="container">
+            <div class="row">
+
+                <!--Links
+                <div class="col-sm-4 text-center">
+
+                    <h2>Hurtiglenker</h2>
+                    <p>Administrer oppgaver og konkurranser og sistemann</p>
+                    <div>
+                        <p><a class="btn btn-default btn-appwhite" role="button">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                            <a class="btn btn-default btn-appwhite" href="#" role="button">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>                    
+                            <a class="btn btn-default btn-appwhite" href="#" role="button">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </p>
+                    </div>
+                    <br>
+                </div>
+                <!--Links end-->
+
+                <!--Goal-->
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <h2>Mål</h2>
+                        <p>Sett deg et mål for uka og se om du når målet ditt!</p>
+                        <accordion>
+                            <accordion-group is-open="isopen"  class="accordion">
+                                <accordion-heading >
+                                    Mitt mål er 30 poeng <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                </accordion-heading>
+                                <p>
+                                    Hvor mange poeng klarer du denne uka?
+                                </p>
+                                <p>
+                                    <input ng-model="goal" type="number" class="form-control" placeholder="Poeng">
+                                </p>
+                                <p>
+                                    <a type="button" class="form-control">Legg til</a>
+                                </p>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+                    <br>
+                </div>
+                <!--Goal end-->
+
+                <!--Ideabank-->
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <h2>Idebank</h2>
+                        <p>Har du en ide? Ikke nøl med å registrere den i banken</p>
+                        <accordion>
+                            <accordion-group is-open="isopen" class="accordion">
+                                <accordion-heading>
+                                    Idebank <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                </accordion-heading>
+                                <p>
+                                    <input type="text" class="form-control" placeholder="Tittel">
+                                </p>
+                                <p>
+                                    <textarea class="form-control" placeholder="Tekst"></textarea>
+                                </p>
+                                <p>
+                                    <a type="button" class="form-control">Legg til</a>
+                                </p>
+                                <p>
+                                    Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
+                                </p>
+                            </accordion-group>
+                        </accordion>    
+                    </div>
+                    <br>
+                </div>
+                <!--Ideabank end-->
+
+
+                <!--Ideabank-->
+                <div class="col-sm-4">
+                    <div>
+                        <h2>Idebank</h2>
+                        <p>Har du en ide? Ikke nøl med å registrere den i banken</p>
+                        
+                    <div class="drop">
+                        <div class="dropHeading">
+                            <a class="text-center" ng-click="drop()">Idebank</a> <a class="pull-right glyphicon" ng-click="drop()" ng-class="{'glyphicon-chevron-down': dropdown, 'glyphicon-chevron-right': !dropdown}"></a>
+                        </div>
+                            <div class="innerDrop" ng-show="dropdown">
+                            <p>
+                            <input type="text" class="form-control" placeholder="Tittel">
+                            </p>
+                            <p>
+                                <textarea class="form-control" placeholder="Tekst"></textarea>
+                            </p>
+                            <p>
+                                <a type="button" class="form-control">Legg til</a>
+                            </p>
+                            <p>
+                                Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
+                            </p>
+                        </div>
+                    </div>
+
+                    </div>
+                    <br>
+                </div>
+                <!--Ideabank end-->
+            </div>
+        </div>
+    </div>
+
+    <!--News-->
+    <div style="background-color:gray">
+        <div class="container">
+            <h2 class="text-center">Nyheter</h2>
+            <accordion close-others="true">
+            <div ng-repeat="article in news" class="text-center">
+                    <accordion-group is-open="isopen"  class="accordion accordion-body">
+                        <accordion-heading class="accordionhead">
+                            {{article.title}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                        </accordion-heading>
+                        {{article.text}}
+                    </accordion-group>
+            </div>
+            </accordion>
+        </div>
+    </div>
+    <!--News end-->
+    
+</div>

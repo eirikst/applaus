@@ -1,0 +1,92 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 5, 2014, 5:37:46 PM
+    Author     : eirikstadheim
+*/
+
+/**
+ * Extra large button extensions. Extends `.btn`.
+ */
+.btn-appwhite {
+    padding: 18px 28px;
+    font-size: 12px;
+    line-height: normal;
+    background-color:white;
+    color:black;
+    border-color:black;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+    }
+    
+.btn-appwhite300 {
+    padding: 18px 28px;
+    font-size: 14px;
+    line-height: normal;
+    width:200px;
+    background-color:white;
+    color:black;
+    border-color:black;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+    }
+    
+    
+/*
+ The animate class is apart of the element and the ng-enter class
+ is attached to the element once the enter animation event is triggered
+*/
+.reveal-animation.ng-enter {
+ -webkit-transition: 0.5s linear all; /* Safari/Chrome */
+ transition: 0.5s linear all; /* All other modern browsers and IE10+ */
+ 
+ /* The animation preparation code */
+ opacity: 0;
+}
+ 
+/*
+ Keep in mind that you want to combine both CSS
+ classes together to avoid any CSS-specificity
+ conflicts
+*/
+.reveal-animation.ng-enter.ng-enter-active {
+ /* The animation code itself */
+ opacity: 1;
+}
+
+
+
+.glyphicon-indexHeader {
+    font-size: 1.2em;
+    color: gray;
+    margin-left: 9px;
+    margin-right: 9px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.glyphicon a.glyphicon-indexHeader-item:hover {
+    color:gray;
+}
+
+.glyfhicon-chosen {
+    color: black;
+}
+
+
+.acc {
+    max-width: 350px;
+}
+
+.navbar-color {
+    background-color: white;
+}
+
+.accoordion-header {
+    background-color:red;
+}

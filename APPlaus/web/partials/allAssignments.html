@@ -1,0 +1,34 @@
+<table class="table table-assignments table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-click="addAssignment()">
+            <td  class="lead">
+                <b>Legg til ny</b>
+            </td>
+            <td></td>
+            <td></td>
+            <td>
+                <i class="fa fa-plus fa-lg" ></i>
+            </td>
+        </tr>
+        <tr ng-repeat="assignment in assignments" ng-click="detailAssignment(assignments.indexOf(assignment))">
+            <td>{{assignment.name}}</td>
+            <td>{{assignment.time| date:'medium'}}</td>
+            <td>
+                <div  class="testy">
+                    {{assignment.desc}}
+                </div>
+            </td>
+            <td>
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>

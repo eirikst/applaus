@@ -1,0 +1,88 @@
+<div ng-swipe-right="changeView('userFront')">
+    <div style="background-color:white">
+        <div class="container">
+            <div class="row">
+
+                <!--Active comp-->
+                <div class="col-sm-6">
+                    <div class="container">
+                        <h2 class="h2-contest">Aktive konkurranser</h2>
+                        <accordion close-others="true">
+                            <div ng-repeat="contest in activeCont">
+                                <accordion-group is-open="isopen"  class="accordion accordion-body acc">
+                                    <accordion-heading class="accordionhead">
+                                        <div class="text-center">
+                                            {{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                        </div>
+                                    </accordion-heading >
+                                    <p>
+                                        Id {{contest._id.$oid}}
+                                    </p>
+                                    <p>
+                                        Administrator: {{contest.username}}
+                                    </p>
+                                    <p>
+                                        Beskrivelse: {{contest.desc}}
+                                    </p>
+                                    <p>
+                                        Premie: {{contest.prize}}
+                                    </p>
+                                    <p>
+                                        Poeng: {{contest.points}}
+                                    </p>
+                                    <p>
+                                        Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
+                                    </p>
+                                    <a type="button" ng-show="isParticipating(contest._id.$oid)" ng-click="dontParticipate(contest)">Meld av</a>
+                                    <a type="button" ng-show="!isParticipating(contest._id.$oid)" ng-click="participate(contest)">Delta</a>
+                                </accordion-group>
+                            </div>
+                        </accordion>
+                    </div>
+                </div>
+                <!--Active comp end-->
+
+
+                <!--Inactive comp-->
+                <div class="col-sm-6">
+                    <div class="container">
+                        <h2 class="h2-contest">Avsluttede konkurranser</h2>
+                        <div class="scrollable">
+                            <accordion close-others="true">
+                                <div ng-repeat="contest in inactiveCont">
+                                    <accordion-group is-open="isopen"  class="accordion accordion-body acc">
+                                        <accordion-heading class="accordionhead">
+                                            <div class="text-center">
+                                                {{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                            </div>
+                                        </accordion-heading>
+                                        <p>
+                                            Administrator: {{contest.username}}
+                                        </p>
+                                        <p>
+                                            Beskrivelse: {{contest.desc}}
+                                        </p>
+                                        <p>
+                                            Premie: {{contest.prize}}
+                                        </p>
+                                        <p>
+                                            Poeng: {{contest.points}}
+                                        </p>
+                                        <p>
+                                            Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
+                                        </p>
+                                    </accordion-group>
+                                </div>
+                            </accordion>
+                            
+                            <a type="button" class="form-control acc" href="#/contests" ng-click="getInactiveCont(skipNext);">Last flere</a>
+                        </div>
+                    </div>
+                </div>
+                {{skipNext}}
+                {{partCont}}
+                <!--Inactive comp end-->
+
+            </div>
+        </div>
+    </div>
