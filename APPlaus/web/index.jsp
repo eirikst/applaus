@@ -41,7 +41,7 @@
                 
                 <a class="glyphicon glyphicon-headphones glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('')}"></a>
                 <a class="glyphicon glyphicon-user glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('')}"></a>
-                <a href="#view1" class="glyphicon glyphicon-flag glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('/view1')}"></a>
+                <a href="#registerAssignment" class="glyphicon glyphicon-flag glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('/registerAssignment')}"></a>
                 <a href="#userFront" class="glyphicon glyphicon-home glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('/userFront')}"></a>
                 <a href="#contests" class="glyphicon glyphicon-pencil glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('/contests')}"></a>
                 <a class="glyphicon glyphicon-signal glyphicon-indexHeader"  ng-class="{'glyfhicon-chosen': isActive('')}"></a>

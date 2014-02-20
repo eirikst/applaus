@@ -126,6 +126,14 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             
+            //assignment
+            else if(request.getParameter("action").equals("getAllAssignments")) {
+                out.println(AssignmentManager.getAllAssignmentsUser(db, "audunsto")); //!! Skift til username !!//
+            }
+            else if(request.getParameter("action").equals("getAssignments")) {
+                out.println(AssignmentManager.getAssignments(db));
+            }           
+            
             //login
             else if(action.equals("login")) {
                 try {
