@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import static java.lang.Integer.parseInt;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -126,13 +127,70 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             
+       //create assignment
+            else if(request.getParameter("action").equals("createAssignment")) {
+                try{
+                    out.println(AssignmentManager.createAssignment(db, request.
+                            getParameter("title").toString(), request.getParameter("desc").toString(),
+                            parseInt(request.getParameter("points"))));
+                    response.setStatus(200);//success
+                }
+                catch(RuntimeException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.severe("Exception mongodb. " + sw.toString());
+                    response.sendError(500);//error
+                }
+            }
+            
+            
+            // register assignment
+            else if(request.getParameter("action").equals("registerAssignment")) {
+                long shit = Long.parseLong(request.getParameter("date"));
+                try{
+                    out.println(AssignmentManager.registerAssignment(db, request.getSession().
+                            getAttribute("username").toString(), request.
+                            getParameter("id").toString(), new java.util.Date(shit), request.getParameter("comment").toString()));
+                    response.setStatus(200);//success
+                }
+                catch(RuntimeException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.severe("Exception mongodb. " + sw.toString());
+                    response.sendError(500);//error
+                }
+            }
+            
             //assignment
             else if(request.getParameter("action").equals("getAllAssignments")) {
-                out.println(AssignmentManager.getAllAssignmentsUser(db, "audunsto")); //!! Skift til username !!//
+                try{
+                    out.println(AssignmentManager.getAllAssignmentsUser(db, "audunsto")); //!! Skift til username !!//
+                    response.setStatus(200);//success
+                }
+                catch(RuntimeException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.severe("Exception mongodb. " + sw.toString());
+                    response.sendError(500);//error
+                }
             }
+            
+            //assignments for list
             else if(request.getParameter("action").equals("getAssignments")) {
-                out.println(AssignmentManager.getAssignments(db));
-            }  
+                try{
+                    out.println(AssignmentManager.getAssignments(db));
+                    response.setStatus(200);//success
+                }catch(RuntimeException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.severe("Exception mongodb. " + sw.toString());
+                    response.sendError(500);//error
+                }
+            }
             
             else if(action.equals("getWeekGoal")) {
                 try {

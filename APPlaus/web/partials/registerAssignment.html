@@ -2,45 +2,29 @@
       
      <div style="background-color:white">
         <div class="container">
-            <accordion>
-                <p><br/></p>
-                <accordion-group is-open="isopen"  class="accordion">
-                    <accordion-heading >
-                        <div class="text-center">
-                            Legg til ny type oppgave <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                        </div>
-                    </accordion-heading>
-                    <p>
-                        Navn: 
-                        <input type="text" placeholder="Navn på oppgave">
-                    </p>
+            
+            <p>
+                Navn: 
+                <input ng-model="title" name="name" type="text" placeholder="Navn på oppgave">
+            </p>
 
-                    <p>
-                        Poeng:
-                        <input type="text" placeholder="Antall poeng">
-                    </p>
+            <p>
+                Poeng:
+                <input ng-model="points" name="points" type="text" placeholder="Antall poeng">
+            </p>
 
-                    <p>
-                        Beskrivelse:
-                        <textarea placeholder="Skriv beskrivlse for oppgave" class="form-control" maxlength="100"></textarea>
-                    </p>
+            <p>
+                Beskrivelse:
+                <textarea ng-model="desc" name="desc" placeholder="Skriv beskrivlse for oppgave" class="form-control" maxlength="100"></textarea>
+            </p>
 
-                    <p>
-                        <a data-ng-click="createAssignment()"
-                          class="btn btn-primary btn-lg" role="button">
-                            Registrer
-                        </a>
-                    </p>
-                </<accordion-group>
-            </accordion>
-
-            <accordion>
-                <accordion-group is-open="isopen"  class="accordion">
-                    <accordion-heading >
-                        <div class="text-center">
-                            Registrer ny oppgave <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
-                        </div>
-                    </accordion-heading>
+            <p>
+                <a data-ng-click="createAssignment()"
+                  class="btn btn-primary btn-lg" role="button">
+                    Registrer
+                </a>
+            </p>
+            
                     <p>
                         Velg oppgave
                         <select data-ng-options="selectedOption.title for selectedOption in selectedOptions"
@@ -52,13 +36,13 @@
                         Oppgaven gir {{selectedOption.points}} poeng
                     </p>
                     <p>
-                        Beskriv oppgave
-                        <textarea  data-ng-model='description' id="as_desc" name="as_desc" class="form-control" maxlength="100"></textarea>
+                        Kommentar:
+                        <textarea  ng-model='comment' id="comment" name="comment" class="form-control" maxlength="100"></textarea>
                     </p>
                     <p>
                         Velg dato
                         <br>
-                        <input type="text" name="as_date" id="as_date" class="datepicker" data-ng-model='date' required>
+                        <input ng-model='date' type="date" name="date" id="date" class="datepicker"  required>
                     </p>
                     <p>
                         <a data-ng-click="registerAssignment()"
@@ -66,20 +50,18 @@
                             Registrer
                         </a>
                     </p>
-                </accordion-group>
-            </accordion>
-
+                    
             <accordion close-others="true">
                 <div ng-repeat="assignment in allAssignments">
                     <accordion-group is-open="isopen"  class="accordion">
                         <accordion-heading class="accordionhead">
                             <div class="text-center">
-                                {{assignment.id}} - {{assignment.date_done.$date| date:('dd.MM')}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+                                {{assignment.id}} - {{assignment.date.$date| date:('dd.MM')}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
                             </div>
                         </accordion-heading>
-                        <p>Kategori:    </p>
+                        <p>Type:    </p>
                         <p>Poeng:       </p>
-                        <p>Dato: {{assignment.date_done.$date| date:('dd.MM')}} </p>
+                        <p>Dato: {{assignment.date.$date| date:('dd.MM')}} </p>
                         <p>Kommentar: {{assignment.comment}} </p>
                     </accordion-group>
                 </div>
