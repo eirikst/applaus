@@ -26,10 +26,16 @@
         <script src="js/libs/bootstrap.js"></script>
         <script src="js/libs/ui-bootstrap-tpls-0.10.0.js"></script>
     </head>
-    <body>
+    <body style="margin-top: 61px">
+        <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
+            <div style="margin:10px" class="text-center">
+                <h3>Velkommen til APPlaus!</h3>
+            </div>
+        </div>
         <div ng-controller="LoginCtrl">
-            <h3>Velkommen til APPlaus!</h3>
             <form>
+                <h4>Logg inn</h4>
+                    
             <p>
                 <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="username">
             </p>
@@ -40,8 +46,16 @@
                 <button class="form-control" ng-click="login()">Log in</button>
             </p>
             </form>
+            <p>
+                <a href="#">Registrer deg</a>
+            </p>
+            <p>
+                <a href="#">Glemt passord</a>
+            </p>
         </div>
         <script src="js/app/empApp.js"></script>
         <script src="js/app/controllers/controllers.js"></script>
+        <script src="js/app/controllers/headerController.js"></script>
+        <script src="js/app/controllers/loginController.js"></script>
     </body>
 </html>

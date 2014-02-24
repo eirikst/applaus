@@ -2,35 +2,29 @@ package mongoConnection;
 
 import com.mongodb.*;
 import com.mongodb.util.JSON;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+import mongoQueries.AssignmentQueries;
+import java.util.List;
 /**
  *
  * @author Audun
  */
 public class AssignmentManager {
     
-    public static String getAssignments(DB db) throws MongoException{
-        DBCollection coll = db.getCollection("assignment");
-        DBCursor cursor = coll.find();
-        return JSON.serialize(cursor);
+    /**
+     * Gets all the assignments as a List of DBObject objects with a call to
+     * AssignmentQueries.getAssignments(). JSON serializes and returns the 
+     * string
+     * @param db DB object to connect to the database
+     * @return JSON serialized array of assignments
+     */
+    public static String getAssignments(DB db) {
+        List<DBObject> assignments = AssignmentQueries.getAssignments(db);
+        return JSON.serialize(assignments);
     }
     
-    public static String getAllAssignmentsUser(DB db, String username) throws MongoException{
-        DBCollection coll = db.getCollection("user");
-        DBObject query = new BasicDBObject();
-        query.put("username", username);
-        DBObject field = new BasicDBObject();
-        field.put("assignments", 1);
-        field.put("_id", 0);
-
-        DBCursor cursor = coll.find(query, field);
-        BasicDBList e = (BasicDBList) cursor.next().get("assignments");
-        cursor.close();
-        return JSON.serialize(e);
+    //gg
+    public static String getAllAssignmentsUser(DB db, String username) {
+        BasicDBList assignments = AssignmentQueries.getAllAssignmentsUser(db, username);
+        return JSON.serialize(assignments);
     }
 }

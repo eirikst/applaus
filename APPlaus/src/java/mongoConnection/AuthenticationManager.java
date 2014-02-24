@@ -1,11 +1,9 @@
 package mongoConnection;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import mongoQueries.*;
 
 /**
  *
@@ -25,33 +23,15 @@ public class AuthenticationManager {
             HttpServletRequest request) {
         String username = request.getParameter("usr");
         String password = request.getParameter("pwd");
-        
-        DBCollection coll = db.getCollection("user");
-        
-        BasicDBObject query = new BasicDBObject();
-	query.put("username", username);
-        query.put("password", password);
-        
-        DBCursor cursor = coll.find(query);
-
-        int size = cursor.size();
-        if(size == 1) {//usr/pwd match
-            int role = -1;
-
-            double dRole = Double.parseDouble(cursor.next().get("role_id").toString());
-            role =(int)dRole;
+        int role = UserQueries.checkLogin(db, request.getParameter("usr"), request.getParameter("pwd"));
+        if(role > 0) {
             setSession(request, username, role);
-            return role;
         }
-        else if(size == 0) {//no usr/pwd match
-                return -1;
+        if(role < 0) {
+            LOGGER.severe("Multiple instances of a username in the database."
+            + " User: " + username);
         }
-        else {
-                LOGGER.severe("Multiple instances of a username/password"
-                        + " couple excists in the database for user " + request.
-                                getParameter("usr"));
-            return -1;
-        }
+        return role;
     }
     
     /**

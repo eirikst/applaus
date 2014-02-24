@@ -28,6 +28,7 @@ public class MongoServlet extends HttpServlet {
     public void init() throws ServletException {
         try {
             mongo = new MongoClient( "localhost" , 27017 );
+             db = mongo.getDB("applaus");
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -35,7 +36,6 @@ public class MongoServlet extends HttpServlet {
         catch(MongoException e) {
             LOGGER.severe(e.toString());
         }
-        db = mongo.getDB("applaus");
     }
     
     /**
@@ -132,7 +132,53 @@ public class MongoServlet extends HttpServlet {
             }
             else if(request.getParameter("action").equals("getAssignments")) {
                 out.println(AssignmentManager.getAssignments(db));
-            }           
+            }  
+            
+            else if(action.equals("getWeekGoal")) {
+                try {
+                    int[] goals = HomeManager.getWeekGoals(db, request
+                            .getSession().getAttribute("username").toString());
+                    if(goals[0] < 0 || goals[1] < 0) {
+                        response.sendError(500);
+                    }
+                    else {
+                        out.print(JSON.serialize(goals));
+                    }
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.severe("Exception parsing double. " + sw.toString());
+                    response.sendError(500);//error
+                }
+                catch(RuntimeException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.severe("Exception mongodb. " + sw.toString());
+                    response.sendError(500);//error
+                }
+            }
+            else if(action.equals("getPointsHome")) {
+                int[] points = HomeManager.getHomePoints(db, (String)request.getSession().getAttribute("username"));
+                out.print(JSON.serialize(points));
+            }
+            else if(action.equals("setGoal")) {
+                String username = (String)request.getSession().getAttribute("username");
+                try {
+                    int goal = Integer.parseInt(request.getParameter("points"));
+                    HomeManager.setGoal(db, username, goal);
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.info("Could not parse goal points to integer. "
+                            + sw.toString());
+                    response.sendError(500);//error
+                }
+            }
             
             //login
             else if(action.equals("login")) {

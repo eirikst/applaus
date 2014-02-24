@@ -1,0 +1,168 @@
+<div ng-swipe-left="changeView('contests')" ng-swipe-right="changeView('registerAssignment')">
+
+    <!--Carousel-->
+    <div ng-swipe-right="prevSlide()">
+        <div style="height: 150px">
+            <carousel interval="slideInterval">
+                <slide ng-repeat="slide in slides" active="slide.active">
+                    <div style="height:150px;background:gray">
+                        <div class="carousel-caption">
+                            <h5>{{slide.text}}</h5>
+                            <h1>{{slide.points}}</h1>
+                        </div>
+                    </div>
+                </slide>
+            </carousel>
+        </div>
+    </div>
+    <!--Carousel end-->
+
+    <div style="background-color:white">
+        <div class="container">
+            <div class="row">
+                <input type="date">
+                <!--Goal-->
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <h2>Mål</h2>
+                        <p>Sett deg et mål for uka og se om du når målet ditt!</p>
+                        <div class="drop" ng-init="dropGoal = false">
+                            <div class="dropHeading">
+                                <a class="text-center" ng-click="dropGoal = !dropGoal">
+
+                                    <span ng-show="goal > 0">
+                                        Mitt mål er {{goal}} poeng
+                                    </span>
+                                    <span ng-show="goal <= 0">
+                                        <span ng-show="lastWeek >= goalLast">
+                                            Du nådde målet ditt forrige uke!
+                                        </span>
+                                        <span ng-show="lastWeek < goalLast">
+                                            Du nådde ikke målet ditt forrige uke. Prøv igjen denne uka!
+                                        </span>
+                                    </span>
+                                </a> <a class="pull-right glyphicon" ng-click="dropGoal = !dropGoal" ng-class="{'glyphicon-chevron-down': dropGoal, 'glyphicon-chevron-right': !dropGoal}"></a>
+                            </div>
+                            <div class="innerDrop" ng-show="dropGoal">
+                                <div ng-show="goal === 0">
+                                    <p>
+                                        Hvor mange poeng klarer du denne uka?
+                                    </p>
+                                    <p>
+                                        <input ng-model="goalToSet" type="number" class="form-control" placeholder="Poeng">
+                                    </p>
+                                    <p>
+                                        <a ng-click="setGoal()" type="button" class="form-control">Legg til</a>
+                                    </p>
+                                </div>
+                                <div ng-show="goal > 0">
+                                    <p>
+                                        Progress:
+                                    </p>
+                                    <!--progress bar-->
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
+                                        </div>
+                                    </div>
+                                    <!-- end progress bar-->
+                                    <p>
+                                        Du har tatt {{week}} poeng
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <!--Goal end-->
+
+                <!--Ideabank-->
+                <div class="col-sm-4">
+                    <div>
+                        <h2>Idebank</h2>
+                        <p>Har du en ide? Ikke nøl med å registrere den i banken</p>
+
+                        <div class="drop" ng-init="dropIdea = false">
+                            <div class="dropHeading">
+                                <a class="text-center" ng-click="dropIdea = !dropIdea">Idebanken er et fint sted å være da</a> <a class="pull-right glyphicon" ng-click="dropIdea = !dropIdea" ng-class="{'glyphicon-chevron-down': dropIdea, 'glyphicon-chevron-right': !dropIdea}"></a>
+                            </div>
+                            <div class="innerDrop" ng-show="dropIdea">
+                                <p>
+                                    <input type="text" class="form-control" placeholder="Tittel">
+                                </p>
+                                <p>
+                                    <textarea class="form-control" placeholder="Tekst"></textarea>
+                                </p>
+                                <p>
+                                    <a type="button" class="form-control">Legg til</a>
+                                </p>
+                                <p>
+                                    Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+                </div>
+                <!--Ideabank end-->
+
+
+                <!--Ideabank-->
+                <div class="col-sm-4">
+                    <div>
+                        <h2>Idebank</h2>
+                        <p>Har du en ide? Ikke nøl med å registrere den i banken</p>
+
+                        <div class="drop" ng-init="dropdown = false">
+                            <div class="dropHeading">
+                                <a class="text-center" ng-click="dropdown = !dropdown">Idebanken er et fint sted å være da</a> <a class="pull-right glyphicon" ng-click="dropdown = !dropdown" ng-class="{'glyphicon-chevron-down': dropdown, 'glyphicon-chevron-right': !dropdown}"></a>
+                            </div>
+                            <div class="innerDrop" ng-show="dropdown">
+                                <p>
+                                    <input type="text" class="form-control" placeholder="Tittel">
+                                </p>
+                                <p>
+                                    <textarea class="form-control" placeholder="Tekst"></textarea>
+                                </p>
+                                <p>
+                                    <a type="button" class="form-control">Legg til</a>
+                                </p>
+                                <p>
+                                    Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+                </div>
+                <!--Ideabank end-->
+            </div>
+        </div>
+    </div>
+
+    <!--News-->
+    <div style="background-color:gray">
+        <div>
+            <h2>Nyheter</h2>
+            <div class="drop" ng-init="dropNews = false" ng-repeat="article in news">
+                <div class="dropHeading">
+                    <a class="text-center" ng-click="dropNews = !dropNews">{{article.title}}</a> <a class="pull-right glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a>
+                </div>
+                <div class="innerDrop" ng-show="dropNews">
+                    <p>
+                        {{article.text}}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <br>
+    </div>
+    
+    
+    <!--News end-->
+
+</div>

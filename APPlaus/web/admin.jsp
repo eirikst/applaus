@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : Feb 19, 2014, 3:11:31 PM
+    Document   : admin
+    Created on : Feb 20, 2014, 3:53:01 PM
     Author     : eirikstadheim
 --%>
 
@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 
 <%
-    if(session.getAttribute("username") == null) {
+    if(session.getAttribute("username") == null || session.getAttribute("role").equals("3")) {
         response.sendRedirect("login.jsp");
 }
         %>
@@ -44,6 +44,7 @@
                 <a href="#userFromt"><img class="index-icons" src="img/Home.png"></a>
                 <a href="#contests"><img class="index-icons" src="img/Contest.png"></a>
                 <a href="#settings"><img class="index-icons" src="img/Settings.png"></a>
+
             </div>
         </div>
         <div>
@@ -54,7 +55,8 @@
             <button onclick="submit()">Log out</button>
             </form>
         </div>
-
+        <script src="js/app/admApp.js"></script>
+        <script src="js/app/controllers/admCtrls.js"></script>
         <script src="js/app/empApp.js"></script>
         <script src="js/app/controllers/controllers.js"></script>
         <script src="js/app/controllers/homeController.js"></script>
