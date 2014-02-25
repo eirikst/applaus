@@ -20,12 +20,23 @@
     <div style="background-color:white">
         <div class="container">
             <div class="row">
-                <input type="date">
                 <!--Goal-->
                 <div class="col-sm-4">
                     <div class="text-center">
                         <h2>Mål</h2>
-                        <p>Sett deg et mål for uka og se om du når målet ditt!</p>
+                        <p>
+                            <span ng-show="goalLast < 0">
+                                Sett deg et mål for uka og se om du når målet ditt!
+                            </span>
+                            <span ng-show="goalLast > 0">
+                                <span ng-show="lastWeek >= goalLast">
+                                    Du nådde målet ditt forrige uke!
+                                </span>
+                                <span ng-show="lastWeek < goalLast">
+                                    Du nådde ikke målet ditt forrige uke. Prøv igjen denne uka!
+                                </span>
+                            </span>
+                        </p>
                         <div class="drop" ng-init="dropGoal = false">
                             <div class="dropHeading">
                                 <a class="text-center" ng-click="dropGoal = !dropGoal">
@@ -34,17 +45,12 @@
                                         Mitt mål er {{goal}} poeng
                                     </span>
                                     <span ng-show="goal <= 0">
-                                        <span ng-show="lastWeek >= goalLast">
-                                            Du nådde målet ditt forrige uke!
-                                        </span>
-                                        <span ng-show="lastWeek < goalLast">
-                                            Du nådde ikke målet ditt forrige uke. Prøv igjen denne uka!
-                                        </span>
+                                        Sett deg et mål!
                                     </span>
                                 </a> <a class="pull-right glyphicon" ng-click="dropGoal = !dropGoal" ng-class="{'glyphicon-chevron-down': dropGoal, 'glyphicon-chevron-right': !dropGoal}"></a>
                             </div>
                             <div class="innerDrop" ng-show="dropGoal">
-                                <div ng-show="goal === 0">
+                                <div ng-show="goal === -1">
                                     <p>
                                         Hvor mange poeng klarer du denne uka?
                                     </p>
@@ -52,7 +58,7 @@
                                         <input ng-model="goalToSet" type="number" class="form-control" placeholder="Poeng">
                                     </p>
                                     <p>
-                                        <a ng-click="setGoal()" type="button" class="form-control">Legg til</a>
+                                        <a ng-click="setGoal()" href="#" type="button" class="form-control">Legg til</a>
                                     </p>
                                 </div>
                                 <div ng-show="goal > 0">

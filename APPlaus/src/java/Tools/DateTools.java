@@ -19,7 +19,7 @@ public class DateTools {
     public static final int TO_MONGO = 1;
     public static final int TO_JAVA = -1;
     
-    //int 0 next monday, -1 last etc
+    //int 0 next monday, -1 last etc, if monday, gets next
     public static Date getMonday(int week) {
         GregorianCalendar toBeMonday = new GregorianCalendar();
         //finds today
@@ -28,6 +28,9 @@ public class DateTools {
             // calculates how much to add  
             int days = (GregorianCalendar.SATURDAY - weekday + 2) % 7;
             toBeMonday.add(GregorianCalendar.DAY_OF_YEAR, days);
+        }
+        else {
+            toBeMonday.add(GregorianCalendar.DAY_OF_YEAR, 7);//if monday, get next
         }
         // clears hour, minute and second(00:00:00)
         toBeMonday.set(GregorianCalendar.HOUR_OF_DAY, 0);

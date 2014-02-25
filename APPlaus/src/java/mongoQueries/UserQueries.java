@@ -163,16 +163,16 @@ public class UserQueries {
         if(size == 1) {
             BasicDBObject obj =  (BasicDBObject)list.get(0);
             int goal = obj.getInt("points");
-            if(goal >= 0) {
+            if(goal > 0) {
                 return goal;
             }
-            return -1;//goal set is zero or less, not allowed
+            return -3;//goal set is zero or less, not allowed
         }
-        else if(size >1) {
+        else if(size > 1) {
             return -2;//should not be more than one instance stored in db
         }
         else {
-            return 0;//no goal set
+            return -1;//no goal set
         }
     }
     

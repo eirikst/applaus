@@ -20,8 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "MongoConnection", urlPatterns = {"/MongoConnection"})
 public class MongoServlet extends HttpServlet {
-    private MongoClient mongo;
-    private DB db;
+    private static MongoClient mongo;
     private final static Logger LOGGER = Logger.getLogger
         (MongoServlet.class.getName());
     
@@ -29,7 +28,6 @@ public class MongoServlet extends HttpServlet {
     public void init() throws ServletException {
         try {
             mongo = new MongoClient( "localhost" , 27017 );
-             db = mongo.getDB("applaus");
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -66,7 +64,7 @@ public class MongoServlet extends HttpServlet {
             
             //getActiveContests
             if(action.equals("getActiveContests")) {
-                out.println(ContestManager.getActiveContests(db));
+                out.println(ContestManager.getActiveContests(mongo.getDB("applaus")));
                 response.setStatus(200);//success
             }
             
@@ -74,7 +72,7 @@ public class MongoServlet extends HttpServlet {
             else if(action.equals("getInactiveContests")) {
                 try {
                     int skip = Integer.parseInt(request.getParameter("skip"));
-                    out.println(ContestManager.getInactiveContests(db, skip));
+                    out.println(ContestManager.getInactiveContests(mongo.getDB("applaus"), skip));
                     response.setStatus(200);//success
                 }
                 catch(NumberFormatException e) {
@@ -89,7 +87,7 @@ public class MongoServlet extends HttpServlet {
             //participate
             else if(action.equals("participate")) {
                 try {
-                    ContestManager.participate(db, request.getSession().
+                    ContestManager.participate(mongo.getDB("applaus"), request.getSession().
                             getAttribute("username").toString(),
                             request.getParameter("contestId"));
                     response.setStatus(200);//success
@@ -105,7 +103,7 @@ public class MongoServlet extends HttpServlet {
             
             //dontParticipate
             else if(action.equals("dontParticipate")) {
-                    ContestManager.dontParticipate(db, request.getSession().
+                    ContestManager.dontParticipate(mongo.getDB("applaus"), request.getSession().
                             getAttribute("username").toString(),
                             request.getParameter("contestId"));
                     response.setStatus(200);//success
@@ -114,7 +112,7 @@ public class MongoServlet extends HttpServlet {
             //userActiveContList
             else if(action.equals("userActiveContList")) {
                 try {
-                    out.println(ContestManager.userActiveContList(db, request.
+                    out.println(ContestManager.userActiveContList(mongo.getDB("applaus"), request.
                             getSession().getAttribute("username").toString()));
                     response.setStatus(200);//success
                 }
@@ -130,7 +128,7 @@ public class MongoServlet extends HttpServlet {
        //create assignment
             else if(request.getParameter("action").equals("createAssignment")) {
                 try{
-                    out.println(AssignmentManager.createAssignment(db, request.
+                    out.println(AssignmentManager.createAssignment(mongo.getDB("applaus"), request.
                             getParameter("title").toString(), request.getParameter("desc").toString(),
                             parseInt(request.getParameter("points"))));
                     response.setStatus(200);//success
@@ -149,7 +147,7 @@ public class MongoServlet extends HttpServlet {
             else if(request.getParameter("action").equals("registerAssignment")) {
                 long shit = Long.parseLong(request.getParameter("date"));
                 try{
-                    out.println(AssignmentManager.registerAssignment(db, request.getSession().
+                    out.println(AssignmentManager.registerAssignment(mongo.getDB("applaus"), request.getSession().
                             getAttribute("username").toString(), request.
                             getParameter("id").toString(), new java.util.Date(shit), request.getParameter("comment").toString()));
                     response.setStatus(200);//success
@@ -166,7 +164,7 @@ public class MongoServlet extends HttpServlet {
             //assignment
             else if(request.getParameter("action").equals("getAllAssignments")) {
                 try{
-                    out.println(AssignmentManager.getAllAssignmentsUser(db, "audunsto")); //!! Skift til username !!//
+                    out.println(AssignmentManager.getAllAssignmentsUser(mongo.getDB("applaus"), "audunsto")); //!! Skift til username !!//
                     response.setStatus(200);//success
                 }
                 catch(RuntimeException e) {
@@ -181,7 +179,7 @@ public class MongoServlet extends HttpServlet {
             //assignments for list
             else if(request.getParameter("action").equals("getAssignments")) {
                 try{
-                    out.println(AssignmentManager.getAssignments(db));
+                    out.println(AssignmentManager.getAssignments(mongo.getDB("applaus")));
                     response.setStatus(200);//success
                 }catch(RuntimeException e) {
                     StringWriter sw = new StringWriter();
@@ -194,9 +192,9 @@ public class MongoServlet extends HttpServlet {
             
             else if(action.equals("getWeekGoal")) {
                 try {
-                    int[] goals = HomeManager.getWeekGoals(db, request
+                    int[] goals = HomeManager.getWeekGoals(mongo.getDB("applaus"), request
                             .getSession().getAttribute("username").toString());
-                    if(goals[0] < 0 || goals[1] < 0) {
+                    if(goals[0] <= -2 || goals[1] <= -2) {
                         response.sendError(500);
                     }
                     else {
@@ -219,14 +217,14 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             else if(action.equals("getPointsHome")) {
-                int[] points = HomeManager.getHomePoints(db, (String)request.getSession().getAttribute("username"));
+                int[] points = HomeManager.getHomePoints(mongo.getDB("applaus"), (String)request.getSession().getAttribute("username"));
                 out.print(JSON.serialize(points));
             }
             else if(action.equals("setGoal")) {
                 String username = (String)request.getSession().getAttribute("username");
                 try {
                     int goal = Integer.parseInt(request.getParameter("points"));
-                    HomeManager.setGoal(db, username, goal);
+                    HomeManager.setGoal(mongo.getDB("applaus"), username, goal);
                 }
                 catch(NumberFormatException e) {
                     StringWriter sw = new StringWriter();
@@ -243,7 +241,7 @@ public class MongoServlet extends HttpServlet {
                 try {
                     //returning role id, -1 if bad details
                     out.println(JSON.serialize(new int[]{AuthenticationManager.
-                            login(db, request)}));
+                            login(mongo.getDB("applaus"), request)}));
                 }
                 //Does not throw com.mongodb.MongoException as the doc says 
                 //it should

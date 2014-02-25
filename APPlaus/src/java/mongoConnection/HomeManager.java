@@ -28,12 +28,12 @@ public class HomeManager {
     public static int[] getWeekGoals(DB db, String username) {
         int[] goals = new int[2];
                 goals[0] = UserQueries.getWeekGoal(db, username, 0);
-        if(goals[0] < 0) {
-            LOGGER.warning("Error fetching stretch goals.");
+        if(goals[0] <= -2) {
+            LOGGER.info("Error fetching stretch goals.");
         }
                 goals[1] = UserQueries.getWeekGoal(db, username, -1);
-        if(goals[1] < 0) {
-            LOGGER.warning("Error fetching stretch goals.");
+        if(goals[1] <= -2) {
+            LOGGER.info("Error fetching stretch goals.");
         }
         return goals;
     }

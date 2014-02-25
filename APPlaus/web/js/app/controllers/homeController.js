@@ -20,7 +20,6 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeSe
             $scope.goalLast = values[1][1];//sets assignment table with info from DB
             $scope.progress = ($scope.week / $scope.goal)*100;
     });*/
-    
     HomeService.getPoints()
             .success(function(data, status, headers, config) {
             $scope.week = data[0];//sets assignment table with info from DB
