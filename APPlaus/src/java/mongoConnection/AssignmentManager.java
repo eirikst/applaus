@@ -18,7 +18,7 @@ public class AssignmentManager {
      * @param db DB object to connect to the database
      * @return JSON serialized array of assignments
      */
-    public static String getAssignments(DB db) {
+    public static String getAssignmentsTypes(DB db) {
         List<DBObject> assignments = AssignmentQueries.getAssignments(db);
         return JSON.serialize(assignments);
     }

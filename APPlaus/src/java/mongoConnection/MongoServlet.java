@@ -125,7 +125,7 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             
-       //create assignment
+            //create assignment
             else if(request.getParameter("action").equals("createAssignment")) {
                 try{
                     out.println(AssignmentManager.createAssignment(mongo.getDB("applaus"), request.
@@ -145,11 +145,11 @@ public class MongoServlet extends HttpServlet {
             
             // register assignment
             else if(request.getParameter("action").equals("registerAssignment")) {
-                long shit = Long.parseLong(request.getParameter("date"));
+                long date = Long.parseLong(request.getParameter("date"));
                 try{
                     out.println(AssignmentManager.registerAssignment(mongo.getDB("applaus"), request.getSession().
                             getAttribute("username").toString(), request.
-                            getParameter("id").toString(), new java.util.Date(shit), request.getParameter("comment").toString()));
+                            getParameter("id").toString(), new java.util.Date(date), request.getParameter("comment").toString()));
                     response.setStatus(200);//success
                 }
                 catch(RuntimeException e) {
@@ -161,10 +161,11 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             
-            //assignment
-            else if(request.getParameter("action").equals("getAllAssignments")) {
+            //get all registered assignments from a user
+            else if(request.getParameter("action").equals("getAllAssignmentsUser")) {
                 try{
-                    out.println(AssignmentManager.getAllAssignmentsUser(mongo.getDB("applaus"), "audunsto")); //!! Skift til username !!//
+                    out.println(AssignmentManager.getAllAssignmentsUser(mongo.getDB("applaus"), 
+                            request.getSession().getAttribute("username").toString()));
                     response.setStatus(200);//success
                 }
                 catch(RuntimeException e) {
@@ -176,10 +177,10 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             
-            //assignments for list
-            else if(request.getParameter("action").equals("getAssignments")) {
+            //get assignments types
+            else if(request.getParameter("action").equals("getAssignmentsTypes")) {
                 try{
-                    out.println(AssignmentManager.getAssignments(mongo.getDB("applaus")));
+                    out.println(AssignmentManager.getAssignmentsTypes(mongo.getDB("applaus")));
                     response.setStatus(200);//success
                 }catch(RuntimeException e) {
                     StringWriter sw = new StringWriter();

@@ -1,12 +1,13 @@
 var controllers = angular.module('employeeApp.controllers');
 
+// Assignment controller
 controllers.controller('AssignCtrl', function($scope, $location, $http) {
     
     $scope.changeView = function(view) {
         $location.path(view); // path not hash
     };
     
-    // new assignment
+    // creating a new type of assignment
     $scope.createAssignment = function(){
         $http({
             url: 'MongoConnection',
@@ -21,7 +22,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
         });        
     };
     
-    // register assignment
+    // user registers a completed assignment
     $scope.registerAssignment = function(){
         var d = new Date($scope.date);
         $http({
@@ -37,32 +38,33 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
         });        
     };    
     
-    //Assignment related
+    //Gets a list of all the types of assignments
     $scope.selectedOptions = new Array();
     $scope.selectedOption = $scope.selectedOptions[0];
     
     $http({
       url: 'MongoConnection',
       method: "POST",
-      data: "action=getAssignments",
+      data: "action=getAssignmentsTypes",
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(data, status, headers, config) {
         $scope.selectedOptions = data;//sets assignment table with info from DB
         $scope.selectedOption = $scope.selectedOptions[0];
     }).error(function(data, status, headers, config) {
-        return [];
+        console.log("Failed http action=getAssignments");
     });    
     
     $scope.allAssignments = new Array();
   
+    //Gettting the logged-in user assignment list
     $http({
       url: 'MongoConnection',
       method: "POST",
-      data: "action=getAllAssignments",
+      data: "action=getAllAssignmentsUser",
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(data, status, headers, config) {
         $scope.allAssignments = data;//sets assignment table with info from DB
     }).error(function(data, status, headers, config) {
-        return [];
+        console.log("Failed http action=getAllAssignmentsUser");
     });
 })

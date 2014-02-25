@@ -2,29 +2,41 @@
       
      <div style="background-color:white">
         <div class="container">
+            <div class="drop" ng-init="dropAssignCreate = false">
+                <div class="dropHeading">
+                                <a class="text-center" ng-click="dropAssignCreate = !dropAssignCreate">Lag en ny type oppgave</a> <a class="pull-right glyphicon" ng-click="dropAssignCreate = !dropAssignCreate" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
+                            </div>
+                <div class="innerDrop" ng-show="dropAssignCreate">
+                    <p>
+                        Navn: 
+                        <input ng-model="title" name="name" type="text" placeholder="Navn på oppgave">
+                    </p>
+
+                    <p>
+                        Poeng:
+                        <input ng-model="points" name="points" type="text" placeholder="Antall poeng">
+                    </p>
+
+                    <p>
+                        Beskrivelse:
+                        <textarea ng-model="desc" name="desc" placeholder="Skriv beskrivlse for oppgave" class="form-control" maxlength="100"></textarea>
+                    </p>
+
+                    <p>
+                        <a data-ng-click="createAssignment()"
+                          class="btn btn-primary btn-lg" role="button">
+                            Registrer
+                        </a>
+                    </p>
+                </div>
+            </div>
             
-            <p>
-                Navn: 
-                <input ng-model="title" name="name" type="text" placeholder="Navn på oppgave">
-            </p>
-
-            <p>
-                Poeng:
-                <input ng-model="points" name="points" type="text" placeholder="Antall poeng">
-            </p>
-
-            <p>
-                Beskrivelse:
-                <textarea ng-model="desc" name="desc" placeholder="Skriv beskrivlse for oppgave" class="form-control" maxlength="100"></textarea>
-            </p>
-
-            <p>
-                <a data-ng-click="createAssignment()"
-                  class="btn btn-primary btn-lg" role="button">
-                    Registrer
-                </a>
-            </p>
             
+            <div class="drop" ng-init="dropAssignReg = false">
+                <div class="dropHeading">
+                    <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Registrer en oppgave</a> <a class="pull-right glyphicon" ng-click="dropAssignReg = !dropAssignReg" ng-class="{'glyphicon-chevron-down': dropAssignReg, 'glyphicon-chevron-right': !dropAssignReg}"></a>
+                </div>
+                <div class="innerDrop" ng-show="dropAssignReg">            
                     <p>
                         Velg oppgave
                         <select data-ng-options="selectedOption.title for selectedOption in selectedOptions"
@@ -50,6 +62,10 @@
                             Registrer
                         </a>
                     </p>
+                </div>
+            </div>
+            
+            <br/>
                     
             <accordion close-others="true">
                 <div ng-repeat="assignment in allAssignments">
