@@ -12,6 +12,7 @@ import mongoQueries.*;
 public class AuthenticationManager {
     private final static Logger LOGGER = Logger.getLogger
         (AuthenticationManager.class.getName());
+    private final UserQueries userQ = new UserQueriesImpl();
     
     /**
      * Checks the mongodb if the user(and only one instance) excists.
@@ -19,11 +20,11 @@ public class AuthenticationManager {
      * @param request http request
      * @return the role(int) on success, or -1 on fail.
      */
-    public static int login(DB db,
+    public int login(DB db,
             HttpServletRequest request) {
         String username = request.getParameter("usr");
         String password = request.getParameter("pwd");
-        int role = UserQueries.checkLogin(db, request.getParameter("usr"), request.getParameter("pwd"));
+        int role = userQ.checkLogin(db, request.getParameter("usr"), request.getParameter("pwd"));
         if(role > 0) {
             setSession(request, username, role);
         }
@@ -41,7 +42,7 @@ public class AuthenticationManager {
      * @param username session username
      * @param role session role id
      */
-    private static void setSession(HttpServletRequest request, String username,
+    private void setSession(HttpServletRequest request, String username,
             int role) {
         request.getSession().setAttribute("username", username);
         request.getSession().setAttribute("role", role);

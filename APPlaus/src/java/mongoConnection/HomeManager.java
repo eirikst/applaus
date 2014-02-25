@@ -17,21 +17,23 @@ import java.util.Calendar;
  */
 public class HomeManager {
     private static final Logger LOGGER = Logger.getLogger(HomeManager.class.getName());
-    
+    private final UserQueries userQ = new UserQueriesImpl();
+    private final AssignmentQueries assignQ = new AssignmentQueriesImpl();
+
     //this first, then last
     /**
-     * Calls UserQueries.getWeekGoal() twice to get the h
+     * Calls UserQueriesImpl.getWeekGoal() twice to get the h
      * @param db
      * @param username
      * @return 
      */
-    public static int[] getWeekGoals(DB db, String username) {
+    public int[] getWeekGoals(DB db, String username) {
         int[] goals = new int[2];
-                goals[0] = UserQueries.getWeekGoal(db, username, 0);
+                goals[0] = userQ.getWeekGoal(db, username, 0);
         if(goals[0] <= -2) {
             LOGGER.info("Error fetching stretch goals.");
         }
-                goals[1] = UserQueries.getWeekGoal(db, username, -1);
+                goals[1] = userQ.getWeekGoal(db, username, -1);
         if(goals[1] <= -2) {
             LOGGER.info("Error fetching stretch goals.");
         }
@@ -40,7 +42,7 @@ public class HomeManager {
     
     
     //first element this week, second last week, third month, fourth year
-    public static int[] getHomePoints(DB db, String username) {
+    public int[] getHomePoints(DB db, String username) {
         int[] points = new int[4];
         points[0] = getPoints(db, username, DateTools.WEEK);
         points[1] = getPoints(db, username, DateTools.LAST_WEEK);
@@ -51,7 +53,7 @@ public class HomeManager {
     
     //WEEK, MONTH, YEAR
     //when: 0 this, -1 last etc
-    public static int getPoints(DB db, String username, int period) {
+    public int getPoints(DB db, String username, int period) {
         Date from = new Date();
         Date to = new Date();
         if(period == DateTools.WEEK) {
@@ -75,8 +77,8 @@ public class HomeManager {
             throw new IllegalArgumentException("period must be WEEK, LAST_WEEK, MONTH or YEAR(7, -7, 30, 365).");
         }
         
-        Iterator<DBObject> userAssignments = UserQueries.getAssignmentsUser(db, username, from, to);
-        Iterator<DBObject> assignmentsIt = AssignmentQueries.getAssignmentsIt(db);
+        Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(db, username, from, to);
+        Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt(db);
         ArrayList<DBObject> assignments = new ArrayList<>();
         while(assignmentsIt.hasNext()) {
             assignments.add(assignmentsIt.next());
@@ -98,7 +100,7 @@ public class HomeManager {
         return points;
     }
     
-    public static void setGoal(DB db, String username, int points) {
-        UserQueries.setGoal(db, username, points);
+    public void setGoal(DB db, String username, int points) {
+        userQ.setGoal(db, username, points);
     }
 }
