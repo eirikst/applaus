@@ -1,11 +1,12 @@
 package mongoQueries;
 
+import applausException.DBException;
+import applausException.InputException;
 import com.mongodb.BasicDBList;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import java.util.Date;
 import java.util.Iterator;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -20,4 +21,6 @@ public interface UserQueries {
     public Iterator<DBObject> getAssignmentsUser(DB db, String username,
             Date from, Date to);
     public void setGoal(DB db, String username, int points);
+    public void deleteContest(DB db, String contestId) throws InputException,
+            DBException;
 }

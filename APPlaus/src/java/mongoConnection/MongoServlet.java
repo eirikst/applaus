@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import static java.lang.Integer.parseInt;
+import java.util.Date;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +24,7 @@ public class MongoServlet extends HttpServlet {
     private final static Logger LOGGER = Logger.getLogger
         (MongoServlet.class.getName());
     private static MongoClient mongo;
+    private static DB db;
     private HomeManager homeMan;
     private AuthenticationManager authMan;
     private AssignmentManager assignMan;
@@ -35,6 +37,7 @@ public class MongoServlet extends HttpServlet {
         contMan = new ContestManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
+            db = mongo.getDB("applaus");
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -57,7 +60,7 @@ public class MongoServlet extends HttpServlet {
             throws ServletException, IOException {
         
         response.setContentType("text/html");
-        
+        request.getSession().setMaxInactiveInterval(604800);
         //printwriter
         
         
@@ -71,7 +74,7 @@ public class MongoServlet extends HttpServlet {
             
             //getActiveContests
             if(action.equals("getActiveContests")) {
-                out.println(contMan.getActiveContests(mongo.getDB("applaus")));
+                out.println(contMan.getActiveContests(db));
                 response.setStatus(200);//success
             }
             
@@ -79,7 +82,7 @@ public class MongoServlet extends HttpServlet {
             else if(action.equals("getInactiveContests")) {
                 try {
                     int skip = Integer.parseInt(request.getParameter("skip"));
-                    out.println(contMan.getInactiveContests(mongo.getDB("applaus"), skip));
+                    out.println(contMan.getInactiveContests(db, skip));
                     response.setStatus(200);//success
                 }
                 catch(NumberFormatException e) {
@@ -94,7 +97,7 @@ public class MongoServlet extends HttpServlet {
             //participate
             else if(action.equals("participate")) {
                 try {
-                    contMan.participate(mongo.getDB("applaus"), request.getSession().
+                    contMan.participate(db, request.getSession().
                             getAttribute("username").toString(),
                             request.getParameter("contestId"));
                     response.setStatus(200);//success
@@ -110,7 +113,7 @@ public class MongoServlet extends HttpServlet {
             
             //dontParticipate
             else if(action.equals("dontParticipate")) {
-                    contMan.dontParticipate(mongo.getDB("applaus"), request.getSession().
+                    contMan.dontParticipate(db, request.getSession().
                             getAttribute("username").toString(),
                             request.getParameter("contestId"));
                     response.setStatus(200);//success
@@ -119,7 +122,7 @@ public class MongoServlet extends HttpServlet {
             //userActiveContList
             else if(action.equals("userActiveContList")) {
                 try {
-                    out.println(contMan.userActiveContList(mongo.getDB("applaus"), request.
+                    out.println(contMan.userActiveContList(db, request.
                             getSession().getAttribute("username").toString()));
                     response.setStatus(200);//success
                 }
@@ -135,7 +138,7 @@ public class MongoServlet extends HttpServlet {
             //create assignment
             else if(request.getParameter("action").equals("createAssignment")) {
                 try{
-                    out.println(assignMan.createAssignment(mongo.getDB("applaus"), request.
+                    out.println(assignMan.createAssignment(db, request.
                             getParameter("title").toString(), request.getParameter("desc").toString(),
                             parseInt(request.getParameter("points"))));
                     response.setStatus(200);//success
@@ -154,7 +157,7 @@ public class MongoServlet extends HttpServlet {
             else if(request.getParameter("action").equals("registerAssignment")) {
                 long date = Long.parseLong(request.getParameter("date"));
                 try{
-                    out.println(assignMan.registerAssignment(mongo.getDB("applaus"), request.getSession().
+                    out.println(assignMan.registerAssignment(db, request.getSession().
                             getAttribute("username").toString(), request.
                             getParameter("id").toString(), new java.util.Date(date), request.getParameter("comment").toString()));
                     response.setStatus(200);//success
@@ -171,7 +174,7 @@ public class MongoServlet extends HttpServlet {
             //get all registered assignments from a user
             else if(request.getParameter("action").equals("getAllAssignmentsUser")) {
                 try{
-                    out.println(assignMan.getAllAssignmentsUser(mongo.getDB("applaus"), 
+                    out.println(assignMan.getAllAssignmentsUser(db, 
                             request.getSession().getAttribute("username").toString()));
                     response.setStatus(200);//success
                 }
@@ -187,7 +190,7 @@ public class MongoServlet extends HttpServlet {
             //get assignments types
             else if(request.getParameter("action").equals("getAssignmentsTypes")) {
                 try{
-                    out.println(assignMan.getAssignmentsTypes(mongo.getDB("applaus")));
+                    out.println(assignMan.getAssignmentsTypes(db));
                     response.setStatus(200);//success
                 }catch(RuntimeException e) {
                     StringWriter sw = new StringWriter();
@@ -200,7 +203,7 @@ public class MongoServlet extends HttpServlet {
             
             else if(action.equals("getWeekGoal")) {
                 try {
-                    int[] goals = homeMan.getWeekGoals(mongo.getDB("applaus"), request
+                    int[] goals = homeMan.getWeekGoals(db, request
                             .getSession().getAttribute("username").toString());
                     if(goals[0] <= -2 || goals[1] <= -2) {
                         response.sendError(500);
@@ -225,14 +228,14 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             else if(action.equals("getPointsHome")) {
-                int[] points = homeMan.getHomePoints(mongo.getDB("applaus"), (String)request.getSession().getAttribute("username"));
+                int[] points = homeMan.getHomePoints(db, (String)request.getSession().getAttribute("username"));
                 out.print(JSON.serialize(points));
             }
             else if(action.equals("setGoal")) {
                 String username = (String)request.getSession().getAttribute("username");
                 try {
                     int goal = Integer.parseInt(request.getParameter("points"));
-                    homeMan.setGoal(mongo.getDB("applaus"), username, goal);
+                    homeMan.setGoal(db, username, goal);
                 }
                 catch(NumberFormatException e) {
                     StringWriter sw = new StringWriter();
@@ -244,12 +247,41 @@ public class MongoServlet extends HttpServlet {
                 }
             }
             
+            else if(action.equals("createContest")) {
+                String title = (String)request.getParameter("title");
+                String desc = (String)request.getParameter("desc");
+                String prize = (String)request.getParameter("prize");
+                String username = (String)request.getSession().
+                        getAttribute("username");
+                try {
+                    Long dateEndLong = Long.parseLong(request.
+                            getParameter("dateEnd"));
+                    Date dateEnd = new Date(dateEndLong);
+                    int points = Integer.parseInt((String)request.
+                            getParameter("points"));
+                    
+                    if(!contMan.createContest(db, title, desc, prize, dateEnd, 
+                            points, username)) {
+                        response.sendError(500);
+                    }
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.info("Could not parse points or date to integer or "
+                            + "long. "
+                            + sw.toString());
+                    response.sendError(500);//error
+                }
+            }
+            
             //login
             else if(action.equals("login")) {
                 try {
                     //returning role id, -1 if bad details
                     out.println(JSON.serialize(new int[]{authMan.
-                            login(mongo.getDB("applaus"), request)}));
+                            login(db, request)}));
                 }
                 //Does not throw com.mongodb.MongoException as the doc says 
                 //it should
@@ -273,6 +305,46 @@ public class MongoServlet extends HttpServlet {
                     e.printStackTrace(pw);
                     LOGGER.severe("Exception mongodb. " + sw.toString());
                     response.sendError(500);
+                }
+            }
+            
+            else if(action.equals("deleteContest")) {
+                int deleted = contMan.deleteContest(db, request
+                        .getParameter("contestId"));
+                if(deleted == 1) {
+                    response.setStatus(200);
+                }
+                else {
+                    response.sendError(500);
+                }
+            }
+            
+            else if(action.equals("editContest")) {
+                String contestId = (String)request.getParameter("contestId");
+                String title = (String)request.getParameter("title");
+                String desc = (String)request.getParameter("desc");
+                String prize = (String)request.getParameter("prize");
+                try {
+                    Long dateEndLong = Long.parseLong(request.
+                            getParameter("dateEnd"));
+                    Date dateEnd = new Date(dateEndLong);
+                    int points = Integer.parseInt((String)request.
+                            getParameter("points"));
+                    
+                    boolean edit = contMan.editContest(db, contestId, title, desc, prize, 
+                            dateEnd, points);
+                    if(!edit) {
+                        response.sendError(500);//error
+                    }
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.info("Could not parse points or date to integer or "
+                            + "long. "
+                            + sw.toString());
+                    response.sendError(500);//error
                 }
             }
             
