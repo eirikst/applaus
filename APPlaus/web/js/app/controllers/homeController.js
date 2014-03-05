@@ -2,7 +2,6 @@ var controllers = angular.module('employeeApp.controllers');
 
 controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, HomeService) {    
     
-    $scope.adminList = new Array();
     $scope.bank = new Array();
     
     $scope.slideInterval = 5000;
@@ -37,27 +36,12 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
                             });
                     });
                     
-    HomeService.getAdminList().success(function(data, status, headers, config) {
-            $scope.adminList = data;            
-        });
         
      HomeService.getIdeas().success(function(data, status, headers, config) {
             $scope.bank = data;            
         });   
         
         
-    $scope.setRole = function(username, role_id) {
-            $http({
-              url: 'MongoConnection',
-              method: "POST",
-              data: "action=setRole&username=" + username + "&role=" + role_id,
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).success(function(data, status, headers, config) {
-              $scope.adminList = data;  
-            }).error(function(data, status, headers, config) {
-                //error
-            });
-        }
     
     
     $scope.addIdea = function() {
@@ -128,7 +112,6 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
 
 
     $scope.changeView = function(view) {
-        $scope.weekPoints = 599;
         $location.path(view); // path not hash
     };
     

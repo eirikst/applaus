@@ -61,7 +61,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
         query.put("username", username);
         DBObject field = new BasicDBObject();
         field.put("id", id);
-        field.put("date", date);
+        field.put("date_done", date);
         field.put("comment", comment);
         
         BasicDBObject pushToAssign = new BasicDBObject("$push", new BasicDBObject("assignments", field));

@@ -62,6 +62,7 @@
                     </a>
                     <ul class="dropdown-menu pull-right">
                       <li><a href="logout.jsp">Logout</a></li>
+                      <li><a type="button" href="#adminList">Admin features</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -88,9 +89,11 @@
         <script src="js/app/controllers/loginController.js"></script>
         <script src="js/app/controllers/assignController.js"></script>
         <script src="js/app/controllers/contController.js"></script>       
+        <script src="js/app/controllers/adminController.js"></script>       
         <script src="js/app/services/homeServices.js"></script>
         <script src="js/app/services/assignmentServices.js"></script>
         <script src="js/app/services/contestServices.js"></script>
+        <script src="js/app/services/adminServices.js"></script>
         <script src="js/app/directives/directives.js"></script>
     </body>
 </html>

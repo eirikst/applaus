@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <!--Admin liste-->
+        <div class="col-sm-4">
+            <div>
+                <h2>Adminliste</h2>
+                <p>Endre brukere til administrator</p>
+                        <input ng-model="filt" placeholder="Søk"/><br/><br/>
+                        <table style="font: 14px 'Proxima Nova Regular','Helvetica Neue',Arial,sans-serif;" class="table table-striped table-bordered table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Navn</th>
+                                    <th>Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="admin in (adminList| filter:filt | orderBy: 'firstname':true | limitTo: 10)">
+                                <tr>
+                                    <td>{{admin.firstname}} {{admin.lastname}}</td>
+                                    <td><input  ng-checked="admin.role_id == 1 || admin.role_id == 2" ng-disabled="admin.role_id == 1" ng-click="setRole(admin.username, admin.role_id)" type="checkbox"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+            <br>
+        </div>
+        <!--Admin liste end-->
+    </body>
+</html>
