@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import mongoQueries.*;
 import Tools.DateTools;
+import com.mongodb.util.JSON;
 import java.util.Calendar;
+import javax.servlet.http.HttpServletRequest;
 /**
  *
  * @author eirikstadheim
@@ -19,6 +21,7 @@ public class HomeManager {
     private static final Logger LOGGER = Logger.getLogger(HomeManager.class.getName());
     private final UserQueries userQ = new UserQueriesImpl();
     private final AssignmentQueries assignQ = new AssignmentQueriesImpl();
+    private final IdeaQueries ideaQ = new IdeaQueriesImpl();
 
     //this first, then last
     /**
@@ -98,6 +101,20 @@ public class HomeManager {
         }
         System.out.println(points);
         return points;
+    }
+    
+    public boolean addIdea(DB db, HttpServletRequest request){
+        String title = request.getParameter("title");
+        String text = request.getParameter("text");
+        String username = (String)request.getSession().getAttribute("username");
+        
+        ideaQ.addIdea(db, title, text, username);
+        return true;
+    }
+    
+    public String getIdeas(DB db) {
+        List<DBObject> ideas = ideaQ.getIdeas(db);
+        return JSON.serialize(ideas);
     }
     
     public void setGoal(DB db, String username, int points) {

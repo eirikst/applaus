@@ -70,12 +70,12 @@
             <div ng-repeat="assignment in allAssignments">
                 <div class="drop" ng-init="dropArchive= false">
                     <div class="dropHeading">
-                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.id}} - {{assignment.date.$date| date:('dd.MM')}}</a> <a class="pull-right glyphicon" ng-click="dropArchive = !dropArchive" ng-class="{'glyphicon-chevron-down': dropArchive, 'glyphicon-chevron-right': !dropArchive}"></a>
+                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.id}} - {{assignment.date_done.$date| date:('dd.MM')}}</a> <a class="pull-right glyphicon" ng-click="dropArchive = !dropArchive" ng-class="{'glyphicon-chevron-down': dropArchive, 'glyphicon-chevron-right': !dropArchive}"></a>
                     </div>
                     <div class="innerDrop" ng-show="dropArchive">
                         <p>Type: {{}}   </p>
                         <p>Poeng:  {{}}     </p>
-                        <p>Dato: {{assignment.date.$date| date:('dd.MM')}} </p>
+                        <p>Dato: {{assignment.date_done.$date| date:('dd.MM')}} </p>
                         <p>Kommentar: {{assignment.comment}} </p>
                     </div>
                 </div>

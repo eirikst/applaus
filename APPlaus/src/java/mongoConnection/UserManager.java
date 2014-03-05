@@ -9,6 +9,7 @@ package mongoConnection;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import static java.lang.Integer.parseInt;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -55,5 +56,20 @@ public class UserManager {
         }else { 
             return false;
         }
+    }
+    
+    public String setRole(DB db, HttpServletRequest request) {
+        String username = request.getParameter("username");
+        int role = parseInt(request.getParameter("role"));
+        
+        if (role == 2){
+            role = 3;
+        } else if (role == 3){
+            role = 2;
+        }
+        
+        userQ.setRole(db, username, role);
+        
+        return getAdminList(db);
     }
 }

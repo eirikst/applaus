@@ -326,6 +326,20 @@ public class UserQueriesImpl implements UserQueries{
         return true;
     }
     
+    public boolean setRole(DB db, String username, int role){
+        DBCollection coll = db.getCollection("user");
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("username", username);
+         
+        BasicDBObject setToRole = new BasicDBObject("$set", new BasicDBObject("role_id", role));
+        System.out.println(query);
+        System.out.println(setToRole);
+        coll.update(query, setToRole);
+        
+        return true;
+    }
+    
     
     /**
      * Takes a HttpServletRequest, username and role and sets the request 
