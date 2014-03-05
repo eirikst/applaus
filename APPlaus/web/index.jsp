@@ -37,22 +37,47 @@
         <!-- Static navbar -->
         <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
             <div style="margin:10px" class="text-center">
-                
-                
-                <a href=href="#profile"><img class="index-icons" src="img/Profile.png"></a>
-                <a href="#registerAssignment"><img class="index-icons" src="img/Assignment.png"></a>
-                <a href="#userFromt"><img class="index-icons" src="img/Home.png"></a>
-                <a href="#contests"><img class="index-icons" src="img/Contest.png"></a>
-                <a href="#settings"><img class="index-icons" src="img/Settings.png"></a>
+
+                        <a href="#profile"><img class="index-icon" src="img/Profile.png"></a>
+                        <a href="#registerAssignment"><img class="index-icon" src="img/Assignment.png"></a>
+                        <a href="#home"><img class="index-icon" src="img/Home.png"></a>
+                        <a href="#contests"><img class="index-icon" src="img/Contest.png"></a>
+                        <a href="#settings"><img class="index-icon" src="img/Settings.png"></a>
+                        
+                        <!--<ul class="nav">
+            <li id="fat-menu" class="dropdown">
+              <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Mer<b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="logout.jsp">Logout</a></li>
+              </ul>
+            </li>
+          </ul>-->
+                        
+                <ul class="nav pull-right">
+                  <li class="dropdown">
+                      <a class="dropdown-toggle" ng-class="glyphicon-chevron-down" data-toggle="dropdown">
+                      Mer
+                      <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                      <li><a href="logout.jsp">Logout</a></li>
+                    </ul>
+                  </li>
+                </ul>
+
+
+
+
+
+
+
+
             </div>
         </div>
         <div>
             <div class="my-slide-container">
                 <div ng-view="" class="reveal-animation"></div>
             </div>
-            <form action="logout.jsp">
-            <button onclick="submit()">Log out</button>
-            </form>
         </div>
 
         <script src="js/app/empApp.js"></script>
@@ -65,5 +90,6 @@
         <script src="js/app/services/homeServices.js"></script>
         <script src="js/app/services/assignmentServices.js"></script>
         <script src="js/app/services/contestServices.js"></script>
+        <script src="js/app/directives/directives.js"></script>
     </body>
 </html>

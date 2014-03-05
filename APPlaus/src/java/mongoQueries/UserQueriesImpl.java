@@ -13,7 +13,11 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import mongoConnection.AuthenticationManager;
 import Tools.DateTools;
+import applausException.DBException;
+import applausException.InputException;
 import com.mongodb.AggregationOutput;
+import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
 import java.util.Iterator;
 
 /**
@@ -257,6 +261,31 @@ public class UserQueriesImpl implements UserQueries{
         BasicDBObject pushField = new BasicDBObject("$push", field);
         
         collection.update(query, pushField);
+    }
+    
+    /**
+     * Removes given contestId in database from all users participating
+     * @param db DB object to connect to database
+     * @param contestId id of the given contest
+     * @throws InputException if 
+     * @throws DBException 
+     */
+    @Override
+    public void deleteContest(DB db, String contestId) throws InputException, DBException {
+        if(db == null) {
+            throw new InputException("DB object null.");
+        }
+        DBCollection collection = db.getCollection("user");
+        BasicDBObject update = new BasicDBObject();
+        update.put("$pull", new BasicDBObject("contests", contestId));
+        
+        WriteResult result;
+        try {
+            result = collection.updateMulti(new BasicDBObject(), update);
+        }
+        catch(MongoException e) {
+            throw new DBException("Error updating mongodb.", e);
+        }
     }
     
     

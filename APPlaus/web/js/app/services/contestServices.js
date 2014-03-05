@@ -51,6 +51,41 @@ services.service('ContestService', function($http) {
         })
         return promise;
     }
+
+    this.deleteContest =  function(contest) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=deleteContest&contestId=" + contest._id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    }
+
+    this.createContest =  function(contest) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=createContest&title=" + contest.title + "&desc=" + 
+                    contest.desc + "&prize=" + contest.prize + "&dateEnd=" + 
+                    contest.date_end + "&points=" + contest.points,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    }
+    
+    this.editContest =  function(contest) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=editContest&contestId=" + contest._id.$oid + "&title="
+                    + contest.title + "&desc=" + contest.desc + "&prize=" + 
+                    contest.prize + "&dateEnd=" + contest.date_end + "&points=" 
+                    + contest.points,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    }
 });
 
 /*services.factory('activeContService', function($http) {

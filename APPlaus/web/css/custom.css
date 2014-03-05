@@ -4,23 +4,29 @@
 */
 
 .drop {
-    margin-top:20px;
-    border-style:solid;
+    margin-top:5px;
+    /*border-style:solid;
     border-color:#ccc;
     border-width:1px;
     
     -webkit-border-radius:5px 5px 5px 5px;
     -moz-border-radius:5px 5px 5px 5px;
-    border-radius:5px 5px 5px 5px;
+    border-radius:5px 5px 5px 5px;*/
+    
+    border-top-style:solid;
+    border-top-color:#ccc;
+    border-top-width:1px;
+    
+    border-bottom-style:solid;
+    border-bottom-color:#ccc;
+    border-bottom-width:1px;
 }
 
 .dropHeading {
     padding:5px;
-    width:100%;
-    height:100%;
-    border-bottom-style:solid;
+    /*border-bottom-style:solid;
     border-bottom-width:1px;
-    border-bottom-color:#ccc;
+    border-bottom-color:#ccc;*/
 }
 
 .dropHeading a {
@@ -49,8 +55,35 @@
     margin-bottom: 15px;
 }
 
-.index-icons {
+.index-icon {
     margin:5px;
     width:25px;
     height:25px;
+}
+
+.index-icons {
+}
+
+.contStrct {
+    max-width:350px;
+}
+
+.righty {
+    float:right;
+    position:absolute;
+    background-color:blue;
+}
+
+lefty {
+    float:left;
+    position:absolute;
+    background-color:red;
+}
+
+.red {
+    background-color:#f2dede;
+}
+
+.green {
+    background-color:#dff0d8;
 }

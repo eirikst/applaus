@@ -2,7 +2,7 @@ var controllers = angular.module('employeeApp.controllers');
 
 
 //ContestCtrl
-controllers.controller('ContCtrl', function($scope, $location, $http, ContestService) {
+controllers.controller('ContCtrl', function($scope, $location, $route, ContestService) {
     //functions
     
     //getting active contests
@@ -55,6 +55,7 @@ controllers.controller('ContCtrl', function($scope, $location, $http, ContestSer
             $scope.partCont.push(contest._id.$oid);
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=participate");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
         });
     };
     
@@ -63,21 +64,68 @@ controllers.controller('ContCtrl', function($scope, $location, $http, ContestSer
         ContestService.dontParticipate(contest)
                 .success(function(data, status, headers, config) {
             for(var i = 0; i < $scope.partCont.length; i++) {
-                if(contest._id.$oid == $scope.partCont[i]) {
+                if(contest._id.$oid === $scope.partCont[i]) {
                     $scope.partCont.splice(i, 1);
                 }
             }
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=dontParticipate");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+    
+    //Delete contest
+    $scope.deleteContest = function(contest) {
+        ContestService.deleteContest(contest)
+                .success(function(data, status, headers, config) {
+            for(var i = 0; i < $scope.activeCont.length; i++) {
+                if(contest._id.$oid === $scope.activeCont[i]._id.$oid) {
+                    $scope.activeCont.splice(i, 1);
+                }
+            }
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=deleteContest");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
         });
     };
 
-    // wwoottt?
-    $scope.changeView = function(view) {
-        $scope.getInactiveContests(3); // path not hash
+    //Create contest
+    $scope.createContest = function(contest) {
+        contest.date_end = (new Date(contest.date_end)).getTime();//long format
+        console.log(contest.date_end);
+        ContestService.createContest(contest)
+                .success(function(data, status, headers, config) {
+                    $route.reload();
+            console.log("Successfully created a contest");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=createContest");
+            $scope.createErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
     };
     
+    //Edit contest
+    $scope.editContest = function(contest) {
+        contest.date_end = (new Date(contest.date_end.$date)).getTime();//long format
+        ContestService.editContest(contest)
+                .success(function(data, status, headers, config) {
+            console.log("Successfully edited a contest");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=editContest");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+
+
+    // wwoottt?
+    $scope.changeView = function(view) {
+        $location.path(view);
+    };
     
+    $scope.copyContest = function(contest) {
+        var copied = angular.copy(contest);
+        console.log("hei:" + copied.date_end.$date);
+        return copied;
+    }
     //init values
     $scope.inactiveCont = new Array();
     $scope.partCont = new Array();
@@ -87,4 +135,21 @@ controllers.controller('ContCtrl', function($scope, $location, $http, ContestSer
     $scope.getActiveContests();
     $scope.getUsersActiveContests();
     $scope.getInactiveContests($scope.skipNext);
+    
+    /*
+    var td = new Date();
+    $scope.today = td.getFullYear() + "-";
+    if(td.getMonth() < 9) {
+        $scope.today += "0" + (td.getMonth() + 1) + "-";
+    }
+    else {
+        $scope.today +=(td.getMonth() + 1) + "-";
+    }
+    if(td.getDate()< 10) {
+        $scope.today += "0" + td.getDate();
+    }
+    else {
+        $scope.today += td.getDate();
+    }
+    console.log($scope.today);*/
 })

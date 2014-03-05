@@ -81,6 +81,16 @@ public class DateTools {
         return gregDate.getTime();
     }
     
+    //today at 00:00:00.000
+    public static Date getToday() {
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.set(GregorianCalendar.HOUR_OF_DAY, 0);
+        cal.set(GregorianCalendar.MINUTE, 0);
+        cal.set(GregorianCalendar.SECOND, 0);
+        cal.set(GregorianCalendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+    
     
     
     

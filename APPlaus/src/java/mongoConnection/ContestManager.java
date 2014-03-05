@@ -1,16 +1,23 @@
 package mongoConnection;
 
+import applausException.DBException;
+import applausException.InputException;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.util.List;
 import com.mongodb.DBObject;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
 import mongoQueries.*;
+import java.util.logging.Logger;
 
 /**
  *
  * @author eirikstadheim
  */
 public class ContestManager {
+    private static final Logger LOGGER = Logger.getLogger(ContestManager.class.getName());
     private final ContestQueries contQ = new ContestQueriesImpl();
     private final UserQueries userQ = new UserQueriesImpl();
     
@@ -67,5 +74,80 @@ public class ContestManager {
      */
     public String userActiveContList(DB db, String username){
         return JSON.serialize(userQ.userActiveContList(db, username));
+    }
+    
+    /**
+     * Deletes a contest from the database if it matches the given contest id 
+     * and id still active(end date is later than this date)
+     * @param db DB object to connect to database
+     * @param objId contest object id represented by a String
+     * @return true if one instance was deleted, false if none was deleted
+     */
+    public int deleteContest(DB db, String objId) {
+        try {
+            boolean okDelete = contQ.deleteContest(db, objId);
+            if(okDelete) {
+                userQ.deleteContest(db, objId);
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+        catch(InputException e) {
+                    LOGGER.severe(e.toString());
+            return -1;
+        }
+        catch(DBException e) {
+            LOGGER.warning(e.toString());
+            return -2;
+        }
+    }
+    
+    /**
+     * Calls ContestQuery's method createContest to insert a contest to the 
+     * database.
+     * @param db DB object to connect to database.
+     * @param title title of contest
+     * @param desc description of contest
+     * @param prize prize of contest
+     * @param dateEnd last date of the contest
+     * @param points number of points a user gets for participating
+     * @param username username of the admin who created the contest
+     * @return true if insert is okay, false if not
+     */
+    public boolean createContest(DB db, String title, String desc, String prize
+            , Date dateEnd, int points, String username) {
+        try {
+            contQ.createContest(db, title, desc, prize, dateEnd, points, username);
+        }
+        catch(InputException | DBException e) {
+            LOGGER.warning(e.toString());
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * @param db DB object to connect to database.
+     * @param contestId String rep of contest object id
+     * @param title title of contest
+     * @param desc description of contest
+     * @param prize prize of contest
+     * @param dateEnd last date of the contest
+     * @param points number of points a user gets for participating
+     * @return true on successful update, false if not(none updated ot database
+     * error)
+     */
+    public boolean editContest(DB db, String contestId, String title, String desc, String prize
+            , Date dateEnd, int points) {
+        try {
+            return contQ.editContest(db, contestId, title, desc, prize
+                    , dateEnd, points);
+        }
+        catch(InputException | DBException e) {
+            LOGGER.warning(e.toString());
+            return false;
+        }
     }
 }
