@@ -20,6 +20,8 @@ import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -338,6 +340,46 @@ public class UserQueriesImpl implements UserQueries{
         coll.update(query, setToRole);
         
         return true;
+    }
+    
+    
+    /**
+     * Gets the ids of a news stories related to a user.
+     * @param db DB object to connect to database
+     * @param username username of user
+     * @return List of object ids for the contests
+     * @throws InputException
+     */
+    @Override
+    public List<ObjectId> getStoryIdsUser(DB db, String username) 
+            throws InputException {
+        if(db == null || username == null) {
+            throw new InputException("db or username input is null.");
+        }
+        DBCollection collection = db.getCollection("user");
+        DBObject match = new BasicDBObject("$match", 
+                new BasicDBObject("username", username));
+        DBObject toProject = new BasicDBObject();
+        toProject.put("_id", 0);
+        toProject.put("news_stories", 1);
+        DBObject project = new BasicDBObject("$project", toProject);
+
+        DBObject unwind = new BasicDBObject("$unwind", "$news_stories");
+
+
+        AggregationOutput output = collection.aggregate(match, project, unwind);
+        Iterable<DBObject> it = output.results();
+        Iterator<DBObject> dbOIterator = it.iterator();
+
+        List<ObjectId> oids = new ArrayList<>();
+        while(dbOIterator.hasNext()) {
+            BasicDBObject obj = (BasicDBObject)dbOIterator.next();
+            ObjectId oid = obj.getObjectId("news_stories");
+            if(oid != null) {
+                oids.add(obj.getObjectId("news_stories"));//add only if not null
+            }
+        }
+        return oids;
     }
     
     

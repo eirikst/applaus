@@ -13,6 +13,10 @@ import Tools.DateTools;
 import com.mongodb.util.JSON;
 import java.util.Calendar;
 import javax.servlet.http.HttpServletRequest;
+import applausException.InputException;
+import com.mongodb.util.JSON;
+import org.bson.types.ObjectId;
+
 /**
  *
  * @author eirikstadheim
@@ -22,6 +26,7 @@ public class HomeManager {
     private final UserQueries userQ = new UserQueriesImpl();
     private final AssignmentQueries assignQ = new AssignmentQueriesImpl();
     private final IdeaQueries ideaQ = new IdeaQueriesImpl();
+    private final NewsQueries newsQ = new NewsQueriesImpl();
 
     //this first, then last
     /**
@@ -119,5 +124,26 @@ public class HomeManager {
     
     public void setGoal(DB db, String username, int points) {
         userQ.setGoal(db, username, points);
+    }
+    
+    /**
+     * Calls for getStoryIdsUser() in UserQueries and getNews() in NewsQueries
+     * to get the related news for a user, meaning stories for all and stories
+     * this person wants to see because of a contest for example.
+     * @param db DB object to connect to
+     * @param username username of user
+     * @param skip number of stories to skip
+     * @return JSON serialized string if okay, null if not okay
+     */
+    public String getNews(DB db, String username, int skip) {
+        try {
+            List<ObjectId> oids = userQ.getStoryIdsUser(db, username);
+            List<DBObject> stories = newsQ.getNews(db, oids, skip);
+            return JSON.serialize(stories);
+        }
+        catch(InputException e) {
+            LOGGER.warning("Error fetching news for user." + e);
+            return null;
+        } 
     }
 }

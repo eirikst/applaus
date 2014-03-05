@@ -30,6 +30,8 @@ public class MongoServlet extends HttpServlet {
     private AssignmentManager assignMan;
     private ContestManager contMan;
     private UserManager userMan;
+    private AdminManager adminMan;
+    
     @Override
     public void init() throws ServletException {
         homeMan = new HomeManager();
@@ -37,6 +39,7 @@ public class MongoServlet extends HttpServlet {
         assignMan = new AssignmentManager();
         contMan = new ContestManager();
         userMan = new UserManager();
+        adminMan = new AdminManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
             db = mongo.getDB("applaus");
@@ -157,7 +160,7 @@ public class MongoServlet extends HttpServlet {
             
             // register assignment
             else if(request.getParameter("action").equals("registerAssignment")) {
-                long date = Long.parseLong(request.getParameter("date"));
+                long date = Long.parseLong(request.getParameter("date_done"));
                 try{
                     out.println(assignMan.registerAssignment(db, request.getSession().
                             getAttribute("username").toString(), request.
@@ -379,6 +382,41 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(500);//error
                 }
             }
+            
+            // get news stories
+            else if(action.equals("getNews")) {
+                String username = request
+                            .getSession().getAttribute("username").toString();
+                int skip = 0;
+                try {
+                    skip = Integer.parseInt(request.getParameter("skip"));
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.warning("skip post value not an integer");
+                }
+                String returnStr = homeMan.getNews(db, username, skip);
+                if(returnStr != null) {
+                    out.println(returnStr);
+                }
+                else {
+                    response.sendError(500);
+                }
+            }
+
+            //add news story
+            else if(action.equals("addNewsAll")) {
+                String writer = request
+                            .getSession().getAttribute("username").toString();
+                String title = request.getParameter("title");
+                String text = request.getParameter("text");
+                if(adminMan.addNewsStoryForAll(db, title, text, writer)) {
+                    response.setStatus(200);
+                }
+                else {
+                    response.sendError(500);
+                }
+            }
+
             
             //no match, bad request
             else {

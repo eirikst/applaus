@@ -1,6 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
-controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeService) {    
+controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, HomeService) {    
     
     $scope.adminList = new Array();
     $scope.bank = new Array();
@@ -101,10 +101,30 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeSe
     
     
     //News related
-    $scope.news = [{title:'Konkurranse ferdig!', text:'Konkurransen "APPlaus 2.0" er ferdig. Dette er dummytekst laget av Eirik.'},
-    {title:'Hvordan går det?', text:'Bruker du APPlaus nok? Snart kommer det en ny konkurranse som vil motivere til bruk av APPlaus blablabla.'},
-    {title:'Heia', text:'Dette er dummytekst laget av Eirik.'},
-    {title:'Registrer mål for uka!', text:'Dette er dummytekst laget av Eirik.'}];
+    //news
+    $scope.news = new Array();
+    var skip = 0;
+    
+    $scope.getNews = function() {
+        HomeService.getNews(skip)
+            .success(function(data, status, headers, config) {
+                skip += 7;
+                for(var i = 0; i < data.length; i++) {
+                    $scope.news.push(data[i]);//sets news table with info from DB
+                }
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=getNews");
+        });
+    }
+
+    $scope.addNewsAll = function(story) {
+        HomeService.addNewsAll(story)
+            .success(function(data, status, headers, config) {
+            $route.reload();
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=addNewsAll");
+        });
+    }
 
 
     $scope.changeView = function(view) {
@@ -113,5 +133,5 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeSe
     };
     
     $scope.returnValue = "";
-    
+    $scope.getNews(skip);
 })

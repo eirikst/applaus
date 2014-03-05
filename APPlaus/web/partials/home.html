@@ -5,7 +5,7 @@
         <div style="height: 150px">
             <carousel interval="slideInterval">
                 <slide ng-repeat="slide in slides" active="slide.active">
-                    <div style="height:150px;background:gray">
+                    <div style="height:150px;">
                         <div class="carousel-caption">
                             <h5>{{slide.text}}</h5>
                             <h1>{{slide.points}}</h1>
@@ -17,7 +17,7 @@
     </div>
     <!--Carousel end-->
 
-    <div style="background-color:white">
+    <div>
         <div class="container">
             <div class="row">
                 <!--Goal-->
@@ -154,29 +154,51 @@
         </div>
     </div>
 
-    <!--News-->
-    <div style="background-color:gray">
-        <div>
-            <h2>Nyheter</h2>
-            <div class="drop" ng-init="dropNews = false" ng-repeat="article in news">
-                <div class="dropHeading">
-                    <a class="text-center" ng-click="dropNews = !dropNews">{{article.title}}</a> <a class="pull-right glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a>
-                </div>
-                <div class="innerDrop" ng-show="dropNews">
-                    <p>
-                        {{article.text}}
-                    </p>
-                </div>
+<!--News-->
+<div>
+    <div>
+        <h2>Nyheter</h2>
+        <div class="drop" ng-init="dropNews = false">
+            <div class="dropHeading">
+                <a class="glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a><a class="text-center" ng-click="dropNews = !dropNews">Legg til</a> 
             </div>
-
+            <div class="innerDrop" ng-show="dropNews">
+                <form name="addNewsForm">
+                    <p>
+                        <input name="newsTitle" type="text" class="form-control" ng-model="story.title" placeholder="Tittel" required="true" ng-class="{red:addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty, green:!addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty}">
+                    </p>
+                    <p>
+                        <textarea name="newsText" class="form-control" ng-model="story.text" placeholder="Tekst" required="true" ng-class="{red:addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty, green:!addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty}"></textarea>
+                    </p>
+                    <p>
+                        <a class="form-control" type="button" ng-click="addNewsAll(story)" ng-disabled="addNewsForm.$invalid">Legg til</a>
+                    </p>
+                </form>
+            </div>
         </div>
-        <br>
+        
+        <div class="drop" ng-init="dropNews = false" ng-repeat="article in news">
+            <div class="dropHeading">
+                <a class="glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a><a class="text-center" ng-click="dropNews = !dropNews">{{article.date.$date | date:('dd.MM.yyyy')}} - {{article.title}}</a> 
+            </div>
+            <div class="innerDrop" ng-show="dropNews">
+                <p>
+                    Postet av: {{article.writer}}
+                </p>
+                <p>
+                    {{article.text}}
+                </p>
+            </div>
+        </div>
+        <a type="button" class="form-control" ng-click="getNews()">Last flere</a>
     </div>
-    
-    
-    <!--News end-->
+    <br>
+</div>
 
-    <div style="background-color:gray">
+
+<!--News end-->
+
+    <div>
         <div>
             <h2>Idebank</h2>           
             <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank">

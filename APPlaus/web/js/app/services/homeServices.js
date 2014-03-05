@@ -40,4 +40,24 @@ services.service('HomeService', function($http) {
         });
         return promise;
     }
+
+    this.getNews = function(skip) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=getNews&skip=" + skip,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    }
+    this.addNewsAll = function(story) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=addNewsAll&title=" + story.title + "&text=" + 
+                    story.text,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    }
 })

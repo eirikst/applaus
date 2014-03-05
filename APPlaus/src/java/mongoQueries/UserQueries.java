@@ -8,6 +8,7 @@ import com.mongodb.DBObject;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -28,4 +29,13 @@ public interface UserQueries {
     public void setGoal(DB db, String username, int points);
     public void deleteContest(DB db, String contestId) throws InputException,
             DBException;
+    /**
+     * Gets the ids of a news stories related to a user.
+     * @param db DB object to connect to database
+     * @param username username of user
+     * @return List of object ids for the contests
+     * @throws InputException
+     */
+    public List<ObjectId> getStoryIdsUser(DB db, String username) 
+            throws InputException;
 }
