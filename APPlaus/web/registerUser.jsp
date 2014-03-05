@@ -1,8 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : Feb 19, 2014, 11:38:18 AM
-    Author     : eirikstadheim
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -32,30 +27,43 @@
                 <h3>Velkommen til APPlaus!</h3>
             </div>
         </div>
-        <div ng-controller="LoginCtrl">
+        <div ng-controller="UserCtrl">
             <form>
-                <h4>Logg inn</h4>
+                <h4>Registrer ny bruker</h4>
                     
             <p>
-                <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="username">
+                <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="brukernavn">
             </p>
             <p>
-                <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="password">
+                <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="passord">
             </p>
             <p>
-                <button class="form-control" ng-click="login()">Log in</button>
+                <input ng-model="pwdRepeat" name="pwdRepeat" class="form-control" type="password" placeholder="gjenta passord">
+            </p>
+            
+            <br/>
+            
+            <p>
+                <input ng-model="fname" name="fname" class="form-control" type="text" placeholder="fornavn">
+            </p>
+            <p>
+                <input ng-model="lname" name="lname" class="form-control" type="text" placeholder="etternavn">
+            </p>
+            <p>
+                <input ng-model="email" name="email" class="form-control" type="text" placeholder="e-post">
+            </p>
+            
+            <p>
+                <button class="form-control" ng-click="registerUser()">Registrer</button>
             </p>
             </form>
             <p>
-                <a href="registerUser.jsp">Registrer deg</a>
-            </p>
-            <p>
-                <a href="newPassword.jsp">Glemt passord</a>
+                <a href="login.jsp">Tilbake til logg inn</a>
             </p>
         </div>
         <script src="js/app/empApp.js"></script>
         <script src="js/app/controllers/controllers.js"></script>
         <script src="js/app/controllers/headerController.js"></script>
-        <script src="js/app/controllers/loginController.js"></script>
+        <script src="js/app/controllers/userController.js"></script>
     </body>
 </html>

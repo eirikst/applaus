@@ -20,7 +20,7 @@ public class AssignmentManager {
      * @return JSON serialized array of assignments
      */
     public String getAssignmentsTypes(DB db) {
-        List<DBObject> assignments = assignQ.getAssignments(db);
+        List<DBObject> assignments = assignQ.getAssignmentsTypes(db);
         return JSON.serialize(assignments);
     }
     
@@ -34,7 +34,7 @@ public class AssignmentManager {
         return assignQ.createAssignment(db, title, desc, points);
     }
     
-    public boolean registerAssignment(DB db, String username, String id, Date date, String comment) {
-        return assignQ.registerAssignment(db, username, id, date, comment);
+    public boolean registerAssignment(DB db, String username, String id, Date date_done, String comment) {
+        return assignQ.registerAssignment(db, username, id, date_done, comment);
     }
 }

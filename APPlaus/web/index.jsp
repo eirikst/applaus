@@ -61,7 +61,7 @@
         <script src="js/app/controllers/headerController.js"></script>
         <script src="js/app/controllers/loginController.js"></script>
         <script src="js/app/controllers/assignController.js"></script>
-        <script src="js/app/controllers/contController.js"></script>
+        <script src="js/app/controllers/contController.js"></script>       
         <script src="js/app/services/homeServices.js"></script>
         <script src="js/app/services/assignmentServices.js"></script>
         <script src="js/app/services/contestServices.js"></script>

@@ -24,11 +24,11 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
     
     // user registers a completed assignment
     $scope.registerAssignment = function(){
-        var d = new Date($scope.date);
+        var d = new Date($scope.date_done);
         $http({
             url: 'MongoConnection',
             method: "POST",
-            data: "action=registerAssignment&id=" + $scope.selectedOption._id.$oid + "&date=" + d.getTime()
+            data: "action=registerAssignment&id=" + $scope.selectedOption._id.$oid + "&date_done=" + d.getTime()
             + "&comment=" + $scope.comment,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(data, status, headers, config) {
@@ -40,7 +40,6 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
     
     //Gets a list of all the types of assignments
     $scope.selectedOptions = new Array();
-    $scope.selectedOption = $scope.selectedOptions[0];
     
     $http({
       url: 'MongoConnection',
@@ -51,7 +50,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
         $scope.selectedOptions = data;//sets assignment table with info from DB
         $scope.selectedOption = $scope.selectedOptions[0];
     }).error(function(data, status, headers, config) {
-        console.log("Failed http action=getAssignments");
+        console.log("Failed http action=getAssignmentsTypes");
     });    
     
     $scope.allAssignments = new Array();
