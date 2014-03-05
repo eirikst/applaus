@@ -29,12 +29,14 @@ public class MongoServlet extends HttpServlet {
     private AuthenticationManager authMan;
     private AssignmentManager assignMan;
     private ContestManager contMan;
+    private UserManager userMan;
     @Override
     public void init() throws ServletException {
         homeMan = new HomeManager();
         authMan = new AuthenticationManager();
         assignMan = new AssignmentManager();
         contMan = new ContestManager();
+        userMan = new UserManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
             db = mongo.getDB("applaus");
@@ -274,6 +276,21 @@ public class MongoServlet extends HttpServlet {
                             + sw.toString());
                     response.sendError(500);//error
                 }
+            }
+            
+            // admin list
+            else if(action.equals("getAdminList")) {
+                out.println(userMan.getAdminList(mongo.getDB("applaus")));
+            }
+            
+            // register user
+            else if(action.equals("registerUser")) {
+                out.println(userMan.registerUser(mongo.getDB("applaus"), request));
+            }
+            
+            // register new password
+            else if(action.equals("newPassword")) {
+                out.println(userMan.newPassword(mongo.getDB("applaus"), request));
             }
             
             //login

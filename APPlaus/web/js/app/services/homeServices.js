@@ -21,4 +21,13 @@ services.service('HomeService', function($http) {
         return promise;
     }
     
+    this.getAdminList = function() {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=getAdminList",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    }
 })

@@ -19,6 +19,7 @@ import com.mongodb.AggregationOutput;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -286,6 +287,43 @@ public class UserQueriesImpl implements UserQueries{
         catch(MongoException e) {
             throw new DBException("Error updating mongodb.", e);
         }
+    }
+    
+    public boolean registerUser(DB db, String username, String password, String firstname, String lastname, String email){
+        DBCollection coll = db.getCollection("user");
+        
+        BasicDBObject query = new BasicDBObject();
+	query.put("username", username);
+        query.put("email", email);
+        query.put("password", password);
+        query.put("firstname", firstname);
+        query.put("lastname", lastname);
+        query.put("role_id", 3);
+         
+        WriteResult cursor = coll.insert(query);
+        return true;
+    }
+    
+    public List<DBObject> getAdminList(DB db){
+        DBCollection coll = db.getCollection("user");
+        BasicDBObject query = new BasicDBObject();
+        DBCursor cursor = coll.find();
+        
+        List<DBObject> adminList = cursor.toArray();
+        return adminList;
+    }
+
+    public boolean newPassword(DB db, String email, String password){
+        DBCollection coll = db.getCollection("user");
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("email", email);
+         
+        BasicDBObject setToPassword = new BasicDBObject("$set", new BasicDBObject("password", password));
+        System.out.println(query);
+        System.out.println(setToPassword);
+        coll.update(query, setToPassword);
+        return true;
     }
     
     

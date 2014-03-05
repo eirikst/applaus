@@ -20,7 +20,7 @@ public class AssignmentManager {
      * @return JSON serialized array of assignments
      */
     public String getAssignmentsTypes(DB db) {
-        List<DBObject> assignments = assignQ.getAssignmentsTypes(db);
+        List<DBObject> assignments = assignQ.getAssignments(db);
         return JSON.serialize(assignments);
     }
     

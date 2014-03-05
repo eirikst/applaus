@@ -171,4 +171,14 @@
     
     <!--News end-->
 
+    <div style="background-color:gray">
+        <div>
+            <h2>Admin liste</h2>
+            <div ng-repeat="admin in adminList">
+                <form>
+                    <input type="checkbox" name="userAdmin" value="{{admin.username}}"> {{admin.firstname}} {{admin.lastname}}<br>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

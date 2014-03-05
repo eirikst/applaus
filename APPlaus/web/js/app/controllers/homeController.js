@@ -31,9 +31,11 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeSe
             $scope.goal = data[0];//sets assignment table with info from DB
             $scope.goalLast = data[1];//sets assignment table with info from DB
             $scope.progress = ($scope.week / $scope.goal)*100;
-                            })
-            
-                    })
+                            });
+            HomeService.getAdminList().success(function(data, status, headers, config) {
+            $scope.adminList = data;            
+        });
+                    });
     
     
 
