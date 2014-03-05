@@ -10,6 +10,7 @@ import java.util.Date;
  *
  * @author eirikstadheim
  */
+
 public interface AssignmentQueries {
     public List<DBObject> getAssignments(DB db);
     public BasicDBList getAllAssignmentsUser(DB db, String username);

@@ -293,6 +293,21 @@ public class MongoServlet extends HttpServlet {
                 out.println(userMan.newPassword(mongo.getDB("applaus"), request));
             }
             
+            // set role for users
+            else if(action.equals("setRole")) {
+                out.println(userMan.setRole(mongo.getDB("applaus"), request));
+            }
+            
+            // add idea
+            else if(action.equals("addIdea")) {
+                out.println(homeMan.addIdea(mongo.getDB("applaus"), request));
+            }           
+            
+            // get ideas
+            else if(action.equals("getIdeas")) {
+                out.println(homeMan.getIdeas(mongo.getDB("applaus")));
+            }   
+            
             //login
             else if(action.equals("login")) {
                 try {

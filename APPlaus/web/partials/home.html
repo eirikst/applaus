@@ -95,13 +95,13 @@
                             </div>
                             <div class="innerDrop" ng-show="dropIdea">
                                 <p>
-                                    <input type="text" class="form-control" placeholder="Tittel">
+                                    <input type="text"  ng-model="title" class="form-control" placeholder="Tittel">
                                 </p>
                                 <p>
-                                    <textarea class="form-control" placeholder="Tekst"></textarea>
+                                    <textarea class="form-control"  ng-model="text" placeholder="Tekst"></textarea>
                                 </p>
                                 <p>
-                                    <a type="button" class="form-control">Legg til</a>
+                                    <a type="button" class="form-control" ng-click="addIdea()">Legg til</a>
                                 </p>
                                 <p>
                                     Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
@@ -115,36 +115,41 @@
                 <!--Ideabank end-->
 
 
-                <!--Ideabank-->
+                <!--Admin liste-->
                 <div class="col-sm-4">
                     <div>
-                        <h2>Idebank</h2>
-                        <p>Har du en ide? Ikke nøl med å registrere den i banken</p>
+                        <h2>Admin liste</h2>
+                        <p>Endre brukere til administrator</p>
 
                         <div class="drop" ng-init="dropdown = false">
                             <div class="dropHeading">
-                                <a class="text-center" ng-click="dropdown = !dropdown">Idebanken er et fint sted å være da</a> <a class="pull-right glyphicon" ng-click="dropdown = !dropdown" ng-class="{'glyphicon-chevron-down': dropdown, 'glyphicon-chevron-right': !dropdown}"></a>
+                                <a class="text-center" ng-click="dropdown = !dropdown">Brukerliste</a> <a class="pull-right glyphicon" ng-click="dropdown = !dropdown" ng-class="{'glyphicon-chevron-down': dropdown, 'glyphicon-chevron-right': !dropdown}"></a>
                             </div>
                             <div class="innerDrop" ng-show="dropdown">
-                                <p>
-                                    <input type="text" class="form-control" placeholder="Tittel">
-                                </p>
-                                <p>
-                                    <textarea class="form-control" placeholder="Tekst"></textarea>
-                                </p>
-                                <p>
-                                    <a type="button" class="form-control">Legg til</a>
-                                </p>
-                                <p>
-                                    Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
-                                </p>
+                                
+                                Søk: <input ng-model="filt"/><br/><br/>
+                                <table style="font: 14px 'Proxima Nova Regular','Helvetica Neue',Arial,sans-serif;" class="table table-striped table-bordered table-condensed table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Navn</th>
+                                            <th>Admin</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="admin in (adminList| filter:filt | orderBy: 'firstname':true | limitTo: 10)">
+                                        <tr>
+                                            <td>{{admin.firstname}} {{admin.lastname}}</td>
+                                            <td><input  ng-checked="admin.role_id == 1 || admin.role_id == 2" ng-disabled="admin.role_id == 1" ng-click="setRole(admin.username, admin.role_id)" type="checkbox"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
                             </div>
                         </div>
 
                     </div>
                     <br>
                 </div>
-                <!--Ideabank end-->
+                <!--Admin liste end-->
             </div>
         </div>
     </div>
@@ -173,12 +178,23 @@
 
     <div style="background-color:gray">
         <div>
-            <h2>Admin liste</h2>
-            <div ng-repeat="admin in adminList">
-                <form>
-                    <input type="checkbox" name="userAdmin" value="{{admin.username}}"> {{admin.firstname}} {{admin.lastname}}<br>
-                </form>
+            <h2>Idebank</h2>           
+            <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank">
+                <div class="dropHeading">
+                    <a class="text-center" ng-click="dropBank = !dropBank">{{idea.title}}</a> <a class="pull-right glyphicon" ng-click="dropBank = !dropBank" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
+                </div>
+                <div class="innerDrop" ng-show="dropBank">
+                    <p>
+                        {{idea.text}}
+                    </p>
+                    <p>
+                        Forfatter: {{idea.username}}, Lagt til: {{idea.date.$date| date:('dd.MM')}}
+                    </p>
+                </div>
             </div>
+
         </div>
+        <br>
     </div>
+    
 </div>

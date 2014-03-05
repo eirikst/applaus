@@ -2,6 +2,9 @@ var controllers = angular.module('employeeApp.controllers');
 
 controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeService) {    
     
+    $scope.adminList = new Array();
+    $scope.bank = new Array();
+    
     $scope.slideInterval = 5000;
     var slides = $scope.slides = [];
     slides.push({image:'http://placehold.it/800x320', text:'Antall poeng samlet denne uka', points:$scope.week});
@@ -32,12 +35,43 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, HomeSe
             $scope.goalLast = data[1];//sets assignment table with info from DB
             $scope.progress = ($scope.week / $scope.goal)*100;
                             });
-            HomeService.getAdminList().success(function(data, status, headers, config) {
+                    });
+                    
+    HomeService.getAdminList().success(function(data, status, headers, config) {
             $scope.adminList = data;            
         });
-                    });
+        
+     HomeService.getIdeas().success(function(data, status, headers, config) {
+            $scope.bank = data;            
+        });   
+        
+        
+    $scope.setRole = function(username, role_id) {
+            $http({
+              url: 'MongoConnection',
+              method: "POST",
+              data: "action=setRole&username=" + username + "&role=" + role_id,
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function(data, status, headers, config) {
+              $scope.adminList = data;  
+            }).error(function(data, status, headers, config) {
+                //error
+            });
+        }
     
     
+    $scope.addIdea = function() {
+        $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=addIdea&title=" + $scope.title + "&text=" + $scope.text,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data, status, headers, config) {
+            $scope.bank = data;  
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=addIdea");
+        });
+    }
 
         $scope.setGoal = function() {
             console.log("inne");

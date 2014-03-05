@@ -24,6 +24,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
         return assignments;
     }
     
+    
     @Override
     public BasicDBList getAllAssignmentsUser(DB db, String username) {
         DBCollection coll = db.getCollection("user");
