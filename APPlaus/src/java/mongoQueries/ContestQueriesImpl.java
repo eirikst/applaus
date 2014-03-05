@@ -164,7 +164,7 @@ public class ContestQueriesImpl implements ContestQueries {
             collection.insert(toInsert);
         }
         catch(MongoException e) {
-            throw new DBException("Exception on remove from mongodb.", e);
+            throw new DBException("Exception on insert to mongodb.", e);
         }
     }
     

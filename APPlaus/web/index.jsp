@@ -32,7 +32,8 @@
 
         <title>APPlaus</title>
     </head> 
-    <body style="margin-top: 61px">
+    <body style="margin-top: 61px; background-repeat:no-repeat;background-attachment:fixed;" background="img/bw.jpg"
+          >
         
         <!-- Static navbar -->
         <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
