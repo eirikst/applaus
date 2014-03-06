@@ -28,8 +28,10 @@ public class IdeaQueriesImpl implements IdeaQueries {
     
     public List<DBObject> getIdeas(DB db) {
         DBCollection coll = db.getCollection("idea");
-        DBCursor cursor = coll.find();
-        List<DBObject> ideas = cursor.toArray();
-        return ideas;
+        try(DBCursor cursor = coll.find().sort
+        (new BasicDBObject( "date" , -1 ))) {
+            List<DBObject> ideas = cursor.toArray();
+            return ideas;
+        }
     }
 }
