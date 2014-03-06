@@ -31,6 +31,7 @@ public class MongoServlet extends HttpServlet {
     private ContestManager contMan;
     private UserManager userMan;
     private AdminManager adminMan;
+    private IdeaManager ideaMan;
     
     @Override
     public void init() throws ServletException {
@@ -40,6 +41,7 @@ public class MongoServlet extends HttpServlet {
         contMan = new ContestManager();
         userMan = new UserManager();
         adminMan = new AdminManager();
+        ideaMan = new IdeaManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
             db = mongo.getDB("applaus");
@@ -183,7 +185,7 @@ public class MongoServlet extends HttpServlet {
                 System.out.println(username + ", " + skipStr);
                 try {
                     int skip = Integer.parseInt(skipStr);
-                    String toReturn = userMan.getAllAssignmentsUserSorted(db, username
+                    String toReturn = assignMan.getAllAssignmentsUserSorted(db, username
                     , skip);
                     if(toReturn != null) {
                         out.println(toReturn);
@@ -310,12 +312,20 @@ public class MongoServlet extends HttpServlet {
             
             // add idea
             else if(action.equals("addIdea")) {
-                out.println(homeMan.addIdea(mongo.getDB("applaus"), request));
+                out.println(ideaMan.addIdea(mongo.getDB("applaus"), request));
             }           
             
             // get ideas
             else if(action.equals("getIdeas")) {
-                out.println(homeMan.getIdeas(mongo.getDB("applaus")));
+                String skipStr = request.getParameter("skip");
+                try {
+                    int skip = Integer.parseInt(skipStr);
+                    out.println(ideaMan.getIdeas(mongo.getDB("applaus"), skip));
+                    response.setStatus(200);
+                }
+                catch(NumberFormatException e) {
+                    response.sendError(500);
+                }
             }   
             
             //login

@@ -99,7 +99,6 @@ public class HomeManager {
             for(int i = 0; i < assignments.size(); i++) {
                 BasicDBObject assignment = (BasicDBObject) assignments.get(i);
                 if(userAssignment.getString("_id").equals(assignment.getObjectId("_id").toString())) {
-                    System.out.println(assignment.get("_id") + "::::" + userAssignment.getString("_id"));
                     points += assignment.getInt("points");
                 }
             }
@@ -108,19 +107,6 @@ public class HomeManager {
         return points;
     }
     
-    public boolean addIdea(DB db, HttpServletRequest request){
-        String title = request.getParameter("title");
-        String text = request.getParameter("text");
-        String username = (String)request.getSession().getAttribute("username");
-        
-        ideaQ.addIdea(db, title, text, username);
-        return true;
-    }
-    
-    public String getIdeas(DB db) {
-        List<DBObject> ideas = ideaQ.getIdeas(db);
-        return JSON.serialize(ideas);
-    }
     
     public void setGoal(DB db, String username, int points) {
         userQ.setGoal(db, username, points);

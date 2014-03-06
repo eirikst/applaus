@@ -74,18 +74,5 @@ public class UserManager {
         userQ.setRole(db, username, role);
         
         return getAdminList(db);
-    }
-    
-    
-    public String getAllAssignmentsUserSorted(DB db, String username, int skip) {
-        try {
-            Iterator<DBObject> assignments = userQ.getAllAssignmentsUserSorted(db, username, skip);
-            return JSON.serialize(Lists.newArrayList(assignments));
-        }
-        catch(InputException e) {
-            LOGGER.warning("Error in input.");
-            return null;
-        }
-    }
-    
+    }    
 }

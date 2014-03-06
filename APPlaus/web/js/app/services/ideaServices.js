@@ -2,11 +2,11 @@ var services = angular.module('employeeApp.services');
 
 services.service('IdeaService', function($http) {
     
-    this.getIdeas = function() {
+    this.getIdeas = function(skip) {
         var promise = $http({
             url: 'MongoConnection',
             method: "POST",
-            data: "action=getIdeas",
+            data: "action=getIdeas&skip=" + skip,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface IdeaQueries {
     public boolean addIdea(DB db, String title, String text, String username);
-    public List<DBObject> getIdeas(DB db);
+    public List<DBObject> getIdeas(DB db, int skip);
 }

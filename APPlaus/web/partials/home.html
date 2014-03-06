@@ -155,12 +155,12 @@
     </div>
 
 <!--News-->
-<div>
+<div class="container">
     <div>
         <h2>Nyheter</h2>
         <div class="drop" ng-init="dropNews = false">
             <div class="dropHeading">
-                <a class="glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a><a class="text-center" ng-click="dropNews = !dropNews">Legg til</a> 
+                <a class="glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a><a class="text-center" ng-click="dropNews = !dropNews">Ny nyhet</a> 
             </div>
             <div class="innerDrop" ng-show="dropNews">
                 <form name="addNewsForm">

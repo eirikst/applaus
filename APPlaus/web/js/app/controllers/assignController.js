@@ -68,9 +68,21 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
                 for(var i = 0; i < data.length; i++) {
                     $scope.allAssignments.push(data[i]);//sets assignment table with info from DB
                 }
+                fixAssignments(skip);
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=getAllAssignmentsUser");
         });
+    }
+    
+    fixAssignments = function(skip) {
+        for(var i = skip; i < $scope.allAssignments.length; i++) {
+            for(var a = 0; a < $scope.selectedOptions.length; a++) {
+                if($scope.allAssignments[i].assignments.id === $scope.selectedOptions[a]._id.$oid) {
+                    $scope.allAssignments[i].title = $scope.selectedOptions[a].title;
+                    $scope.allAssignments[i].points = $scope.selectedOptions[a].points;
+                }
+            }
+        }
     }
     
     $scope.getAllAssignments($scope.skip);

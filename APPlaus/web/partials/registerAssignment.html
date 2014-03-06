@@ -31,10 +31,10 @@
                 </div>
             </div>
             
-            
+            <h2>Registrerte oppgaver</h2>
             <div class="drop" ng-init="dropAssignReg = false">
                 <div class="dropHeading">
-                    <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Registrer en oppgave</a> <a class="pull-right glyphicon" ng-click="dropAssignReg = !dropAssignReg" ng-class="{'glyphicon-chevron-down': dropAssignReg, 'glyphicon-chevron-right': !dropAssignReg}"></a>
+                    <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Ny oppgave</a> <a class="pull-right glyphicon" ng-click="dropAssignReg = !dropAssignReg" ng-class="{'glyphicon-chevron-down': dropAssignReg, 'glyphicon-chevron-right': !dropAssignReg}"></a>
                 </div>
                 <div class="innerDrop" ng-show="dropAssignReg">            
                     <p>
@@ -66,17 +66,14 @@
                 </div>
             </div>
             
-            <br/>
             
-            Assignments
             <div ng-repeat="assignment in allAssignments">
                 <div class="drop" ng-init="dropArchive= false">
                     <div class="dropHeading">
-                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.assignments.date_done.$date | date:('dd.MM')}} - {{assignment.assignments.id}}</a> <a class="pull-right glyphicon" ng-click="dropArchive = !dropArchive" ng-class="{'glyphicon-chevron-down': dropArchive, 'glyphicon-chevron-right': !dropArchive}"></a>
+                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.assignments.date_done.$date | date:('dd.MM')}} - {{assignment.title}}</a> <a class="pull-right glyphicon" ng-click="dropArchive = !dropArchive" ng-class="{'glyphicon-chevron-down': dropArchive, 'glyphicon-chevron-right': !dropArchive}"></a>
                     </div>
                     <div class="innerDrop" ng-show="dropArchive">
-                        <p>Type: {{}}   </p>
-                        <p>Poeng:  {{}}     </p>
+                        <p>Poeng:  {{assignment.points}}     </p>
                         <p>Dato: {{assignment.assignments.date_done.$date| date:('dd.MM')}} </p>
                         <p>Kommentar: {{assignment.assignments.comment}} </p>
                     </div>

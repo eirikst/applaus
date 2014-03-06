@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class IdeaQueriesImpl implements IdeaQueries {
     
+    @Override
     public boolean addIdea(DB db, String title, String text, String username){
         DBCollection coll = db.getCollection("idea");
         DBObject query = new BasicDBObject();
@@ -26,10 +27,12 @@ public class IdeaQueriesImpl implements IdeaQueries {
         return true;
     }
     
-    public List<DBObject> getIdeas(DB db) {
+    @Override
+    public List<DBObject> getIdeas(DB db, int skip) {
         DBCollection coll = db.getCollection("idea");
+        
         try(DBCursor cursor = coll.find().sort
-        (new BasicDBObject( "date" , -1 ))) {
+        (new BasicDBObject( "date" , -1 )).skip(skip).limit(7)) {
             List<DBObject> ideas = cursor.toArray();
             return ideas;
         }
