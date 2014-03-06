@@ -32,7 +32,7 @@
 
         <title>APPlaus</title>
     </head> 
-    <body style="margin-top: 61px; background-repeat:no-repeat;background-attachment:fixed;" background="img/bw.jpg"
+    <body style="margin-top: 61px; background-repeat:no-repeat;background-attachment:fixed;background-size: cover;height:" background="img/bw.jpg"
           >
         
         <!-- Static navbar -->
@@ -43,7 +43,7 @@
                         <a href="#registerAssignment"><img class="index-icon" src="img/Assignment.png"></a>
                         <a href="#home"><img class="index-icon" src="img/Home.png"></a>
                         <a href="#contests"><img class="index-icon" src="img/Contest.png"></a>
-                        <a href="#settings"><img class="index-icon" src="img/Settings.png"></a>
+                        <a href="#ideabank"><img class="index-icon" src="img/Settings.png"></a>
                         
                         <!--<ul class="nav">
             <li id="fat-menu" class="dropdown">
@@ -90,10 +90,12 @@
         <script src="js/app/controllers/assignController.js"></script>
         <script src="js/app/controllers/contController.js"></script>       
         <script src="js/app/controllers/adminController.js"></script>       
+        <script src="js/app/controllers/ideaController.js"></script>       
         <script src="js/app/services/homeServices.js"></script>
         <script src="js/app/services/assignmentServices.js"></script>
         <script src="js/app/services/contestServices.js"></script>
         <script src="js/app/services/adminServices.js"></script>
+        <script src="js/app/services/ideaServices.js"></script>
         <script src="js/app/directives/directives.js"></script>
     </body>
 </html>

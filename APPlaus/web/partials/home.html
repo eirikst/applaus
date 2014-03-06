@@ -1,6 +1,6 @@
 <div ng-swipe-left="changeView('contests')" ng-swipe-right="changeView('registerAssignment')">
 
-    <!--Carousel-->
+    <!--Carousel--
     <div ng-swipe-right="prevSlide()">
         <div style="height: 150px">
             <carousel interval="slideInterval">
@@ -197,26 +197,5 @@
 
 
 <!--News end-->
-
-    <div>
-        <div>
-            <h2>Idebank</h2>           
-            <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank">
-                <div class="dropHeading">
-                    <a class="text-center" ng-click="dropBank = !dropBank">{{idea.title}}</a> <a class="pull-right glyphicon" ng-click="dropBank = !dropBank" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
-                </div>
-                <div class="innerDrop" ng-show="dropBank">
-                    <p>
-                        {{idea.text}}
-                    </p>
-                    <p>
-                        Forfatter: {{idea.username}}, Lagt til: {{idea.date.$date| date:('dd.MM')}}
-                    </p>
-                </div>
-            </div>
-
-        </div>
-        <br>
-    </div>
     
 </div>

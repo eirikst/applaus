@@ -21,15 +21,6 @@ services.service('HomeService', function($http) {
         return promise;
     }
         
-    this.getIdeas = function() {
-        var promise = $http({
-            url: 'MongoConnection',
-            method: "POST",
-            data: "action=getIdeas",
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        });
-        return promise;
-    }
 
     this.getNews = function(skip) {
         var promise = $http({

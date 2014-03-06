@@ -1,6 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
-controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, HomeService) {    
+controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, HomeService, IdeaService) {    
     
     $scope.bank = new Array();
     
@@ -37,25 +37,6 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
                     });
                     
         
-     HomeService.getIdeas().success(function(data, status, headers, config) {
-            $scope.bank = data;            
-        });   
-        
-        
-    
-    
-    $scope.addIdea = function() {
-        $http({
-            url: 'MongoConnection',
-            method: "POST",
-            data: "action=addIdea&title=" + $scope.title + "&text=" + $scope.text,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function(data, status, headers, config) {
-            $scope.bank = data;  
-        }).error(function(data, status, headers, config) {
-            console.log("Failed http action=addIdea");
-        });
-    }
 
         $scope.setGoal = function() {
             console.log("inne");
@@ -76,10 +57,6 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
     
     
     
-    
-    
-    
-    //Ideabank related
     
     
     
@@ -109,6 +86,17 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
             console.log("Failed http action=addNewsAll");
         });
     }
+    
+    //idea related
+    $scope.addIdea = function(title, text) {
+        IdeaService.addIdea(title, text)
+            .success(function(data, status, headers, config) {
+                $scope.bank = data;  
+            }).error(function(data, status, headers, config) {
+                console.log("Failed http action=addIdea");
+        });
+    };
+
 
 
     $scope.changeView = function(view) {

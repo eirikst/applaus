@@ -19,5 +19,6 @@ employeeApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/contests', {templateUrl: 'partials/contests.html', controller: 'ContCtrl'});
     $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'HomeCtrl'});
     $routeProvider.when('/adminList', {templateUrl: 'partials/adminList.html', controller: 'AdminCtrl'});
+    $routeProvider.when('/ideabank', {templateUrl: 'partials/ideabank.html', controller: 'IdeaCtrl'});
     $routeProvider.otherwise({redirectTo: '/home'});
 }]);
