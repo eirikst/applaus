@@ -1,4 +1,4 @@
-<div ng-swipe-right="changeView('home')">
+<div ng-swipe-left="changeView('ideabank')" ng-swipe-right="changeView('home')">
     <div>
         <div class="container">
             <div class="red">
@@ -11,7 +11,10 @@
                         <h2 class="h2-contest">Aktive konkurranser</h2>
                         <div class="drop">
                             <div class="dropHeading">
-                                <a class="text-center" ng-click="dropCreate = !dropCreate">Ny konkurranse</a> <a class="pull-right glyphicon" ng-click="dropCreate = !dropCreate" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
+                                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
+                                <a class="text-center" ng-click="dropCreate = !dropCreate">Ny konkurranse
+                                    <span class="clickableDiv"></span>
+                                </a>
                             </div>
                             <div class="innerDrop" ng-show="dropCreate">
                                 <form name="createContForm">
@@ -44,9 +47,11 @@
                         <div class="drop" ng-init="dropActive = false" ng-repeat="contest in activeCont">
                             <div class="dropHeading">
                                 <div class="lefty">
-                                    <a class="text-center" ng-click="dropActive = !dropActive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}</a>
+                                    <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
+                                    <a class="text-center" ng-click="dropActive = !dropActive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}
+                                        <span class="clickableDiv"></span>
+                                    </a>
                                 </div>
-                                <a class="glyphicon pull-right" ng-click="dropActive = !dropActive" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
                             </div>
                             <div class="innerDrop" ng-show="dropActive">
                                 <form name="editContForm">
@@ -127,7 +132,10 @@
                         <h2 class="h2-contest">Tidligere konkurranser</h2>
                         <div class="drop" ng-init="dropInactive = false" ng-repeat="contest in inactiveCont">
                             <div class="dropHeading">
-                                <a class="text-center" ng-click="dropInactive = !dropInactive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}</a> <a class="pull-right glyphicon" ng-click="dropInactive = !dropInactive" ng-class="{'glyphicon-chevron-down': dropInactive, 'glyphicon-chevron-right': !dropInactive}"></a>
+                                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
+                                <a class="text-center" ng-click="dropInactive = !dropInactive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}
+                                    <span class="clickableDiv"></span>
+                                </a>
                             </div>
                             <div class="innerDrop" ng-show="dropInactive">
                                 <p>

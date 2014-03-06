@@ -1,11 +1,14 @@
-<div class="container">
+<div class="container" ng-swipe-right="changeView('contests')">
     <div class="red">
         {{createErrMsg}}
     </div>
-    <h2>Idebank</h2>
+    <h2 class="text-center">Idebank</h2>
     <div class="drop" ng-init="dropCreate = false">
         <div class="dropHeading">
-            <a class="text-center" ng-click="dropCreate = !dropCreate">Ny ide</a> <a class="pull-right glyphicon" ng-click="dropCreate = !dropCreate" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
+            <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
+            <a class="text-center" ng-click="dropCreate = !dropCreate">Ny ide
+                <span class="clickableDiv"></span>
+            </a>
         </div>
         <div class="innerDrop" ng-show="dropCreate">
             <form name="createIdeaForm">
@@ -27,7 +30,10 @@
 
     <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank">
         <div class="dropHeading">
-            <a class="text-center" ng-click="dropBank = !dropBank">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}}</a> <a class="pull-right glyphicon" ng-click="dropBank = !dropBank" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
+            <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
+            <a class="text-center" ng-click="dropBank = !dropBank">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}}
+                <span class="clickableDiv"></span>
+            </a>
         </div>
         <div class="innerDrop" ng-show="dropBank">
             <p>

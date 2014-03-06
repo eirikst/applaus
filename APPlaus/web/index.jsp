@@ -61,8 +61,8 @@
                       <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu pull-right">
-                      <li><a href="logout.jsp">Logout</a></li>
                       <li><a type="button" href="#adminList">Admin features</a></li>
+                      <li><a href="logout.jsp">Logout</a></li>
                     </ul>
                   </li>
                 </ul>

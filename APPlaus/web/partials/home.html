@@ -39,8 +39,9 @@
                 </p>
                 <div class="drop" ng-init="dropGoal = false">
                     <div class="dropHeading">
-                        <a class="glyphicon" ng-click="dropGoal = !dropGoal" ng-class="{'glyphicon-chevron-down': dropGoal, 'glyphicon-chevron-right': !dropGoal}"></a>
+                        <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropGoal, 'glyphicon-chevron-right': !dropGoal}"></a>
                         <a class="text-center" ng-click="dropGoal = !dropGoal">
+                            <span class="clickableDiv"></span>
                             <span ng-show="goal > 0">
                                 Mitt mål er {{goal}} poeng
                             </span>
@@ -95,7 +96,9 @@
                 <div class="drop" ng-init="dropIdea = false">
                     <div class="dropHeading text-center">
                         <a class="glyphicon" ng-click="dropIdea = !dropIdea" ng-class="{'glyphicon-chevron-down': dropIdea, 'glyphicon-chevron-right': !dropIdea}"></a>
-                        <a ng-click="dropIdea = !dropIdea">Legg til en ide</a>
+                        <a ng-click="dropIdea = !dropIdea">Legg til en ide
+                            <span class="clickableDiv"></span>
+                        </a>
                     </div>
                     <div class="innerDrop" ng-show="dropIdea">
                         <form name="ideabankForm">
@@ -128,8 +131,10 @@
                 </div>
                 <div class="drop" ng-init="dropdown = false">
                     <div class="dropHeading text-center">
-                        <a class="glyphicon" ng-click="dropIdea = !dropIdea" ng-class="{'glyphicon-chevron-down': dropIdea, 'glyphicon-chevron-right': !dropIdea}"></a>
-                        <a ng-click="dropdown = !dropdown">Se noe</a>
+                        <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropdown, 'glyphicon-chevron-right': !dropdown}"></a>
+                        <a ng-click="dropdown = !dropdown">Se noe
+                            <span class="clickableDiv"></span>
+                        </a>
                     </div>
                     <div class="innerDrop" ng-show="dropdown">
 
@@ -159,13 +164,16 @@
     </div>
 
     <!--News-->
-    <div>
+    <div class="container">
         <h2 class="text-center">Nyheter</h2>
-        <div class="drop" ng-init="dropNews = false">
+        <div class="drop" ng-init="dropNewStory = false">
             <div class="dropHeading">
-                <a class="glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a><a class="text-center" ng-click="dropNews = !dropNews">Ny nyhet</a> 
+                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropNewStory, 'glyphicon-chevron-right': !dropNewStory}"></a>
+                <a class="text-center" ng-click="dropNewStory = !dropNewStory">Ny nyhet
+                    <span class="clickableDiv"></span>
+                </a> 
             </div>
-            <div class="innerDrop" ng-show="dropNews">
+            <div class="innerDrop" ng-show="dropNewStory">
                 <form name="addNewsForm">
                     <p>
                         <input name="newsTitle" type="text" class="form-control" ng-model="story.title" placeholder="Tittel" required="true" ng-class="{red:addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty, green:!addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty}">
@@ -185,7 +193,10 @@
 
         <div class="drop" ng-init="dropNews = false" ng-repeat="article in news">
             <div class="dropHeading">
-                <a class="glyphicon" ng-click="dropNews = !dropNews" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a><a class="text-center" ng-click="dropNews = !dropNews">{{article.date.$date| date:('dd.MM')}} - {{article.title}}</a> 
+                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropNews, 'glyphicon-chevron-right': !dropNews}"></a>
+                <a class="text-center" ng-click="dropNews = !dropNews">{{article.date.$date| date:('dd.MM')}} - {{article.title}}
+                    <span class="clickableDiv"></span>
+                </a> 
             </div>
             <div class="innerDrop" ng-show="dropNews">
                 <p>

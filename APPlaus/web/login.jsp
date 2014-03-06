@@ -26,10 +26,10 @@
         <script src="js/libs/bootstrap.js"></script>
         <script src="js/libs/ui-bootstrap-tpls-0.10.0.js"></script>
     </head>
-    <body style="margin-top: 61px">
+    <body style="margin-top: 61px; background-repeat:no-repeat;background-attachment:fixed;background-size: cover;height:" background="img/bw.jpg">
         <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
-            <div style="margin:10px" class="text-center">
-                <h3>Velkommen til APPlaus!</h3>
+            <div style="margin:15px" class="text-center">
+                <h4>Velkommen til APPlaus!</h4>
             </div>
         </div>
         <div ng-controller="LoginCtrl" class="container">

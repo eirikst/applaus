@@ -1,6 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
-controllers.controller('IdeaCtrl', function($scope, $route, IdeaService) {    
+controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaService) {    
     $scope.skip = 0;
     $scope.bank = new Array();  
 
@@ -31,4 +31,14 @@ controllers.controller('IdeaCtrl', function($scope, $route, IdeaService) {
     };
     
     $scope.getIdeas($scope.skip);
+    
+    
+    
+    
+    
+    //BOORT?
+    $scope.changeView = function(view) {
+        $location.path(view); // path not hash
+    };
+
 });

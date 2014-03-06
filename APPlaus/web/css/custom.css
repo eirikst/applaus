@@ -24,6 +24,7 @@
 
 .dropHeading {
     padding:5px;
+    position:relative;
     /*border-bottom-style:solid;
     border-bottom-width:1px;
     border-bottom-color:#ccc;*/
@@ -87,3 +88,14 @@ lefty {
 .green {
     background-color:#dff0d8;
 }
+
+.clickableDiv { 
+  position:absolute; 
+  width:100%;
+  height:100%;
+  top:0;
+  left: 0;
+
+  /* edit: added z-index */
+  z-index: 1;
+}   
