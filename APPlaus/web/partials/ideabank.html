@@ -1,6 +1,32 @@
 <div>
     <div>
-        <h2>Idebank</h2>           
+        <h2>Idebank</h2>
+
+        <div class="drop" ng-init="dropCreate = false">
+            <div class="dropHeading">
+                <a class="text-center" ng-click="dropCreate = !dropCreate">Legg til ide</a> <a class="pull-right glyphicon" ng-click="dropCreate = !dropCreate" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
+            </div>
+            <div class="innerDrop" ng-show="dropCreate">
+                <form name="createIdeaForm">
+                    <p>
+                        <input type="text"  ng-model="title" class="form-control" placeholder="Tittel">
+                    </p>
+                    <p>
+                        <textarea class="form-control"  ng-model="text" placeholder="Tekst"></textarea>
+                    </p>
+                    <p>
+                        <a type="button" class="form-control" ng-click="addIdea(title, text)">Legg til</a>
+                    </p>
+                    <p>
+                        Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
+                    </p>
+                <div class="red">
+                    {{createErrMsg}}
+                </div>
+                </form>
+            </div>
+        </div>
+
         <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank">
             <div class="dropHeading">
                 <a class="text-center" ng-click="dropBank = !dropBank">{{idea.title}}</a> <a class="pull-right glyphicon" ng-click="dropBank = !dropBank" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
@@ -10,7 +36,7 @@
                     {{idea.text}}
                 </p>
                 <p>
-                    Forfatter: {{idea.username}}, Lagt til: {{idea.date.$date| date:('dd.MM')}}
+                    Forfatter: {{idea.username}}, Lagt til: {{idea.date.$date| date:('dd.MM.yyyy')}}
                 </p>
             </div>
         </div>
