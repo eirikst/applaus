@@ -3,6 +3,7 @@ package mongoConnection;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.util.Date;
+import java.util.Iterator;
 import mongoQueries.*;
 import java.util.List;
 /**
@@ -24,11 +25,6 @@ public class AssignmentManager {
         return JSON.serialize(assignments);
     }
     
-    //gg
-    public String getAllAssignmentsUser(DB db, String username) {
-        BasicDBList assignments = assignQ.getAllAssignmentsUser(db, username);
-        return JSON.serialize(assignments);
-    }
     
     public boolean createAssignment(DB db, String title, String desc, int points) {
         return assignQ.createAssignment(db, title, desc, points);

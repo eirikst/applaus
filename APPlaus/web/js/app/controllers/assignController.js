@@ -2,6 +2,8 @@ var controllers = angular.module('employeeApp.controllers');
 
 // Assignment controller
 controllers.controller('AssignCtrl', function($scope, $location, $http) {
+    $scope.skip = 0;
+    $scope.allAssignments = new Array();
     
     $scope.changeView = function(view) {
         $location.path(view); // path not hash
@@ -52,18 +54,24 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
     }).error(function(data, status, headers, config) {
         console.log("Failed http action=getAssignmentsTypes");
     });    
-    
-    $scope.allAssignments = new Array();
+  
   
     //Gettting the logged-in user assignment list
-    $http({
-      url: 'MongoConnection',
-      method: "POST",
-      data: "action=getAllAssignmentsUser",
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(data, status, headers, config) {
-        $scope.allAssignments = data;//sets assignment table with info from DB
-    }).error(function(data, status, headers, config) {
-        console.log("Failed http action=getAllAssignmentsUser");
-    });
+    $scope.getAllAssignments = function(skip) {
+        $http({
+          url: 'MongoConnection',
+          method: "POST",
+          data: "action=getAllAssignmentsUserSorted&skip=" + skip,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data, status, headers, config) {
+            $scope.skip += 7;
+                for(var i = 0; i < data.length; i++) {
+                    $scope.allAssignments.push(data[i]);//sets assignment table with info from DB
+                }
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=getAllAssignmentsUser");
+        });
+    }
+    
+    $scope.getAllAssignments($scope.skip);
 })

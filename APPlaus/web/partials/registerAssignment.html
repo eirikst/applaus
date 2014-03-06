@@ -24,7 +24,7 @@
 
                     <p>
                         <a data-ng-click="createAssignment()"
-                          class="btn btn-primary btn-lg" role="button">
+                          class="form-control" role="button">
                             Registrer
                         </a>
                     </p>
@@ -58,7 +58,8 @@
                     </p>
                     <p>
                         <a data-ng-click="registerAssignment()"
-                          class="btn btn-primary btn-lg" role="button">
+                           
+                          class="form-control" role="button">
                             Registrer
                         </a>
                     </p>
@@ -67,20 +68,21 @@
             
             <br/>
             
+            Assignments
             <div ng-repeat="assignment in allAssignments">
                 <div class="drop" ng-init="dropArchive= false">
                     <div class="dropHeading">
-                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.id}} - {{assignment.date_done.$date| date:('dd.MM')}}</a> <a class="pull-right glyphicon" ng-click="dropArchive = !dropArchive" ng-class="{'glyphicon-chevron-down': dropArchive, 'glyphicon-chevron-right': !dropArchive}"></a>
+                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.assignments.date_done.$date | date:('dd.MM')}} - {{assignment.assignments.id}}</a> <a class="pull-right glyphicon" ng-click="dropArchive = !dropArchive" ng-class="{'glyphicon-chevron-down': dropArchive, 'glyphicon-chevron-right': !dropArchive}"></a>
                     </div>
                     <div class="innerDrop" ng-show="dropArchive">
                         <p>Type: {{}}   </p>
                         <p>Poeng:  {{}}     </p>
-                        <p>Dato: {{assignment.date_done.$date| date:('dd.MM')}} </p>
-                        <p>Kommentar: {{assignment.comment}} </p>
+                        <p>Dato: {{assignment.assignments.date_done.$date| date:('dd.MM')}} </p>
+                        <p>Kommentar: {{assignment.assignments.comment}} </p>
                     </div>
                 </div>
             </div>
-            
+            <button class="form-control" ng-click="getAllAssignments(skip);">Last flere</button>
         </div>
      </div>
 </div>

@@ -382,6 +382,48 @@ public class UserQueriesImpl implements UserQueries{
         return oids;
     }
     
+    /**
+     * Gets a sorted list of a user's assignments
+     * @param db DB object to connect to database
+     * @param username user's username
+     * @param skip number of assignments to skip
+     * @return sorted list of user's assignments
+     * @throws InputException if error in input
+     */
+    @Override
+    public Iterator<DBObject> getAllAssignmentsUserSorted(DB db, String username, int skip)
+            throws InputException {
+        if(db == null || username == null) {
+            throw new InputException("db or username is null.");
+        }
+        DBCollection collection = db.getCollection("user");
+        
+        BasicDBObject match = new BasicDBObject();
+        match.put("$match", new BasicDBObject("username", username));
+
+        DBObject toProject = new BasicDBObject();
+        toProject.put("assignments", 1);
+        toProject.put("_id", 0);
+        BasicDBObject project = new BasicDBObject();
+        project.put("$project", toProject);
+        
+        BasicDBObject unwind = new BasicDBObject();
+        unwind.put("$unwind", "$assignments");
+        
+        BasicDBObject sort = new BasicDBObject();
+        sort.put("$sort", new BasicDBObject("assignments.date_done", -1));
+        
+        BasicDBObject skipAssign = new BasicDBObject();
+        skipAssign.put("$skip", skip);
+
+        BasicDBObject limit = new BasicDBObject();
+        limit.put("$limit", 7);
+
+        AggregationOutput output = collection.aggregate(match, project, unwind, sort, skipAssign, limit);
+        
+        Iterable<DBObject> it = output.results();
+        return it.iterator();
+    }
     
     /**
      * Takes a HttpServletRequest, username and role and sets the request 

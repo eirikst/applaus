@@ -6,10 +6,13 @@
 
 package mongoConnection;
 
+import applausException.InputException;
+import com.google.common.collect.Lists;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import static java.lang.Integer.parseInt;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -72,4 +75,17 @@ public class UserManager {
         
         return getAdminList(db);
     }
+    
+    
+    public String getAllAssignmentsUserSorted(DB db, String username, int skip) {
+        try {
+            Iterator<DBObject> assignments = userQ.getAllAssignmentsUserSorted(db, username, skip);
+            return JSON.serialize(Lists.newArrayList(assignments));
+        }
+        catch(InputException e) {
+            LOGGER.warning("Error in input.");
+            return null;
+        }
+    }
+    
 }

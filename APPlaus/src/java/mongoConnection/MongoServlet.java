@@ -177,19 +177,26 @@ public class MongoServlet extends HttpServlet {
             }
             
             //get all registered assignments from a user
-            else if(request.getParameter("action").equals("getAllAssignmentsUser")) {
-                try{
-                    out.println(assignMan.getAllAssignmentsUser(db, 
-                            request.getSession().getAttribute("username").toString()));
-                    response.setStatus(200);//success
+            else if(request.getParameter("action").equals("getAllAssignmentsUserSorted")) {
+                String username = request.getSession().getAttribute("username").toString();
+                String skipStr = request.getParameter("skip");
+                System.out.println(username + ", " + skipStr);
+                try {
+                    int skip = Integer.parseInt(skipStr);
+                    String toReturn = userMan.getAllAssignmentsUserSorted(db, username
+                    , skip);
+                    if(toReturn != null) {
+                        out.println(toReturn);
+                        response.setStatus(200);//success
+                    }
+                    else {
+                        response.sendError(500);
+                    }
                 }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);//error
+                catch(NumberFormatException e) {
+                    response.sendError(500);
                 }
+                
             }
             
             //get assignments types

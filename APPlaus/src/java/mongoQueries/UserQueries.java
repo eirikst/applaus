@@ -38,4 +38,5 @@ public interface UserQueries {
      */
     public List<ObjectId> getStoryIdsUser(DB db, String username) 
             throws InputException;
+    public Iterator<DBObject> getAllAssignmentsUserSorted(DB db, String username, int skip) throws InputException;
 }
