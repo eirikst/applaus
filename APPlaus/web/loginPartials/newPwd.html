@@ -1,0 +1,21 @@
+<div class="container">
+    <form>
+        <h4 class="text-center">Nytt passord</h4>
+
+    <p>
+        <input ng-model="userInfo.email" name="email" class="form-control" type="text" placeholder="e-post">
+    </p>
+    <p>
+        <input ng-model="userInfo.pwd" name="pwd" class="form-control" type="password" placeholder="nytt passord">
+    </p>
+    <p>
+        <input ng-model="userInfo.pwdRepeat" name="pwdRepeat" class="form-control" type="password" placeholder="gjenta nytt passord">
+    </p>
+    <p>
+        <button class="form-control" ng-click="newPassword(userInfo)">Registrer nytt passord</button>
+    </p>
+    </form>
+    <p>
+        <a href="#login">Logg inn</a>
+    </p>
+</div>

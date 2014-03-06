@@ -20,11 +20,9 @@ public class AuthenticationManager {
      * @param request http request
      * @return the role(int) on success, or -1 on fail.
      */
-    public int login(DB db,
+    public int login(DB db, String username, String password,
             HttpServletRequest request) {
-        String username = request.getParameter("usr");
-        String password = request.getParameter("pwd");
-        int role = userQ.checkLogin(db, request.getParameter("usr"), request.getParameter("pwd"));
+        int role = userQ.checkLogin(db, username, password);
         if(role > 0) {
             setSession(request, username, role);
         }

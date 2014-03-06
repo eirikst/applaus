@@ -292,6 +292,7 @@ public class UserQueriesImpl implements UserQueries{
         }
     }
     
+    
     public boolean registerUser(DB db, String username, String password, String firstname, String lastname, String email){
         DBCollection coll = db.getCollection("user");
         

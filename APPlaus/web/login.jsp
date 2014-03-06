@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html ng-app="employeeApp">
+<html ng-app="loginApp">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -27,38 +27,15 @@
         <script src="js/libs/ui-bootstrap-tpls-0.10.0.js"></script>
     </head>
     <body style="margin-top: 61px; background-repeat:no-repeat;background-attachment:fixed;background-size: cover;height:" background="img/bw.jpg">
-        <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
+        <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation">
             <div style="margin:15px" class="text-center">
                 <h4>Velkommen til APPlaus!</h4>
             </div>
         </div>
-        <div ng-controller="LoginCtrl" class="container">
-            <form name="loginForm">
-                <h4>Logg inn</h4>
-                    
-            <p>
-                <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="username" ng-class="{red:loginForm.usr.$error.required && loginForm.usr.$dirty, green:!loginForm.usr.$error.required && loginForm.usr.$dirty}" required="true">
-            </p>
-            <p>
-                <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="password" ng-class="{red:loginForm.pwd.$error.required && loginForm.pwd.$dirty, green:!loginForm.pwd.$error.required && loginForm.pwd.$dirty}" required="true">
-            </p>
-            <p>
-                <button class="form-control" ng-click="login(usr, pwd)"  ng-disabled="loginForm.$invalid">Log in</button>
-            </p>
-            </form>
-            <div class="red">
-                {{loginErr}}
-            </div>
-            <p>
-                <a href="registerUser.jsp">Registrer deg</a>
-            </p>
-            <p>
-                <a href="newPassword.jsp">Glemt passord</a>
-            </p>
-        </div>
-        <script src="js/app/empApp.js"></script>
-        <script src="js/app/controllers/controllers.js"></script>
-        <script src="js/app/controllers/headerController.js"></script>
+        
+        <div ng-view></div>
+        
+        <script src="js/app/loginApp.js"></script>
         <script src="js/app/controllers/loginController.js"></script>
         <script src="js/app/services/loginServices.js"></script>
     </body>

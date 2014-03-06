@@ -336,10 +336,13 @@ public class MongoServlet extends HttpServlet {
             
             //login
             else if(action.equals("login")) {
+                String username = request.getParameter("usr");
+                String password = request.getParameter("pwd");
+
                 try {
                     //returning role id, -1 if bad details
                     out.println(JSON.serialize(new int[]{authMan.
-                            login(db, request)}));
+                            login(db, username, password, request)}));
                 }
                 //Does not throw com.mongodb.MongoException as the doc says 
                 //it should

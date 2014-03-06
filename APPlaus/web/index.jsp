@@ -86,7 +86,6 @@
         <script src="js/app/controllers/controllers.js"></script>
         <script src="js/app/controllers/homeController.js"></script>
         <script src="js/app/controllers/headerController.js"></script>
-        <script src="js/app/controllers/loginController.js"></script>
         <script src="js/app/controllers/assignController.js"></script>
         <script src="js/app/controllers/contController.js"></script>       
         <script src="js/app/controllers/adminController.js"></script>       

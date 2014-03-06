@@ -1,4 +1,4 @@
-var controllers = angular.module('employeeApp.controllers');
+var controllers = angular.module('loginApp.controllers');
 
 controllers.controller('LoginCtrl', function($scope, $location, $http, $window, LoginService) {
         
@@ -10,7 +10,7 @@ controllers.controller('LoginCtrl', function($scope, $location, $http, $window, 
                 $window.location = "index.jsp";
             }
             else if(data[0] === 2 || data[0] === 1) {//admin/superadmin
-                console.log("Usr/pwd okay for admin, redirecting to admin.jsp.");
+                console.log("Usr/pwd okay for admin, redirecting to index.jsp.");
                     $window.location = "index.jsp";//admin.jsp
             }else {
                 console.log("Usr/pwd don't match.");
@@ -21,5 +21,25 @@ controllers.controller('LoginCtrl', function($scope, $location, $http, $window, 
             console.log("Failed http action=login");
         });
     }
-            
+           
+    
+    
+    $scope.registerUser = function(user) {
+        LoginService.registerUser(user)
+        .success(function(data, status, headers, config) {
+            console.log("User registered");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=registerUser");
+        });
+    }
+    
+    $scope.newPassword = function(userInfo) {
+        LoginService.newPassword(userInfo)
+        .success(function(data, status, headers, config) {
+            console.log("New password registered");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=newPassword");
+        });
+    }
+    
 });

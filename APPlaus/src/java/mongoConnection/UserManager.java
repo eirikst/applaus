@@ -27,6 +27,11 @@ public class UserManager {
     private static final Logger LOGGER = Logger.getLogger(HomeManager.class.getName());
     private final UserQueries userQ = new UserQueriesImpl();
     
+    //ikke servletrequest inn her. den skal bare ligge i servlet(med få unntak)
+    //. ta ut verdier i servlet og send inn som gitt verdi(stringer her)
+    //viktig at alle verdier sjekkes med trim, så de ikke er tomme(viktig her
+    //siden det angår brukerdetaljer)
+    // 
     public boolean registerUser(DB db, HttpServletRequest request) {
         String username = request.getParameter("usr");
         String password = request.getParameter("pwd");
@@ -48,6 +53,9 @@ public class UserManager {
         return JSON.serialize(adminList);
     }
     
+    //sjekk at user finnes, ellers lager den en ny user, ikke bra
+    // gjør dette helst i en egen metode
+    // ikke servlet-request
     public boolean newPassword(DB db, HttpServletRequest request) {
         String email = request.getParameter("email");
         String password = request.getParameter("pwd");
@@ -61,6 +69,7 @@ public class UserManager {
         }
     }
     
+    //ikke servlet-request
     public String setRole(DB db, HttpServletRequest request) {
         String username = request.getParameter("username");
         int role = parseInt(request.getParameter("role"));

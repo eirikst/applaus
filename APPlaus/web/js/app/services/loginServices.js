@@ -1,4 +1,4 @@
-var services = angular.module('employeeApp.services');
+var services = angular.module('loginApp.services');
 
 services.service('LoginService', function($http) {
     
@@ -13,4 +13,27 @@ services.service('LoginService', function($http) {
         return promise;
     };
     
-})
+    
+    //http call to register a new user to the system
+    this.registerUser = function(user) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=registerUser&usr=" + user.usr + "&pwd=" + user.pwd + "&pwdRepeat=" +  user.pwdRepeat
+                                       + "&fname=" + user.fname + "&lname=" +  user.lname + "&email=" +  user.email,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+        return promise;
+    };
+    
+    //http call to register a new user to the system
+    this.newPassword = function(userInfo) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=newPassword&email=" + userInfo.email + "&pwd=" + userInfo.pwd + "&pwdRepeat=" +  userInfo.pwdRepeat,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+});
