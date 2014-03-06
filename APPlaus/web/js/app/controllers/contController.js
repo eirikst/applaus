@@ -1,8 +1,8 @@
 var controllers = angular.module('employeeApp.controllers');
 
-
 //ContestCtrl
 controllers.controller('ContCtrl', function($scope, $location, $route, ContestService) {
+    
     //functions
     
     //getting active contests
@@ -11,6 +11,8 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
             .success(function(data, status, headers, config) {
                     $scope.activeCont = data;
         }).error(function(data, status, headers, config) {
+            $scope.errFetchMsg = "En feil skjedde under lesing av " + 
+     "konkurranser";
             console.log("Failed http action=getActiveContests");
         });
     }
@@ -24,6 +26,8 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
                 }
             $scope.skipNext += 7;
         }).error(function(data, status, headers, config) {
+            $scope.errFetchMsg = "En feil skjedde under lesing av " + 
+     "konkurranser";
             console.log("Failed http action=getInactiveContests");
         });
     };
@@ -35,19 +39,12 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
                     $scope.partCont = data;//sets assignment table with info from DB
         })
                 .error(function(data, status, headers, config) {
+            $scope.errFetchMsg = "En feil skjedde under lesing av " + 
+     "konkurranser";
             console.log("Failed http action=userActiveContList");
         });
     }
-    
-    //checks if contestId matches any in participating array
-    $scope.isParticipating = function(contestId) {
-        for(var i = 0; i < $scope.partCont.length; i++) {
-            if(contestId == $scope.partCont[i]) {
-                return true;
-            }
-        }
-    };
-    
+        
     //Registers to participate
     $scope.participate = function(contest) {
         ContestService.participate(contest)
@@ -114,18 +111,23 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
             $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
         });
     };
-
-
-    // wwoottt?
-    $scope.changeView = function(view) {
-        $location.path(view);
+    
+    //checks if contestId matches any in participating array
+    $scope.isParticipating = function(contestId) {
+        for(var i = 0; i < $scope.partCont.length; i++) {
+            if(contestId === $scope.partCont[i]) {
+                return true;
+            }
+        }
     };
     
+    //support method to the view
     $scope.copyContest = function(contest) {
         var copied = angular.copy(contest);
         console.log("hei:" + copied.date_end.$date);
         return copied;
-    }
+    };
+    
     //init values
     $scope.inactiveCont = new Array();
     $scope.partCont = new Array();
@@ -135,6 +137,22 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
     $scope.getActiveContests();
     $scope.getUsersActiveContests();
     $scope.getInactiveContests($scope.skipNext);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // burde bort? sjekk dette
+    $scope.changeView = function(view) {
+        $location.path(view);
+    };
+
+    
     
     /*
     var td = new Date();
@@ -152,4 +170,4 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
         $scope.today += td.getDate();
     }
     console.log($scope.today);*/
-})
+});

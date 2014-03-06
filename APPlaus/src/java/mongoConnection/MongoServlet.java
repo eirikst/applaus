@@ -249,7 +249,13 @@ public class MongoServlet extends HttpServlet {
                 String username = (String)request.getSession().getAttribute("username");
                 try {
                     int goal = Integer.parseInt(request.getParameter("points"));
-                    homeMan.setGoal(db, username, goal);
+                    boolean ok = homeMan.setGoal(db, username, goal);
+                    if(ok) {
+                        response.setStatus(200);
+                    }
+                    else {
+                        response.sendError(500);
+                    }
                 }
                 catch(NumberFormatException e) {
                     StringWriter sw = new StringWriter();

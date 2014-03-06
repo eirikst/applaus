@@ -1,6 +1,8 @@
-<div>
+<div class="container">
+    <div class="red">
+        {{createErrMsg}}
+    </div>
     <h2>Idebank</h2>
-
     <div class="drop" ng-init="dropCreate = false">
         <div class="dropHeading">
             <a class="text-center" ng-click="dropCreate = !dropCreate">Ny ide</a> <a class="pull-right glyphicon" ng-click="dropCreate = !dropCreate" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
@@ -8,20 +10,17 @@
         <div class="innerDrop" ng-show="dropCreate">
             <form name="createIdeaForm">
                 <p>
-                    <input type="text"  ng-model="title" class="form-control" placeholder="Tittel">
+                    <input name="ideaTitle" type="text"  ng-model="title" class="form-control" placeholder="Tittel" ng-class="{red:createIdeaForm.ideaTitle.$error.required && createIdeaForm.ideaTitle.$dirty, green:!createIdeaForm.ideaTitle.$error.required && createIdeaForm.ideaTitle.$dirty}" required="true">
                 </p>
                 <p>
-                    <textarea class="form-control"  ng-model="text" placeholder="Tekst"></textarea>
+                    <textarea name="ideaText" class="form-control"  ng-model="text" placeholder="Tekst" ng-class="{red:createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty, green:!createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty}" required="true"></textarea>
                 </p>
                 <p>
-                    <a type="button" class="form-control" ng-click="addIdea(title, text)">Legg til</a>
+                    <button class="form-control" ng-click="addIdea(title, text)" ng-disabled="createIdeaForm.$invalid">Legg til</button>
                 </p>
-                <p>
-                    Husk at ideer som registreres i idebanken er offentlige og kan bli diskutert på siden for idebanken
-                </p>
-            <div class="red">
-                {{createErrMsg}}
-            </div>
+                <div class="red">
+                    {{createErrMsg}}
+                </div>
             </form>
         </div>
     </div>
@@ -39,5 +38,7 @@
             </p>
         </div>
     </div>
+    <br>
     <a type="button" class="form-control" ng-click="getIdeas(skip)">Legg til</a>
+    <br>
 </div>

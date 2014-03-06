@@ -26,7 +26,7 @@ public interface UserQueries {
     public int getWeekGoal(DB db, String username, int week);
     public Iterator<DBObject> getAssignmentsUser(DB db, String username,
             Date from, Date to);
-    public void setGoal(DB db, String username, int points);
+    public void setGoal(DB db, String username, int points) throws InputException;
     public void deleteContest(DB db, String contestId) throws InputException,
             DBException;
     /**

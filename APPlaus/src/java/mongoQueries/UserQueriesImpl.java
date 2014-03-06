@@ -242,11 +242,12 @@ public class UserQueriesImpl implements UserQueries{
      * @param db DB object to contact database
      * @param username of given user
      * @param points points to set as goal this week
+     * @throws InputException when bad input
      */
     @Override
-    public void setGoal(DB db, String username, int points) {
-        if(points <= 0) {
-            throw new IllegalArgumentException("points variable must be an"
+    public void setGoal(DB db, String username, int points) throws InputException {
+        if(points <= 0 || username == null || db == null) {
+            throw new InputException("points variable must be an"
                     + "integer more than 0.");
         }
         Date end = DateTools.formatDate(DateTools.getMonday(0), DateTools.TO_MONGO);

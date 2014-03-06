@@ -9,7 +9,7 @@ services.service('HomeService', function($http) {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
         return promise;
-    }
+    };
     
     this.getGoals = function() {
         var promise = $http({
@@ -19,7 +19,7 @@ services.service('HomeService', function($http) {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
         return promise;
-    }
+    };
         
 
     this.getNews = function(skip) {
@@ -30,7 +30,8 @@ services.service('HomeService', function($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
-    }
+    };
+    
     this.addNewsAll = function(story) {
         var promise = $http({
             url: 'MongoConnection',
@@ -40,5 +41,15 @@ services.service('HomeService', function($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
-    }
-})
+    };
+    
+    this.setGoal = function(goal) {
+        var promise = $http({
+              url: 'MongoConnection',
+              method: "POST",
+              data: "action=setGoal&points=" + goal,
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            });
+        return promise;
+    };
+});

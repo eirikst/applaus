@@ -1,6 +1,9 @@
 <div ng-swipe-right="changeView('home')">
     <div>
         <div class="container">
+            <div class="red">
+                {{errFetchMsg}}
+            </div>
             <div class="row">
                 <!--Active cont-->
                 <div class="col-sm-6">
@@ -16,13 +19,13 @@
                                         <input placeholder="Tittel" name="title" class="form-control" ng-class="{red:createContForm.title.$error.required && createContForm.title.$dirty, green:!createContForm.title.$error.required && createContForm.title.$dirty}" type="text" ng-model="newCont.title" required="true">
                                     </p>
                                     <p>
-                                        <textarea placeholder="Beskrivelse" name="desc" class="form-control"  ng-class="{red:createContForm.desc.$error.required && createContForm.desc.$dirty, green:!createContForm.desc.$error.required && createContForm.desc.$dirty}"ng-model="newCont.desc" required="true"></textarea>
+                                        <textarea placeholder="Beskrivelse" name="desc" class="form-control"  ng-class="{red:createContForm.desc.$error.required && createContForm.desc.$dirty, green:!createContForm.desc.$error.required && createContForm.desc.$dirty}" ng-model="newCont.desc" required="true"></textarea>
                                     </p>
                                     <p>
-                                        <textarea placeholder="Premie" name="prize" class="form-control"  ng-class="{red:createContForm.prize.$error.required && createContForm.prize.$dirty, green:!createContForm.prize.$error.required && createContForm.prize.$dirty}"ng-model="newCont.prize" required="true"></textarea>
+                                        <textarea placeholder="Premie" name="prize" class="form-control"  ng-class="{red:createContForm.prize.$error.required && createContForm.prize.$dirty, green:!createContForm.prize.$error.required && createContForm.prize.$dirty}" ng-model="newCont.prize" required="true"></textarea>
                                     </p>
                                     <p>
-                                        <input placeholder="Poeng" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}"type="number" ng-model="newCont.points" min="1" required="true">
+                                        <input placeholder="Poeng" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}" type="number" ng-model="newCont.points" min="1" required="true">
                                     </p>
                                     <p>
                                         <input placeholder="dd/mm/yyyy" class="form-control" name="dateEnd" ng-class="{red:(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty, green:!(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty}" type="date" ng-model="newCont.date_end" required="true">
@@ -47,9 +50,6 @@
                             </div>
                             <div class="innerDrop" ng-show="dropActive">
                                 <form name="editContForm">
-                                    <p>
-                                        Id {{contest._id.$oid}}
-                                    </p>
                                     <p>
                                         Administrator: {{contest.username}}
                                     </p>
@@ -87,14 +87,12 @@
                                             Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
                                         </span>
                                         <br>
-                                        heidato: <span formated-date="editableContest.date_end.$date"></span>
                                         <span ng-show="editable">
                                             <input formatedDate="editableContest.date_end.$date" type="date" name="editDateEnd" class="form-control" ng-class="{red:editContForm.editDateEnd.$error.required, green:!editContForm.editDateEnd.$error.required}" ng-model="editableContest.date_end.$date" required="true">
                                         </span>
                                     </p>
                                     <p>
-                                        <button class="form-control" ng-show="editable" ng-click="editable = !editable;
-                                                editContest(editableContest);
+                                        <button class="form-control" ng-show="editable" ng-click="editable=!editable; editContest(editableContest);
                                                 contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
                                     </p>
                                 </form>

@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import mongoQueries.*;
 import Tools.DateTools;
-import com.mongodb.util.JSON;
 import java.util.Calendar;
-import javax.servlet.http.HttpServletRequest;
 import applausException.InputException;
+import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import org.bson.types.ObjectId;
 
@@ -108,8 +107,19 @@ public class HomeManager {
     }
     
     
-    public void setGoal(DB db, String username, int points) {
-        userQ.setGoal(db, username, points);
+    public boolean setGoal(DB db, String username, int points) {
+        try {
+            userQ.setGoal(db, username, points);
+            return true;
+        }
+        catch(InputException e) {
+            LOGGER.warning("Bad input" + e);
+            return false;
+        }
+        catch(MongoException e) {
+            LOGGER.warning("Error when quering database" + e);
+            return false;
+        }
     }
     
     /**

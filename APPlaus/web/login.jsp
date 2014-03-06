@@ -32,20 +32,23 @@
                 <h3>Velkommen til APPlaus!</h3>
             </div>
         </div>
-        <div ng-controller="LoginCtrl">
-            <form>
+        <div ng-controller="LoginCtrl" class="container">
+            <form name="loginForm">
                 <h4>Logg inn</h4>
                     
             <p>
-                <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="username">
+                <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="username" ng-class="{red:loginForm.usr.$error.required && loginForm.usr.$dirty, green:!loginForm.usr.$error.required && loginForm.usr.$dirty}" required="true">
             </p>
             <p>
-                <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="password">
+                <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="password" ng-class="{red:loginForm.pwd.$error.required && loginForm.pwd.$dirty, green:!loginForm.pwd.$error.required && loginForm.pwd.$dirty}" required="true">
             </p>
             <p>
-                <button class="form-control" ng-click="login()">Log in</button>
+                <button class="form-control" ng-click="login(usr, pwd)"  ng-disabled="loginForm.$invalid">Log in</button>
             </p>
             </form>
+            <div class="red">
+                {{loginErr}}
+            </div>
             <p>
                 <a href="registerUser.jsp">Registrer deg</a>
             </p>
@@ -57,5 +60,6 @@
         <script src="js/app/controllers/controllers.js"></script>
         <script src="js/app/controllers/headerController.js"></script>
         <script src="js/app/controllers/loginController.js"></script>
+        <script src="js/app/services/loginServices.js"></script>
     </body>
 </html>
