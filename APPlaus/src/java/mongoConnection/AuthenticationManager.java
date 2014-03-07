@@ -45,7 +45,7 @@ public class AuthenticationManager {
     //viktig at alle verdier sjekkes med trim, så de ikke er tomme(viktig her
     //siden det angår brukerdetaljer)
     // 
-    public boolean registerUser(DB db, HttpServletRequest request) {
+    public int registerUser(DB db, HttpServletRequest request) {
         String username = request.getParameter("usr");
         String password = request.getParameter("pwd");
         String repeat = request.getParameter("pwdRepeat");
@@ -54,15 +54,14 @@ public class AuthenticationManager {
         String email = request.getParameter("email");
         
         if (password.equals(repeat)){
-            userQ.registerUser(db, username, password, firstname, lastname, email);
-            return true;
+            return userQ.registerUser(db, username, password, firstname, lastname, email);
         }else { 
-            return false;
+            return 2;
         }
     }
     
     public String getAdminList(DB db) {
-        List<DBObject> adminList = userQ.getAdminList(db);
+        List<DBObject> adminList = userQ.getUsers(db);
         return JSON.serialize(adminList);
     }
     

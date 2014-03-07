@@ -1,8 +1,5 @@
 <div class="container">
     
-    <div class="red">
-        {{createErrMsg}}
-    </div>
     
     <form name="registerUserForm">
         <h4 class="text-center">Registrer ny bruker</h4>
@@ -32,6 +29,10 @@
         <p>
             <button class="form-control" ng-click="registerUser(user)" ng-disabled="registerUserForm.$invalid">Registrer</button>
         </p>
+            <div class="red">
+        {{errMsg}}
+    </div>
+
     </form>
     <p>
         <a href="#login">Logg inn</a>

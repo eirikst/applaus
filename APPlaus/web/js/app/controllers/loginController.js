@@ -32,8 +32,19 @@ controllers.controller('LoginCtrl', function($scope, $location, $http, $window, 
     $scope.registerUser = function(user) {
         LoginService.registerUser(user)
         .success(function(data, status, headers, config) {
-            console.log("User registered");
+            if(data == 0) {
+                $location.path('login');
+                console.log("Register successfull");
+            }
+            else if (data == 1) {
+                $scope.errMsg = "Brukernavnet er allerede i bruk, vennligst fyll inn et nytt brukernavn."
+                console.log("Invalid username");
+            } else if (data == 2) {
+                $scope.errMsg = "Passord stemmer ikke overens."
+                console.log("Invalid password");
+            }
         }).error(function(data, status, headers, config) {
+            $scope.errMsg = "En feil skjedde. Prøv igjen senere."
             console.log("Failed http action=registerUser");
         });
     }

@@ -16,9 +16,10 @@ import org.bson.types.ObjectId;
  */
 public interface UserQueries {
     public int checkLogin(DB db, String username, String password);
-    public boolean registerUser(DB db, String username, String password, String firstname, String lastname, String email);
-    public boolean newPassword(DB db, String email, String password);
+    public int registerUser(DB db, String username, String password, String firstname, String lastname, String email);
+    public int newPassword(DB db, String email, String password);
     public List<DBObject> getUsers(DB db);
+    public boolean isUser(DB db, String username);
     public boolean setRole(DB db, String username, int role);
     public void participate(DB db, String username, String contestId);
     public void dontParticipate(DB db, String username, String contestId);
