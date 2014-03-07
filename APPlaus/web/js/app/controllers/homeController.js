@@ -1,6 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
-controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, HomeService, IdeaService) {
+controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, $cookies, HomeService, IdeaService) {
     //carousel!
     $scope.slideInterval = 5000;
     var slides = $scope.slides = [];
@@ -103,16 +103,11 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
     var skip = 0;
     $scope.getPoints();
     $scope.getNews(skip);
+    $scope.roleCookie = $cookies.role;//role cookie
     
     
     
     
-    
-
-
-
-
-
     //BOORT?
     $scope.changeView = function(view) {
         $location.path(view); // path not hash

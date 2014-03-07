@@ -2,7 +2,7 @@
       
      <div>
         <div class="container">
-            <div class="drop" ng-init="dropAssignCreate = false">
+            <div class="drop" ng-init="dropAssignCreate = false" ng-show="roleCookie == 1 || roleCookie == 2">
                 <div class="dropHeading">
                                 <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
                                 <a class="text-center" ng-click="dropAssignCreate = !dropAssignCreate">Lag en ny type oppgave

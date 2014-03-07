@@ -9,10 +9,15 @@ controllers.controller('LoginCtrl', function($scope, $location, $http, $window, 
                 console.log("Usr/pwd okay, redirecting to index.jsp.");
                 $window.location = "index.jsp";
             }
-            else if(data[0] === 2 || data[0] === 1) {//admin/superadmin
+            else if(data[0] === 2) {//admin
                 console.log("Usr/pwd okay for admin, redirecting to index.jsp.");
-                    $window.location = "index.jsp";//admin.jsp
-            }else {
+                    $window.location = "index.jsp";//index.jsp
+            }
+            else if(data[0] === 1) {//superadmin
+                console.log("Usr/pwd okay for superadmin, redirecting to index.jsp.");
+                    $window.location = "index.jsp";//index.jsp
+            }
+            else {
                 console.log("Usr/pwd don't match.");
                 $scope.loginErr = "Could not find username password match. " + 
                         "Please try again.";

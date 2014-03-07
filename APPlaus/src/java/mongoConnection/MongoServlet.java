@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 
 /**
  *
@@ -76,7 +77,6 @@ public class MongoServlet extends HttpServlet {
                 response.sendError(400);
                 return;
             }
-            
             //getActiveContests
             if(action.equals("getActiveContests")) {
                 out.println(contMan.getActiveContests(db));
@@ -348,11 +348,17 @@ public class MongoServlet extends HttpServlet {
             else if(action.equals("login")) {
                 String username = request.getParameter("usr");
                 String password = request.getParameter("pwd");
-
+                
                 try {
+                    int role = authMan.login(db, username, password, request);
                     //returning role id, -1 if bad details
-                    out.println(JSON.serialize(new int[]{authMan.
-                            login(db, username, password, request)}));
+                    out.println(JSON.serialize(new int[]{role}));
+                    
+                    if(role != -1) {
+                        Cookie cookie = new Cookie("role", "" + role);
+                        cookie.setMaxAge(24*60*60);
+                        response.addCookie(cookie); 
+                    }
                 }
                 //Does not throw com.mongodb.MongoException as the doc says 
                 //it should

@@ -1,7 +1,7 @@
 var controllers = angular.module('employeeApp.controllers');
 
 //ContestCtrl
-controllers.controller('ContCtrl', function($scope, $location, $route, ContestService) {
+controllers.controller('ContCtrl', function($scope, $location, $route, $cookies, ContestService) {
     
     //functions
     
@@ -137,7 +137,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, ContestSe
     $scope.getActiveContests();
     $scope.getUsersActiveContests();
     $scope.getInactiveContests($scope.skipNext);
-    
+    $scope.roleCookie = $cookies.role;//role cookie
     
     
     

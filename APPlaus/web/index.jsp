@@ -10,9 +10,11 @@
 <%
     if(session.getAttribute("username") == null) {
         response.sendRedirect("login.jsp");
-}
-        %>
-<html ng-app="employeeApp">
+    }
+%>
+
+
+<html ng-app='employeeApp'>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -26,6 +28,7 @@
         <script src="js/libs/angular-route.js"></script>
         <script src="js/libs/angular-touch.js"></script>
         <script src="js/libs/angular-animate.js"></script>
+        <script src="js/libs/angular-cookies.js"></script>
         <script src="js/libs/bootstrap.js"></script>
         <script src="js/libs/ui-bootstrap-tpls-0.10.0.js"></script>
 
@@ -45,14 +48,6 @@
                         <a href="#contests"><img class="index-icon" src="img/Contest.png"></a>
                         <a href="#ideabank"><img class="index-icon" src="img/Settings.png"></a>
                         
-                        <!--<ul class="nav">
-            <li id="fat-menu" class="dropdown">
-              <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Mer<b class="caret"></b></a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="logout.jsp">Logout</a></li>
-              </ul>
-            </li>
-          </ul>-->
                         
                 <ul class="nav pull-right">
                   <li class="dropdown">
@@ -61,7 +56,7 @@
                       <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu pull-right">
-                      <li><a type="button" href="#adminList">Admin features</a></li>
+                      <li><a type="button" href="#adminList" ng-show="roleCookie == 1">Admin features</a></li>
                       <li><a href="logout.jsp">Logout</a></li>
                     </ul>
                   </li>
