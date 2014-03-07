@@ -29,7 +29,6 @@ public class MongoServlet extends HttpServlet {
     private AuthenticationManager authMan;
     private AssignmentManager assignMan;
     private ContestManager contMan;
-    private UserManager userMan;
     private AdminManager adminMan;
     private IdeaManager ideaMan;
     
@@ -39,7 +38,6 @@ public class MongoServlet extends HttpServlet {
         authMan = new AuthenticationManager();
         assignMan = new AssignmentManager();
         contMan = new ContestManager();
-        userMan = new UserManager();
         adminMan = new AdminManager();
         ideaMan = new IdeaManager();
         try {
@@ -298,22 +296,22 @@ public class MongoServlet extends HttpServlet {
             
             // admin list
             else if(action.equals("getAdminList")) {
-                out.println(userMan.getAdminList(mongo.getDB("applaus")));
+                out.println(authMan.getAdminList(mongo.getDB("applaus")));
             }
             
             // register user
             else if(action.equals("registerUser")) {
-                out.println(userMan.registerUser(mongo.getDB("applaus"), request));
+                out.println(authMan.registerUser(mongo.getDB("applaus"), request));
             }
             
             // register new password
             else if(action.equals("newPassword")) {
-                out.println(userMan.newPassword(mongo.getDB("applaus"), request));
+                out.println(authMan.newPassword(mongo.getDB("applaus"), request));
             }
             
             // set role for users
             else if(action.equals("setRole")) {
-                out.println(userMan.setRole(mongo.getDB("applaus"), request));
+                out.println(authMan.setRole(mongo.getDB("applaus"), request));
             }
             
             // add idea
