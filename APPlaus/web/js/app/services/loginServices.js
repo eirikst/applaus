@@ -27,11 +27,11 @@ services.service('LoginService', function($http) {
     };
     
     //http call to register a new user to the system
-    this.newPassword = function(userInfo) {
+    this.newPassword = function(email) {
         var promise = $http({
             url: 'MongoConnection',
             method: "POST",
-            data: "action=newPassword&email=" + userInfo.email + "&pwd=" + userInfo.pwd + "&pwdRepeat=" +  userInfo.pwdRepeat,
+            data: "action=newPassword&email=" + email,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

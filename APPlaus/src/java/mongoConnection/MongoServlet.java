@@ -304,9 +304,21 @@ public class MongoServlet extends HttpServlet {
                 out.println(authMan.registerUser(mongo.getDB("applaus"), request));
             }
             
-            // register new password
+            // new password
             else if(action.equals("newPassword")) {
-                out.println(authMan.newPassword(mongo.getDB("applaus"), request));
+                String email = request.getParameter("email");
+                int ok = authMan.newPassword(mongo.getDB("applaus"), email);
+                if(ok == 1) {
+                    out.print(1);//ok email, all good
+                    response.setStatus(200);
+                }
+                else if(ok == 0) {
+                    out.print(0);//wrong email
+                    response.setStatus(200);
+                }
+                else {
+                    response.sendError(500);//error
+                }
             }
             
             // set role for users

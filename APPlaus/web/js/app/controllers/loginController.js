@@ -33,10 +33,17 @@ controllers.controller('LoginCtrl', function($scope, $location, $http, $window, 
         });
     }
     
-    $scope.newPassword = function(userInfo) {
-        LoginService.newPassword(userInfo)
+    $scope.newPassword = function(email) {
+        LoginService.newPassword(email)
         .success(function(data, status, headers, config) {
-            console.log("New password registered");
+            if(data == 1) {
+                $location.path('login');
+                console.log("New password send by email");
+            }
+            else {
+                $scope.errMsg = "Fant ikke din epost i systemet. Vennligst prøv igjen."
+                console.log("Invalid email");
+            }
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=newPassword");
         });
