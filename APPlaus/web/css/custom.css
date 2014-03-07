@@ -5,21 +5,12 @@
 
 .drop {
     margin-top:5px;
-    /*border-style:solid;
-    border-color:#ccc;
-    border-width:1px;
+    margin-bottom:5px;
+    background-color: rgba(255,255,255,0.4);    
     
     -webkit-border-radius:5px 5px 5px 5px;
     -moz-border-radius:5px 5px 5px 5px;
-    border-radius:5px 5px 5px 5px;*/
-    
-    border-top-style:solid;
-    border-top-color:#ccc;
-    border-top-width:1px;
-    
-    border-bottom-style:solid;
-    border-bottom-color:#ccc;
-    border-bottom-width:1px;
+    border-radius:5px 5px 5px 5px;
 }
 
 .dropHeading {
@@ -45,6 +36,7 @@
 
 .innerDrop {
     margin:5px;
+    padding-bottom: 5px;
 }
 
 .scrollable {
@@ -98,4 +90,8 @@ lefty {
 
   /* edit: added z-index */
   z-index: 1;
-}   
+}
+
+.stdLink {
+    color: mediumblue;
+}
