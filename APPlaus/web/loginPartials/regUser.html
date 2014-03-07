@@ -1,32 +1,37 @@
 <div class="container">
-    <form>
+    
+    <div class="red">
+        {{createErrMsg}}
+    </div>
+    
+    <form name="registerUserForm">
         <h4 class="text-center">Registrer ny bruker</h4>
 
-    <p>
-        <input ng-model="user.usr" name="usr" class="form-control" type="text" placeholder="brukernavn">
-    </p>
-    <p>
-        <input ng-model="user.pwd" name="pwd" class="form-control" type="password" placeholder="passord">
-    </p>
-    <p>
-        <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="password" placeholder="gjenta passord">
-    </p>
+        <p>
+            <input ng-model="user.usr" name="usr" class="form-control" type="text" placeholder="brukernavn" ng-class="{red:registerUserForm.usr.$error.required && registerUserForm.usr.$dirty, green:!registerUserForm.usr.$error.required && registerUserForm.usr.$dirty}" required="true">
+        </p>
+        <p>
+            <input ng-model="user.pwd" name="pwd" class="form-control" type="password" placeholder="passord" ng-class="{red:registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty, green:!registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty}" required="true">
+        </p>
+        <p>
+            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="password" placeholder="gjenta passord" ng-class="{red:registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty}" required="true">
+        </p>
 
-    <br/>
+        <br/>
 
-    <p>
-        <input ng-model="user.fname" name="fname" class="form-control" type="text" placeholder="fornavn">
-    </p>
-    <p>
-        <input ng-model="user.lname" name="lname" class="form-control" type="text" placeholder="etternavn">
-    </p>
-    <p>
-        <input ng-model="user.email" name="email" class="form-control" type="text" placeholder="e-post">
-    </p>
+        <p>
+            <input ng-model="user.fname" name="fname" class="form-control" type="text" placeholder="fornavn" ng-class="{red:registerUserForm.fname.$error.required && registerUserForm.fname.$dirty, green:!registerUserForm.fname.$error.required && registerUserForm.fname.$dirty}" required="true">
+        </p>
+        <p>
+            <input ng-model="user.lname" name="lname" class="form-control" type="text" placeholder="etternavn" ng-class="{red:registerUserForm.lname.$error.required && registerUserForm.lname.$dirty, green:!registerUserForm.lname.$error.required && registerUserForm.lname.$dirty}" require="true">
+        </p>
+        <p>
+            <input ng-model="user.email" name="email" class="form-control" type="email" placeholder="e-post" ng-class="{red:(registerUserForm.email.$error.required || registerUserForm.email.$error.email) && registerUserForm.email.$dirty, green:!registerUserForm.email.$error.required && !registerUserForm.email.$error.email && registerUserForm.email.$dirty}" required="true">
+        </p>
 
-    <p>
-        <button class="form-control" ng-click="registerUser(user)">Registrer</button>
-    </p>
+        <p>
+            <button class="form-control" ng-click="registerUser(user)" ng-disabled="registerUserForm.$invalid">Registrer</button>
+        </p>
     </form>
     <p>
         <a href="#login">Logg inn</a>
