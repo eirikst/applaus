@@ -10,8 +10,9 @@ var employeeApp = angular.module('employeeApp',
 'ngRoute',
 'ngTouch',
 'ngAnimate',
+'ngCookies',
 'ui.bootstrap'
-])
+]);
 
         //The route provider manages routing of views
 employeeApp.config(['$routeProvider', function($routeProvider) {

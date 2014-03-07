@@ -2,12 +2,14 @@ package mongoConnection;
 
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import static java.lang.Integer.parseInt;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import mongoQueries.*;
+import Tools.*;
 
 /**
  *
@@ -19,7 +21,7 @@ public class AuthenticationManager {
     private final UserQueries userQ = new UserQueriesImpl();
     
     /**
-     * Checks the mongodb if the user(and only one instance) excists.
+     * Checks the database if the user(and only one instance) exists.
      * @param db database connection
      * @param request http request
      * @return the role(int) on success, or -1 on fail.
@@ -64,19 +66,23 @@ public class AuthenticationManager {
         return JSON.serialize(adminList);
     }
     
-    //sjekk at user finnes, ellers lager den en ny user, ikke bra
-    // gjør dette helst i en egen metode
-    // ikke servlet-request
-    public boolean newPassword(DB db, HttpServletRequest request) {
-        String email = request.getParameter("email");
-        String password = request.getParameter("pwd");
-        String repeat = request.getParameter("pwdRepeat");
-        
-        if (password.equals(repeat)){
-            userQ.newPassword(db, email, password);
-            return true;
-        }else { 
-            return false;
+    /**
+     * First calls Password.generateNew() to get generate a new password
+     * Then calls EmailSender.sendNewPassword() to send password by email. At 
+     * last calls UserQueries' newPassword() to set the new password
+     * @param db DB object to connect to database
+     * @param email email address typed in by user
+     * @return 
+     */
+    public int newPassword(DB db, String email) {
+        String password = Password.generateNew();
+        try {
+            EmailSender.sendNewPassword(email, password);
+            return userQ.newPassword(db, email, password);
+        }
+        catch(MongoException e) {
+            LOGGER.warning("Database error." + e);
+            return -1;
         }
     }
     

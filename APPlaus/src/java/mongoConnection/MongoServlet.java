@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 
 /**
  *
@@ -76,7 +77,6 @@ public class MongoServlet extends HttpServlet {
                 response.sendError(400);
                 return;
             }
-            
             //getActiveContests
             if(action.equals("getActiveContests")) {
                 out.println(contMan.getActiveContests(db));
@@ -304,9 +304,21 @@ public class MongoServlet extends HttpServlet {
                 out.println(authMan.registerUser(mongo.getDB("applaus"), request));
             }
             
-            // register new password
+            // new password
             else if(action.equals("newPassword")) {
-                out.println(authMan.newPassword(mongo.getDB("applaus"), request));
+                String email = request.getParameter("email");
+                int ok = authMan.newPassword(mongo.getDB("applaus"), email);
+                if(ok == 1) {
+                    out.print(1);//ok email, all good
+                    response.setStatus(200);
+                }
+                else if(ok == 0) {
+                    out.print(0);//wrong email
+                    response.setStatus(200);
+                }
+                else {
+                    response.sendError(500);//error
+                }
             }
             
             // set role for users
@@ -336,11 +348,17 @@ public class MongoServlet extends HttpServlet {
             else if(action.equals("login")) {
                 String username = request.getParameter("usr");
                 String password = request.getParameter("pwd");
-
+                
                 try {
+                    int role = authMan.login(db, username, password, request);
                     //returning role id, -1 if bad details
-                    out.println(JSON.serialize(new int[]{authMan.
-                            login(db, username, password, request)}));
+                    out.println(JSON.serialize(new int[]{role}));
+                    
+                    if(role != -1) {
+                        Cookie cookie = new Cookie("role", "" + role);
+                        cookie.setMaxAge(24*60*60);
+                        response.addCookie(cookie); 
+                    }
                 }
                 //Does not throw com.mongodb.MongoException as the doc says 
                 //it should

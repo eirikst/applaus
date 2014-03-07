@@ -238,7 +238,7 @@ public class UserQueriesImpl implements UserQueries{
     }
     
     /**
-     * Sets the goal for next monday if it doesn't already excist
+     * Sets the goal for next monday if it doesn't already exist
      * @param db DB object to contact database
      * @param username of given user
      * @param points points to set as goal this week
@@ -330,18 +330,46 @@ public class UserQueriesImpl implements UserQueries{
         return users;
     }
 
-    public boolean newPassword(DB db, String email, String password){
+    /**
+     * Sets a new password to the database for given email. First calls isAUser
+     * to see if a user is registered with the given email address.
+     * @param db DB object to connect to database
+     * @param email email address
+     * @param password new password
+     * @return true on okay insert
+     */
+    @Override
+    public int newPassword(DB db, String email, String password){
+        if(!isAUser(db, email)) {
+            return 0;
+        }
         DBCollection coll = db.getCollection("user");
         
         BasicDBObject query = new BasicDBObject();
         query.put("email", email);
          
         BasicDBObject setToPassword = new BasicDBObject("$set", new BasicDBObject("password", password));
-        System.out.println(query);
-        System.out.println(setToPassword);
+
         coll.update(query, setToPassword);
-        return true;
+        return 1;
     }
+    
+    /**
+     * Checks if a email is registered on a user
+     * @param db DB object to connect to
+     * @param email email of user
+     * @return true if email is registered on a user, false if not
+     */
+    @Override
+    public boolean isAUser(DB db, String email) {
+            DBCollection collection = db.getCollection("user");
+            DBObject query = new BasicDBObject();
+            query.put("email", email);
+
+            try(DBCursor cursor = collection.find(query)) {
+                return cursor.hasNext();
+            }
+        }
     
     public boolean setRole(DB db, String username, int role){
         DBCollection coll = db.getCollection("user");

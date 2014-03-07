@@ -1,20 +1,16 @@
 <div class="container">
-    <form>
-        <h4 class="text-center">Nytt passord</h4>
-
-    <p>
-        <input ng-model="userInfo.email" name="email" class="form-control" type="text" placeholder="e-post">
-    </p>
-    <p>
-        <input ng-model="userInfo.pwd" name="pwd" class="form-control" type="password" placeholder="nytt passord">
-    </p>
-    <p>
-        <input ng-model="userInfo.pwdRepeat" name="pwdRepeat" class="form-control" type="password" placeholder="gjenta nytt passord">
-    </p>
-    <p>
-        <button class="form-control" ng-click="newPassword(userInfo)">Registrer nytt passord</button>
-    </p>
+    <h4 class="text-center">Nytt passord</h4>
+    <form name="newPwdForm">
+        <p>
+            <input ng-model="email" name="email" class="form-control" type="text" placeholder="e-post" required="true" ng-class="{red:newPwdForm.email.$error.required && newPwdForm.email.$dirty, green:!newPwdForm.email.$error.required && newPwdForm.email.$dirty}">
+        </p>
+        <p>
+            <button class="form-control" ng-click="newPassword(email)" ng-disabled="newPwdForm.$invalid">Send meg nytt passord</button>
+        </p>
     </form>
+    <div class="red">
+        {{errMsg}}
+    </div>
     <p>
         <a href="#login">Logg inn</a>
     </p>

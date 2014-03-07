@@ -1,7 +1,7 @@
 var controllers = angular.module('employeeApp.controllers');
 
 // Assignment controller
-controllers.controller('AssignCtrl', function($scope, $location, $http) {
+controllers.controller('AssignCtrl', function($scope, $location, $http, $cookies) {
     $scope.skip = 0;
     $scope.allAssignments = new Array();
     
@@ -86,4 +86,6 @@ controllers.controller('AssignCtrl', function($scope, $location, $http) {
     }
     
     $scope.getAllAssignments($scope.skip);
+    $scope.roleCookie = $cookies.role;
+    console.log($scope.roleCookie);
 })
