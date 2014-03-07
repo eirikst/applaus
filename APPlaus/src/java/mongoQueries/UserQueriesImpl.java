@@ -294,27 +294,40 @@ public class UserQueriesImpl implements UserQueries{
     
     
     public boolean registerUser(DB db, String username, String password, String firstname, String lastname, String email){
-        DBCollection coll = db.getCollection("user");
-        
-        BasicDBObject query = new BasicDBObject();
-	query.put("username", username);
-        query.put("email", email);
-        query.put("password", password);
-        query.put("firstname", firstname);
-        query.put("lastname", lastname);
-        query.put("role_id", 3);
+        if (isUser(db, username)){
+            return false;
+        } else {
+            DBCollection coll = db.getCollection("user");
+            BasicDBObject query = new BasicDBObject();
+            query.put("username", username);
+            query.put("email", email);
+            query.put("password", password);
+            query.put("firstname", firstname);
+            query.put("lastname", lastname);
+            query.put("role_id", 3);
          
-        WriteResult cursor = coll.insert(query);
-        return true;
+            WriteResult cursor = coll.insert(query);
+            return true;
+        }
     }
     
-    public List<DBObject> getAdminList(DB db){
+    public boolean isUser(DB db, String username){
         DBCollection coll = db.getCollection("user");
         BasicDBObject query = new BasicDBObject();
+	query.put("username", username);
+        if (coll.find(query).hasNext()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public List<DBObject> getUsers(DB db){
+        DBCollection coll = db.getCollection("user");
         DBCursor cursor = coll.find();
         
-        List<DBObject> adminList = cursor.toArray();
-        return adminList;
+        List<DBObject> users = cursor.toArray();
+        return users;
     }
 
     public boolean newPassword(DB db, String email, String password){
