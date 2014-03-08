@@ -1,17 +1,22 @@
 <div class="container">
     <h4 class="text-center">Nytt passord</h4>
+    
+    <!--newpwd form-->
     <form name="newPwdForm">
         <p>
-            <input ng-model="email" name="email" class="form-control" type="text" placeholder="e-post" required="true" ng-class="{red:newPwdForm.email.$error.required && newPwdForm.email.$dirty, green:!newPwdForm.email.$error.required && newPwdForm.email.$dirty}">
+            <input class="form-control" ng-model="email" name="email" type="text" placeholder="e-post" required="true" ng-class="{red:newPwdForm.email.$error.required && newPwdForm.email.$dirty, green:!newPwdForm.email.$error.required && newPwdForm.email.$dirty}">
         </p>
         <p>
-            <button class="form-control" ng-click="newPassword(email)" ng-disabled="newPwdForm.$invalid">Send meg nytt passord</button>
+            <button class="form-control" ng-click="newPassword(email)" ng-disabled="newPwdForm.$invalid">Send nytt passord</button>
         </p>
     </form>
+    <!--end newpwd form-->
+    
     <div class="red">
         {{errMsg}}
     </div>
+    
     <p>
-        <a href="#login">Logg inn</a>
+        <a class="stdLink" href="#login">Tilbake</a>
     </p>
 </div>

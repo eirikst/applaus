@@ -1,17 +1,20 @@
 <div class="container">
+    
+    <!--login form-->
     <form name="loginForm">
         <h4 class="text-center">Logg inn</h4>
-
-    <p>
-        <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="username" ng-class="{red:loginForm.usr.$error.required && loginForm.usr.$dirty, green:!loginForm.usr.$error.required && loginForm.usr.$dirty}" required="true">
-    </p>
-    <p>
-        <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="password" ng-class="{red:loginForm.pwd.$error.required && loginForm.pwd.$dirty, green:!loginForm.pwd.$error.required && loginForm.pwd.$dirty}" required="true">
-    </p>
-    <p>
-        <button class="form-control" ng-click="login(usr, pwd)"  ng-disabled="loginForm.$invalid">Log in</button>
-    </p>
+        <p>
+            <input ng-model="usr" name="usr" class="form-control" type="text" placeholder="Brukernavn"  required="true" ng-class="{red:loginForm.usr.$error.required && loginForm.usr.$dirty, green:!loginForm.usr.$error.required && loginForm.usr.$dirty}">
+        </p>
+        <p>
+            <input ng-model="pwd" name="pwd" class="form-control" type="password" placeholder="Passord"  required="true" ng-class="{red:loginForm.pwd.$error.required && loginForm.pwd.$dirty, green:!loginForm.pwd.$error.required && loginForm.pwd.$dirty}">
+        </p>
+        <p>
+            <button class="form-control" ng-click="login(usr, pwd)"  ng-disabled="loginForm.$invalid">Logg inn</button>
+        </p>
     </form>
+    <!--end login form-->
+    
     <div class="red">
         {{loginErr}}
     </div>

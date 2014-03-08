@@ -95,3 +95,33 @@ lefty {
 .stdLink {
     color: mediumblue;
 }
+
+.header {
+    
+}
+
+.content {
+    position:absolute;
+    top:55px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    overflow:auto;
+}
+
+/*Trengs ikke?*/
+.main-body {
+    height:100%;
+    width:100%;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-size: cover;
+}
+
+.navbar-content-index {
+    margin:10px;
+}
+
+.navbar-content-login {
+    margin:15px;
+}

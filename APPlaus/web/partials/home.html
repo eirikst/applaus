@@ -122,45 +122,49 @@
         </div>
         <!--Ideabank end-->
 
-        <!--Admin liste-->
+        <!--reg assignment-->
         <div class="col-sm-4">
-            <div>
-                <div class="text-center">
-                    <h2>Ett eller annet</h2>
-                    <p>Her er en tekst som er ca like lang som de andre</p>
-                </div>
-                <div class="drop" ng-init="dropdown = false">
-                    <div class="dropHeading text-center">
-                        <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropdown, 'glyphicon-chevron-right': !dropdown}"></a>
-                        <a ng-click="dropdown = !dropdown">Se noe
-                            <span class="clickableDiv"></span>
-                        </a>
+            <div class="text-center">
+                <h2>Oppgaver</h2>
+                <p>Har du utført en oppgave? Registrer den her!</p>
+                <div class="drop" ng-init="dropAssignReg = false">
+                    <div class="dropHeading">
+                    <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
+                    <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Ny oppgave
+                        <span class="clickableDiv"></span>
+                    </a>
                     </div>
-                    <div class="innerDrop" ng-show="dropdown">
-
-                        <input class="form-control" ng-model="filt" placeholder="Søk"/><br/><br/>
-                        <table style="font: 14px 'Proxima Nova Regular','Helvetica Neue',Arial,sans-serif;" class="table table-striped table-bordered table-condensed table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Navn</th>
-                                    <th>Admin</th>
-                                </tr>
-                            </thead>
-                            <tbody ng-repeat="admin in (adminList| filter:filt | orderBy: 'firstname':true | limitTo: 10)">
-                                <tr>
-                                    <td>{{admin.firstname}} {{admin.lastname}}</td>
-                                    <td><input  ng-checked="admin.role_id == 1 || admin.role_id == 2" ng-disabled="admin.role_id == 1" ng-click="setRole(admin.username, admin.role_id)" type="checkbox"/></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                    <div class="innerDrop" ng-show="dropAssignReg">
+                        <p>
+                            <select  class="form-control" data-ng-options="selectedOption.title for selectedOption in selectedOptions"
+                                    data-ng-model="selectedOption">
+                            </select>
+                        </p>
+                        <p>
+                            {{selectedOption.desc}}<br/>
+                            Oppgaven gir {{selectedOption.points}} poeng
+                        </p>
+                        <form name="regForm">
+                            <p>
+                                <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}" required="true"></textarea>
+                            </p>
+                            <p>
+                                <input class="form-control" ng-model='assignment.date_done' type="date" name="regDate"  ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}" required="true">
+                            </p>
+                            <p>
+                                <button data-ng-click="registerAssignment(selectedOption._id.$oid, assignment)"
+                                        ng-disabled="regForm.$invalid"
+                                  class="form-control">
+                                    Registrer
+                                </button>
+                            </p>
+                        </form>
                     </div>
                 </div>
-
             </div>
-            <br>
         </div>
-        <!--Admin liste end-->
+        <!--reg assignment end-->
+        
     </div>
 
     <!--News-->

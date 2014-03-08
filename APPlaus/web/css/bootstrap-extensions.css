@@ -8,35 +8,6 @@ and open the template in the editor.
     Author     : eirikstadheim
 */
 
-/**
- * Extra large button extensions. Extends `.btn`.
- */
-.btn-appwhite {
-    padding: 18px 28px;
-    font-size: 12px;
-    line-height: normal;
-    background-color:white;
-    color:black;
-    border-color:black;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
-    }
-    
-.btn-appwhite300 {
-    padding: 18px 28px;
-    font-size: 14px;
-    line-height: normal;
-    width:200px;
-    background-color:white;
-    color:black;
-    border-color:black;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
-    }
-    
-    
 /*
  The animate class is apart of the element and the ng-enter class
  is attached to the element once the enter animation event is triggered
@@ -60,7 +31,8 @@ and open the template in the editor.
 }
 
 
-
+//Glyphicon. Brukes ikke lengre.
+/*
 .glyphicon-indexHeader {
     font-size: 1.2em;
     color: gray;
@@ -76,12 +48,22 @@ and open the template in the editor.
 
 .glyfhicon-chosen {
     color: black;
-}
+}*/
 
 .navbar-color {
-    background-color: white;
+    background-color: rgba(255,255,255,0.6);
+    border-width: 0px;
 }
+/*kan virke som den ikke trengs
+navbar-ext {
+    position:absolute;
+    top:0px;
+    left:0px;
+    height:100px;
+    right:0px;
+    overflow:hidden;
+}*/
 
-.accoordion-header {
-    background-color:red;
+.form-control-trans {
+    background-color: rgba(255,255,255,0.4);
 }

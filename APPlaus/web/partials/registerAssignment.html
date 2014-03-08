@@ -12,19 +12,19 @@
                 <div class="innerDrop" ng-show="dropAssignCreate">
                     <form name="newAssignForm">
                         <p>
-                            <input name="newAssignTitle" class="form-control" ng-model="title" type="text" placeholder="Navn" ng-class="{red:newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty, green:!newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty}" required="true">
+                            <input name="newAssignTitle" class="form-control" ng-model="assignment.title" type="text" placeholder="Navn" ng-class="{red:newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty, green:!newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty}" required="true">
                         </p>
 
                         <p>
-                            <input name="newAssignPoints" class="form-control" ng-model="points" type="number" placeholder="Poeng" ng-class="{red:(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty, green:!(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty}" required="true" min="1">
+                            <input name="newAssignPoints" class="form-control" ng-model="assignment.points" type="number" placeholder="Poeng" ng-class="{red:(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty, green:!(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty}" required="true" min="1">
                         </p>
 
                         <p>
-                            <textarea name="newAssignDesc" ng-model="desc" placeholder="Beskrivelse" class="form-control" ng-class="{red:newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty, green:!newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty}" required="true"></textarea>
+                            <textarea name="newAssignDesc" ng-model="assignment.desc" placeholder="Beskrivelse" class="form-control" ng-class="{red:newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty, green:!newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty}" required="true"></textarea>
                         </p>
 
                         <p>
-                            <button data-ng-click="createAssignment()"
+                            <button data-ng-click="createAssignment(assignment)"
                                     class="form-control" ng-disabled="newAssignForm.$invalid">
                                 Registrer
                             </button>
@@ -53,13 +53,13 @@
                     </p>
                     <form name="regForm">
                         <p>
-                            <textarea ng-model='comment' name="regComment" class="form-control" placeholder="Kommentar" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}" required="true"></textarea>
+                            <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}" required="true"></textarea>
                         </p>
                         <p>
-                            <input class="form-control" ng-model='date_done' type="date" name="regDate"  ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}" required="true">
+                            <input class="form-control" ng-model='assignment.date_done' type="date" name="regDate"  ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}" required="true">
                         </p>
                         <p>
-                            <button data-ng-click="registerAssignment()"
+                            <button data-ng-click="registerAssignment(selectedOption._id.$oid, assignment)"
                                     ng-disabled="regForm.$invalid"
                               class="form-control">
                                 Registrer

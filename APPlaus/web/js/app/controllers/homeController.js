@@ -1,6 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
-controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, $cookies, HomeService, IdeaService) {
+controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route, $cookies, HomeService, IdeaService, AssignService) {
     //carousel!
     $scope.slideInterval = 5000;
     var slides = $scope.slides = [];
@@ -98,8 +98,36 @@ controllers.controller('HomeCtrl', function($scope, $location, $http, $q, $route
     };
     
     
+    //assignment related
+    
+    // user registers a completed assignment
+    $scope.registerAssignment = function(id, assignment){
+        console.log(id);
+        var d = new Date(assignment.date_done);
+        assignment.time = d.getTime()
+        AssignService.registerAssignment(id, assignment).success(function(data, status, headers, config) {
+            return [];
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=registerAssignment");
+        });        
+    };      
+    
+    //gets the different types of assignments from the system
+    getAssignmentTypes = function() {
+        AssignService.getAssignmentTypes().success(function(data, status, headers, config) {
+            $scope.selectedOptions = data;//sets assignment table with info from DB
+            $scope.selectedOption = $scope.selectedOptions[0];//first one is selected
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=getAssignmentsTypes");
+        });    
+    }
+
+    
+    
     //init + calls
     $scope.news = new Array();
+    $scope.selectedOptions = new Array();
+    getAssignmentTypes();
     var skip = 0;
     $scope.getPoints();
     $scope.getNews(skip);
