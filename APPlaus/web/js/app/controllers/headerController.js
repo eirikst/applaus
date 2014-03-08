@@ -8,5 +8,6 @@ controllers.controller('HeaderCtrl', function($scope, $location, $cookies) {
         return viewLocation === $location.path();
     };
     
+    //gets role id
     $scope.roleCookie = $cookies.role;
-})
+});

@@ -1,26 +1,28 @@
 <div ng-swipe-left="changeView('userFront')" >
-      
-     <div>
+    <div class="red">
+        {{fetchErrMsg}}<!--Error fetching info-->
+    </div>
+    <div>
         <div class="container">
             <div class="drop" ng-init="dropAssignCreate = false" ng-show="roleCookie == 1 || roleCookie == 2">
                 <div class="dropHeading">
-                                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
-                                <a class="text-center" ng-click="dropAssignCreate = !dropAssignCreate">Lag en ny type oppgave
-                                    <span class="clickableDiv"></span>
-                                </a>
-                            </div>
+                    <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
+                    <a class="text-center" ng-click="dropAssignCreate = !dropAssignCreate">Lag en ny type oppgave
+                        <span class="clickableDiv"></span>
+                    </a>
+                </div>
                 <div class="innerDrop" ng-show="dropAssignCreate">
                     <form name="newAssignForm">
                         <p>
-                            <input name="newAssignTitle" class="form-control" ng-model="assignment.title" type="text" placeholder="Navn" ng-class="{red:newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty, green:!newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty}" required="true">
+                            <input name="newAssignTitle" class="form-control" ng-model="assignment.title" type="text" placeholder="Navn" required="true" ng-class="{red:newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty, green:!newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty}">
                         </p>
 
                         <p>
-                            <input name="newAssignPoints" class="form-control" ng-model="assignment.points" type="number" placeholder="Poeng" ng-class="{red:(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty, green:!(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty}" required="true" min="1">
+                            <input name="newAssignPoints" class="form-control" ng-model="assignment.points" type="number" placeholder="Poeng" required="true" min="1" ng-class="{red:(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty, green:!(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty}">
                         </p>
 
                         <p>
-                            <textarea name="newAssignDesc" ng-model="assignment.desc" placeholder="Beskrivelse" class="form-control" ng-class="{red:newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty, green:!newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty}" required="true"></textarea>
+                            <textarea name="newAssignDesc" ng-model="assignment.desc" placeholder="Beskrivelse" class="form-control" required="true" ng-class="{red:newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty, green:!newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty}"></textarea>
                         </p>
 
                         <p>
@@ -29,22 +31,25 @@
                                 Registrer
                             </button>
                         </p>
+                        <div class="red">
+                            {{createErrMsg}}<!--Error on create-->
+                        </div>
                     </form>
                 </div>
             </div>
-            
+
             <h2 class="text-center">Registrerte oppgaver</h2>
             <div class="drop" ng-init="dropAssignReg = false">
                 <div class="dropHeading">
-                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
-                <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Ny oppgave
-                    <span class="clickableDiv"></span>
-                </a>
+                    <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
+                    <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Ny oppgave
+                        <span class="clickableDiv"></span>
+                    </a>
                 </div>
                 <div class="innerDrop" ng-show="dropAssignReg">
                     <p>
                         <select  class="form-control" data-ng-options="selectedOption.title for selectedOption in selectedOptions"
-                                data-ng-model="selectedOption">
+                                 data-ng-model="selectedOption">
                         </select>
                     </p>
                     <p>
@@ -53,28 +58,31 @@
                     </p>
                     <form name="regForm">
                         <p>
-                            <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}" required="true"></textarea>
+                            <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" required="true" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}"></textarea>
                         </p>
                         <p>
-                            <input class="form-control" ng-model='assignment.date_done' type="date" name="regDate"  ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}" required="true">
+                            <input class="form-control" ng-model='assignment.date_done' type="date" name="regDate" required="true" ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}">
                         </p>
                         <p>
                             <button data-ng-click="registerAssignment(selectedOption._id.$oid, assignment)"
                                     ng-disabled="regForm.$invalid"
-                              class="form-control">
+                                    class="form-control">
                                 Registrer
                             </button>
                         </p>
+                        <div class="red">
+                            {{regErrMsg}}<!--Error on create-->
+                        </div>
                     </form>
                 </div>
             </div>
-            
-            
+
+
             <div ng-repeat="assignment in allAssignments">
-                <div class="drop" ng-init="dropArchive= false">
+                <div class="drop" ng-init="dropArchive = false">
                     <div class="dropHeading">
                         <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
-                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.assignments.date_done.$date | date:('dd.MM')}} - {{assignment.title}}
+                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.assignments.date_done.$date| date:('dd.MM')}} - {{assignment.title}}
                             <span class="clickableDiv"></span>
                         </a>
                     </div>
@@ -86,8 +94,8 @@
                 </div>
             </div>
             <br>
-                <button class="form-control" ng-click="getAllAssignments(skip);">Last flere</button>
+            <button class="form-control" ng-click="getAllAssignments(skip);">Last flere</button>
             <br>
         </div>
-     </div>
+    </div>
 </div>

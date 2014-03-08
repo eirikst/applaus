@@ -1,6 +1,6 @@
 var controllers = angular.module('loginApp.controllers');
 
-controllers.controller('LoginCtrl', function($scope, $location, $http, $window, $timeout, LoginService) {
+controllers.controller('LoginCtrl', function($scope, $location, $window, $timeout, LoginService) {
         
     $scope.login = function(usr, pwd) {
         LoginService.login(usr, pwd)

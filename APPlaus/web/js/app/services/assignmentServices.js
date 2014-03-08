@@ -43,6 +43,4 @@ services.service('AssignService', function($http) {
         });
         return promise;
     };
-    
-    
 });
