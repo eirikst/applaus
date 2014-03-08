@@ -68,7 +68,7 @@ services.service('ContestService', function($http) {
             method: "POST",
             data: "action=createContest&title=" + contest.title + "&desc=" + 
                     contest.desc + "&prize=" + contest.prize + "&dateEnd=" + 
-                    contest.date_end + "&points=" + contest.points,
+                    contest.dateSec + "&points=" + contest.points,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

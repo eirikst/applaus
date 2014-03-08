@@ -11,8 +11,10 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     $scope.getActiveContests = function() {
         ContestService.getActiveContests()
             .success(function(data, status, headers, config) {
-                    $scope.activeCont = data;
-            console.log("getAcitveContests success");
+                for(var i = 0; i < data.length; i++) {
+                    $scope.activeCont.push(data[i]);//sets assignment table with info from DB
+                }
+            console.log("getActiveContests success");
         }).error(function(data, status, headers, config) {
             $scope.errFetchMsg = "En feil skjedde under lesing av " + 
      "konkurranser.";
@@ -101,12 +103,13 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
 
     //Create contest
     $scope.createContest = function(contest) {
-        contest.date_end = (new Date(contest.date_end)).getTime();//long format
+        contest.dateSec = (new Date(contest.date_end.$date)).getTime();//long format
         ContestService.createContest(contest)
                 .success(function(data, status, headers, config) {
-                    $route.reload();
+                    contest._id = data;//obj id returned
+                    $scope.activeCont.push(contest);
+                    $scope.getActiveContests();
                     //route reload
-            
             console.log("createContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=createContest");
@@ -145,6 +148,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     };
     
     //init values
+    $scope.activeCont = new Array();
     $scope.inactiveCont = new Array();
     $scope.partCont = new Array();
     $scope.skipNext = 0;

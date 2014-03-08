@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -278,8 +279,13 @@ public class MongoServlet extends HttpServlet {
                     int points = Integer.parseInt((String)request.
                             getParameter("points"));
                     
-                    if(!contMan.createContest(db, title, desc, prize, dateEnd, 
-                            points, username)) {
+                    ObjectId oid = contMan.createContest(db, title, desc, prize, dateEnd, 
+                            points, username);
+                    System.out.println("HIE");
+                    if(oid != null) {
+                        out.print(JSON.serialize(oid));
+                    }
+                    else {
                         response.sendError(500);
                     }
                 }

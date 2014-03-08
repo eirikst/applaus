@@ -32,7 +32,7 @@
                                         <input placeholder="Poeng" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}" type="number" ng-model="newCont.points" min="1" required="true">
                                     </p>
                                     <p>
-                                        <input placeholder="dd/mm/yyyy" class="form-control" name="dateEnd" ng-class="{red:(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty, green:!(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty}" type="date" ng-model="newCont.date_end" required="true">
+                                        <input placeholder="dd/mm/yyyy" class="form-control" name="dateEnd" ng-class="{red:(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty, green:!(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty}" type="date" ng-model="newCont.date_end.$date" required="true">
                                     </p>
                                     <p>
                                         <button class="form-control" ng-click="createContest(newCont);" ng-disabled="createContForm.$invalid">Legg til</button>
@@ -56,6 +56,9 @@
                             </div>
                             <div class="innerDrop" ng-show="dropActive">
                                 <form name="editContForm">
+                                    <p>
+                                        oid: {{contest._id.$oid}}
+                                    </p>
                                     <p>
                                         Administrator: {{contest.username}}
                                     </p>
@@ -94,7 +97,7 @@
                                         </span>
                                         <br>
                                         <span ng-show="editable">
-                                            <input formatedDate="editableContest.date_end.$date" type="date" name="editDateEnd" class="form-control" ng-class="{red:editContForm.editDateEnd.$error.required, green:!editContForm.editDateEnd.$error.required}" ng-model="editableContest.date_end.$date" required="true">
+                                            <input type="date" name="editDateEnd" class="form-control" ng-class="{red:editContForm.editDateEnd.$error.required, green:!editContForm.editDateEnd.$error.required}" ng-model="editableContest.date_end.$date" required="true">
                                         </span>
                                     </p>
                                     <p>

@@ -1,5 +1,6 @@
 package mongoQueries;
 
+import Tools.DateTools;
 import static Tools.DateTools.*;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -134,9 +135,10 @@ public class ContestQueriesImpl implements ContestQueries {
      * @throws InputException if any of the input objects is null or points is 
      * less than 0
      * @throws DBException if any errors from the mongodb
+     * @return ObjectId of document
      */
     @Override
-    public void createContest(DB db, String title, String desc, String prize,
+    public ObjectId createContest(DB db, String title, String desc, String prize,
              Date dateEnd, int points, String username)
             throws InputException, DBException {
         if(db == null || title == null || desc == null || prize == null || 
@@ -147,7 +149,7 @@ public class ContestQueriesImpl implements ContestQueries {
         if(points < 0) {
             throw new InputException("points < 0 caused an exception.");
         }
-        if(dateEnd.before(new Date())) {
+        if(dateEnd.before(DateTools.getToday())) {
             throw new InputException("Date cannot be before today");
         }
         DBCollection collection = db.getCollection("contest");
@@ -162,6 +164,8 @@ public class ContestQueriesImpl implements ContestQueries {
         
         try {
             collection.insert(toInsert);
+            ObjectId oid = (ObjectId)toInsert.get("_id");
+            return oid;
         }
         catch(MongoException e) {
             throw new DBException("Exception on insert to mongodb.", e);
@@ -191,7 +195,7 @@ public class ContestQueriesImpl implements ContestQueries {
         if(points < 0) {
             throw new InputException("points < 0 caused an exception.");
         }
-        if(dateEnd.before(new Date())) {
+        if(dateEnd.before(DateTools.getToday())) {
             throw new InputException("Date cannot be before today.");
         }
         ObjectId objId;

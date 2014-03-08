@@ -6,11 +6,10 @@ import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.util.List;
 import com.mongodb.DBObject;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
 import mongoQueries.*;
 import java.util.logging.Logger;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -116,16 +115,15 @@ public class ContestManager {
      * @param username username of the admin who created the contest
      * @return true if insert is okay, false if not
      */
-    public boolean createContest(DB db, String title, String desc, String prize
+    public ObjectId createContest(DB db, String title, String desc, String prize
             , Date dateEnd, int points, String username) {
         try {
-            contQ.createContest(db, title, desc, prize, dateEnd, points, username);
+            return contQ.createContest(db, title, desc, prize, dateEnd, points, username);
         }
         catch(InputException | DBException e) {
             LOGGER.warning(e.toString());
-            return false;
+            return null;
         }
-        return true;
     }
     
     /**
