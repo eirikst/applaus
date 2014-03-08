@@ -5,7 +5,8 @@
                 {{errFetchMsg}}
             </div>
             <div class="row">
-                <!--Active cont-->
+                
+                <!--active cont-->
                 <div class="col-sm-6">
                     <div class="container contStrct">
                         <h2 class="h2-contest">Aktive konkurranser</h2>
@@ -101,6 +102,7 @@
                                                 contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
                                     </p>
                                 </form>
+                                
                                 <!--admin features-->
                                 <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 ||roleCookie == 2)" ng-click="editable = !editable;
                                         editableContest = copyContest(contest);">Endre</a>
@@ -114,6 +116,7 @@
                                     </div>
                                 </div>
                                 <!--end admin feature-->
+                                
                                 <a class="stdLink" ng-show="isParticipating(contest._id.$oid)" ng-click="dontParticipate(contest)">Meld av</a>
                                 <a class="stdLink" ng-show="!isParticipating(contest._id.$oid)" ng-click="participate(contest)">Delta</a>
                                 <div class="red">

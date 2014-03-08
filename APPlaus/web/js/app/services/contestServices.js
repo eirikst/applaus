@@ -38,9 +38,9 @@ services.service('ContestService', function($http) {
             method: "POST",
             data: "action=participate&contestId=" + contest._id.$oid,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
+        });
         return promise;
-    }
+    };
 
     this.dontParticipate =  function(contest) {
         var promise = $http({
@@ -48,9 +48,9 @@ services.service('ContestService', function($http) {
             method: "POST",
             data: "action=dontParticipate&contestId=" + contest._id.$oid,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
+        });
         return promise;
-    }
+    };
 
     this.deleteContest =  function(contest) {
         var promise = $http({
@@ -60,7 +60,7 @@ services.service('ContestService', function($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
-    }
+    };
 
     this.createContest =  function(contest) {
         var promise = $http({
@@ -72,7 +72,7 @@ services.service('ContestService', function($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
-    }
+    };
     
     this.editContest =  function(contest) {
         var promise = $http({
@@ -85,5 +85,5 @@ services.service('ContestService', function($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
-    }
+    };
 });

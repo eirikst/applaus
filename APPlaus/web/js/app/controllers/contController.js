@@ -5,17 +5,20 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     
     //functions
     
+    //getting data
+    
     //getting active contests
     $scope.getActiveContests = function() {
         ContestService.getActiveContests()
             .success(function(data, status, headers, config) {
                     $scope.activeCont = data;
+            console.log("getAcitveContests success");
         }).error(function(data, status, headers, config) {
             $scope.errFetchMsg = "En feil skjedde under lesing av " + 
-     "konkurranser";
+     "konkurranser.";
             console.log("Failed http action=getActiveContests");
         });
-    }
+    };
     
     //getting inactive contests
     $scope.getInactiveContests = function(skip) {
@@ -25,6 +28,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
                     $scope.inactiveCont.push(data[i]);//sets assignment table with info from DB
                 }
             $scope.skipNext += 7;
+            console.log("getInactiveContests success");
         }).error(function(data, status, headers, config) {
             $scope.errFetchMsg = "En feil skjedde under lesing av " + 
      "konkurranser";
@@ -37,19 +41,24 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         ContestService.getUsersActiveContests()
                 .success(function(data, status, headers, config) {
                     $scope.partCont = data;//sets assignment table with info from DB
+            console.log("getUsersActiveContests success");
         })
                 .error(function(data, status, headers, config) {
             $scope.errFetchMsg = "En feil skjedde under lesing av " + 
      "konkurranser";
             console.log("Failed http action=userActiveContList");
         });
-    }
+    };
+    
+    //setting data
         
     //Registers to participate
     $scope.participate = function(contest) {
         ContestService.participate(contest)
                 .success(function(data, status, headers, config) {
             $scope.partCont.push(contest._id.$oid);
+    //adds contest id to participating contests
+            console.log("participate success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=participate");
             $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
@@ -63,6 +72,8 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             for(var i = 0; i < $scope.partCont.length; i++) {
                 if(contest._id.$oid === $scope.partCont[i]) {
                     $scope.partCont.splice(i, 1);
+            //removes contest id from participating contests
+            console.log("dontParticipate success");
                 }
             }
         }).error(function(data, status, headers, config) {
@@ -78,6 +89,8 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             for(var i = 0; i < $scope.activeCont.length; i++) {
                 if(contest._id.$oid === $scope.activeCont[i]._id.$oid) {
                     $scope.activeCont.splice(i, 1);
+            //removes given contest from active contests
+            console.log("deleteContest success");
                 }
             }
         }).error(function(data, status, headers, config) {
@@ -89,11 +102,12 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     //Create contest
     $scope.createContest = function(contest) {
         contest.date_end = (new Date(contest.date_end)).getTime();//long format
-        console.log(contest.date_end);
         ContestService.createContest(contest)
                 .success(function(data, status, headers, config) {
                     $route.reload();
-            console.log("Successfully created a contest");
+                    //route reload
+            
+            console.log("createContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=createContest");
             $scope.createErrMsg = "En feil oppsto. Vennligst prøv igjen";
@@ -105,7 +119,9 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         contest.date_end = (new Date(contest.date_end.$date)).getTime();//long format
         ContestService.editContest(contest)
                 .success(function(data, status, headers, config) {
-            console.log("Successfully edited a contest");
+                    //ingenting
+                    
+            console.log("editContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=editContest");
             $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
@@ -122,9 +138,9 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     };
     
     //support method to the view
+    //copies a contest and return the copy
     $scope.copyContest = function(contest) {
         var copied = angular.copy(contest);
-        console.log("hei:" + copied.date_end.$date);
         return copied;
     };
     
@@ -137,12 +153,14 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     $scope.getActiveContests();
     $scope.getUsersActiveContests();
     $scope.getInactiveContests($scope.skipNext);
+    
+    //gets cookie
     $scope.roleCookie = $cookies.role;//role cookie
     
     
     
     
-    
+    ////////////////////////////////////////////////////////////////////////////
     
     
     
