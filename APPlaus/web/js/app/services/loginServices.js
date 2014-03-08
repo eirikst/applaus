@@ -22,7 +22,7 @@ services.service('LoginService', function($http) {
             data: "action=registerUser&usr=" + user.usr + "&pwd=" + user.pwd + "&pwdRepeat=" +  user.pwdRepeat
                                        + "&fname=" + user.fname + "&lname=" +  user.lname + "&email=" +  user.email,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        })
+        });
         return promise;
     };
     

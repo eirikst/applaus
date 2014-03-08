@@ -45,18 +45,12 @@ public class AuthenticationManager {
     //viktig at alle verdier sjekkes med trim, så de ikke er tomme(viktig her
     //siden det angår brukerdetaljer)
     // 
-    public int registerUser(DB db, HttpServletRequest request) {
-        String username = request.getParameter("usr");
-        String password = request.getParameter("pwd");
-        String repeat = request.getParameter("pwdRepeat");
-        String firstname = request.getParameter("fname");
-        String lastname = request.getParameter("lname");
-        String email = request.getParameter("email");
-        
-        if (password.equals(repeat)){
+    public int registerUser(DB db, String username, String password, 
+            String pwdRepeat, String firstname, String lastname, String email) {        
+        if (password.equals(pwdRepeat)){
             return userQ.registerUser(db, username, password, firstname, lastname, email);
         }else { 
-            return 2;
+            return -3;
         }
     }
     

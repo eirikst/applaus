@@ -301,7 +301,16 @@ public class MongoServlet extends HttpServlet {
             
             // register user
             else if(action.equals("registerUser")) {
-                out.println(authMan.registerUser(mongo.getDB("applaus"), request));
+                String username = request.getParameter("usr");
+                String password = request.getParameter("pwd");
+                String pwdRepeat = request.getParameter("pwdRepeat");
+                String firstname = request.getParameter("fname");
+                String lastname = request.getParameter("lname");
+                String email = request.getParameter("email");
+                
+                out.println(authMan.registerUser(db, 
+                        username, password, pwdRepeat, firstname, lastname,
+                        email));
             }
             
             // new password

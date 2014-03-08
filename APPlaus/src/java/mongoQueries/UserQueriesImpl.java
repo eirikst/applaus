@@ -292,11 +292,15 @@ public class UserQueriesImpl implements UserQueries{
         }
     }
     
-    
+    @Override
     public int registerUser(DB db, String username, String password, String firstname, String lastname, String email){
-        if (isUser(db, username)){
-            return 1;
-        } else {
+        if (userExist(db, username)){
+            return -1;
+        }
+        if(emailExist(db, email)) {
+            return -2;
+        }
+        else {
             DBCollection coll = db.getCollection("user");
             BasicDBObject query = new BasicDBObject();
             query.put("username", username);
@@ -306,12 +310,12 @@ public class UserQueriesImpl implements UserQueries{
             query.put("lastname", lastname);
             query.put("role_id", 3);
          
-            WriteResult cursor = coll.insert(query);
-            return 0;
+            coll.insert(query);
+            return 1;
         }
     }
     
-    public boolean isUser(DB db, String username){
+    public boolean userExist(DB db, String username){
         DBCollection coll = db.getCollection("user");
         BasicDBObject query = new BasicDBObject();
 	query.put("username", username);
@@ -339,7 +343,7 @@ public class UserQueriesImpl implements UserQueries{
      */
     @Override
     public int newPassword(DB db, String email, String password){
-        if(!isAUser(db, email)) {
+        if(!emailExist(db, email)) {
             return 0;
         }
         DBCollection coll = db.getCollection("user");
@@ -359,7 +363,8 @@ public class UserQueriesImpl implements UserQueries{
      * @param email email of user
      * @return true if email is registered on a user, false if not
      */
-     public boolean isAUser(DB db, String email) {
+    @Override
+     public boolean emailExist(DB db, String email) {
             DBCollection collection = db.getCollection("user");
             DBObject query = new BasicDBObject();
             query.put("email", email);

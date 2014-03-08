@@ -22,10 +22,8 @@
         <script src="js/libs/jquery.js"></script>
         <script src="js/libs/angular.js"></script>
         <script src="js/libs/angular-route.js"></script>
-        <script src="js/libs/angular-touch.js"></script>
         <script src="js/libs/angular-animate.js"></script>
         <script src="js/libs/bootstrap.js"></script>
-        <script src="js/libs/ui-bootstrap-tpls-0.10.0.js"></script>
         <!--end lib js scripts-->
 
     </head>

@@ -10,7 +10,7 @@
             <input ng-model="user.pwd" name="pwd" class="form-control" type="password" placeholder="Passord" required="true" ng-class="{red:registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty, green:!registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty}">
         </p>
         <p>
-            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="Password" placeholder="gjenta passord" required="true" ng-class="{red:registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty}">
+            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="Password" placeholder="Gjenta passord" required="true" ng-class="{red:registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty}">
         </p>
 
         <p>
@@ -27,6 +27,9 @@
             <button class="form-control" ng-click="registerUser(user)" ng-disabled="registerUserForm.$invalid">Registrer</button>
         </p>
     </form>
+    <div class="green">
+        {{msg}}
+    </div>
     <div class="red">
         {{errMsg}}
     </div>

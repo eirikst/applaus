@@ -8,9 +8,8 @@ var loginApp = angular.module('loginApp',
 'loginApp.controllers',
 'loginApp.directives',
 'ngRoute',
-'ngTouch',
 'ngAnimate',
-])
+]);
 
 //The route provider manages routing of views
 loginApp.config(['$routeProvider', function($routeProvider) {
