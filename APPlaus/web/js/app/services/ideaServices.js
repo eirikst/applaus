@@ -2,6 +2,7 @@ var services = angular.module('employeeApp.services');
 
 services.service('IdeaService', function($http) {
     
+    //http call to get ideas from db, skip=number of ideas to skip
     this.getIdeas = function(skip) {
         var promise = $http({
             url: 'MongoConnection',
@@ -12,6 +13,7 @@ services.service('IdeaService', function($http) {
         return promise;
     };
     
+    //http call to add idea to db
     this.addIdea = function(title, text) {
         var promise = $http({
             url: 'MongoConnection',
@@ -20,5 +22,5 @@ services.service('IdeaService', function($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
-    }
-})
+    };
+});
