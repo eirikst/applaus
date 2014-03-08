@@ -55,20 +55,19 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     }
     
     @Override
-    public boolean registerAssignment(DB db, String username, String id, Date date, String comment) {
+    public void registerAssignment(DB db, String username, String id, Date dateDone, String comment) {
         DBCollection coll = db.getCollection("user");
         DBObject query = new BasicDBObject();
         query.put("username", username);
         DBObject field = new BasicDBObject();
         field.put("id", id);
-        field.put("date_done", date);
+        field.put("date_done", dateDone);
         field.put("comment", comment);
         
         BasicDBObject pushToAssign = new BasicDBObject("$push", new BasicDBObject("assignments", field));
         
         System.out.println(query + " ::: " + pushToAssign);
         WriteResult cursor = coll.update(query, pushToAssign);
-        return true;
         
         /**
          * > db.user.update( {username:"eirikst"} , { $push : { assignments : {id: "000000000000000000000011", date_done:new Date('2014-02-04'), comment : "Dette gikk"} }} )

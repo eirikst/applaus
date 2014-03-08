@@ -444,9 +444,17 @@ public class UserQueriesImpl implements UserQueries{
         }
         DBCollection collection = db.getCollection("user");
         
-        BasicDBObject match = new BasicDBObject();
-        match.put("$match", new BasicDBObject("username", username));
+        BasicDBObject matchUsername = new BasicDBObject();
+        matchUsername.put("$match", new BasicDBObject("username", username));
+        
+        
+        BasicDBObject dateLte = new BasicDBObject();
+        dateLte.put("assignments.date_done", new BasicDBObject("$lte", DateTools.formatDate(new Date(), DateTools.TO_MONGO)));
+        
+        BasicDBObject matchDate = new BasicDBObject();
+        matchDate.put("$match", dateLte);
 
+        
         DBObject toProject = new BasicDBObject();
         toProject.put("assignments", 1);
         toProject.put("_id", 0);
@@ -465,7 +473,7 @@ public class UserQueriesImpl implements UserQueries{
         BasicDBObject limit = new BasicDBObject();
         limit.put("$limit", 7);
 
-        AggregationOutput output = collection.aggregate(match, project, unwind, sort, skipAssign, limit);
+        AggregationOutput output = collection.aggregate(matchUsername, project, unwind, matchDate, sort, skipAssign, limit);
         
         Iterable<DBObject> it = output.results();
         return it.iterator();

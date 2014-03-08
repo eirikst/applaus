@@ -1,7 +1,7 @@
 var controllers = angular.module('employeeApp.controllers');
 
 // Assignment controller
-controllers.controller('AssignCtrl', function($scope, $location, $cookies, AssignService) {
+controllers.controller('AssignCtrl', function($scope, $location, $route, $cookies, AssignService) {
 
     // creating a new type of assignment
     $scope.createAssignment = function(assignment) {
@@ -21,9 +21,14 @@ controllers.controller('AssignCtrl', function($scope, $location, $cookies, Assig
         assignment.time = d.getTime()
         AssignService.registerAssignment(id, assignment)
                 .success(function(data, status, headers, config) {
-                    //SOMETHING
-
+                    if(data == 1) {
+                        $route.reload();
                     console.log("registerAssignment success");
+                    }
+                    else if(data == -1) {
+                        $scope.regErrMsg = "Feil ved dato angitt.";
+                        console.log("Date not this week.");
+                    }
                 }).error(function(data, status, headers, config) {
             $scope.regErrMsg = "En feil skjedde. Vennligst prøv igjen.";
             console.log("Failed http action=registerAssignment");

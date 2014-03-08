@@ -15,6 +15,6 @@ public interface AssignmentQueries {
     public List<DBObject> getAssignments(DB db);
     public BasicDBList getAllAssignmentsUser(DB db, String username);
     public Iterator<DBObject> getAssignmentsIt(DB db);
-    public boolean registerAssignment(DB db, String username, String id, Date date, String comment);
+    public void registerAssignment(DB db, String username, String id, Date date, String comment);
     public boolean createAssignment(DB db, String title, String desc, int points);
 }

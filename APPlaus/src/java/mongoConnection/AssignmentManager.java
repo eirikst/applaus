@@ -1,5 +1,6 @@
 package mongoConnection;
 
+import Tools.DateTools;
 import applausException.InputException;
 import com.google.common.collect.Lists;
 import com.mongodb.*;
@@ -35,8 +36,14 @@ public class AssignmentManager {
         return assignQ.createAssignment(db, title, desc, points);
     }
     
-    public boolean registerAssignment(DB db, String username, String id, Date date_done, String comment) {
-        return assignQ.registerAssignment(db, username, id, date_done, comment);
+    public int registerAssignment(DB db, String username, String id, Date dateDone, String comment) {
+        Date now = new Date();
+        Date lastMonday = DateTools.getMonday(-1);
+        if(dateDone.after(now) || dateDone.before(lastMonday)) {
+            return -1;//date error
+        }
+        assignQ.registerAssignment(db, username, id, dateDone, comment);
+        return 1;
     }
     
     public String getAllAssignmentsUserSorted(DB db, String username, int skip) {
