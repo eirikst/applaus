@@ -81,6 +81,22 @@ lefty {
     background-color:#dff0d8;
 }
 
+.redMsg {
+    background-color:#f2dede;
+    
+    -webkit-border-radius:2px 2px 2px 2px;
+    -moz-border-radius:2px 2px 2px 2px;
+    border-radius:2px 2px 2px 2px;
+}
+
+.greenMsg {
+    background-color:#dff0d8;
+    
+    -webkit-border-radius:2px 2px 2px 2px;
+    -moz-border-radius:2px 2px 2px 2px;
+    border-radius:2px 2px 2px 2px;
+}
+
 .clickableDiv { 
   position:absolute; 
   width:100%;

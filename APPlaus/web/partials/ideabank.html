@@ -1,7 +1,7 @@
 <div class="container" ng-swipe-right="changeView('contests')">
-    <div class="red">
+    <span class="redMsg">
         {{createErrMsg}}
-    </div>
+    </span>
     <h2 class="text-center">Idebank</h2>
     <div class="drop" ng-init="dropCreate = false">
         <div class="dropHeading">
@@ -19,16 +19,19 @@
                     <textarea name="ideaText" class="form-control"  ng-model="idea.text" placeholder="Tekst" ng-class="{red:createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty, green:!createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty}" required="true"></textarea>
                 </p>
                 <p>
-                    <button class="form-control" ng-click="addIdea(idea)" ng-disabled="createIdeaForm.$invalid">Legg til</button>
+                    <button class="form-control" ng-click="addIdea(idea);" ng-disabled="createIdeaForm.$invalid">Legg til</button>
                 </p>
-                <div class="red">
+                <span class="redMsg">
                     {{createErrMsg}}
-                </div>
+                </span>
+                <span class="greenMsg">
+                    {{createMsg}}
+                </span>
             </form>
         </div>
     </div>
 
-    <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank">
+    <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank track by $index">
         <div class="dropHeading">
             <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
             <a class="text-center" ng-click="dropBank = !dropBank">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}}

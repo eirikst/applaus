@@ -1,5 +1,5 @@
 <div class="container">
-    
+
     <!--reg form-->
     <form name="registerUserForm">
         <h4 class="text-center">Registrer ny bruker</h4>
@@ -27,14 +27,14 @@
             <button class="form-control" ng-click="registerUser(user)" ng-disabled="registerUserForm.$invalid">Registrer</button>
         </p>
     </form>
-    <div class="green">
+    <span class="greenMsg">
         {{msg}}
-    </div>
-    <div class="red">
+    </span>
+    <span class="redMsg">
         {{errMsg}}
-    </div>
+    </span>
     <!--end reg form-->
-    
+
     <p>
         <a class="stdLink" href="#login">Tilbake</a>
     </p>

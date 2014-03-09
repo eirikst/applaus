@@ -9,7 +9,8 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                 .success(function(data, status, headers, config) {
                     console.log("createAssignment success");
                     assignment._id = data._id;
-                    $scope.selectedOptions.push(assignment);
+                    $scope.selectedOptions.unshift(assignment);
+                    $scope.createMsg = "Oppgave lagt til!";
                 }).error(function(data, status, headers, config) {
             $scope.createErrMsg = "En feil skjedde. Vennligst prøv igjen.";
             console.log("Failed http action=createAssignment");
@@ -25,12 +26,13 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                     if(data == 1) {
                         //$route.reload();
                     mergeOneUserAssign(assignment, id);
-                    $scope.allAssignments.push(assignment);
+                    $scope.allAssignments.unshift(assignment);
                     $scope.skip ++;
+                    $scope.regMsg = "Oppgave registrert!";
                     console.log("registerAssignment success");
                     }
                     else if(data == -1) {
-                        $scope.regErrMsg = "Feil ved dato angitt.";
+                        $scope.regErrMsg = "Du kan bare registrere for denne uka";
                         console.log("Date not this week.");
                     }
                 }).error(function(data, status, headers, config) {
@@ -89,7 +91,18 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                 assignment.points = $scope.selectedOptions[i].points;
             }
         }
-    }
+    };
+    
+    //clears error messages
+    $scope.clearMsg = function() {
+        $scope.regMsg = null;
+        $scope.regErrMsg = null;
+        $scope.createMsg = null;
+        $scope.createErrMsg = null;
+    };
+    
+    
+    
 
     //init values
     $scope.skip = 0;

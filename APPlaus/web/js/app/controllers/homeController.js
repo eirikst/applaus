@@ -80,8 +80,9 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     story._id = data._id;
                     story.date = data.date;
                     story.writer = data.writer;
-                    $scope.news.push(story);
+                    $scope.news.unshift(story);
                     skip ++;
+                    $scope.addNews = "Du la til en nyhet!";
                     console.log("addNewsAll success");
                 }).error(function(data, status, headers, config) {
             $scope.addNewsErr = "Det skjedde en feil. "
@@ -96,6 +97,7 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     $scope.addIdea = function(idea) {
         IdeaService.addIdea(idea)
                 .success(function(data, status, headers, config) {
+                $scope.ideaMsg = "Ide lagt til i idebank!";
             console.log("addIdea success");
                 }).error(function(data, status, headers, config) {
             $scope.ideaErr = "Det skjedde en feil. "
@@ -113,6 +115,12 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         assignment.time = d.getTime();//date as long time
         AssignService.registerAssignment(id, assignment)
                 .success(function(data, status, headers, config) {
+                    if(data == 1) {
+                        $scope.assignMsg = "Oppgave lagt til!";
+                    }
+                    else if(data == -1) {
+                        $scope.assignErrMsg = "Du kan bare registrere for denne uka";
+                    }
             console.log("registerAssignment success");
         }).error(function(data, status, headers, config) {
             $scope.assignErrMsg = "Det skjedde en feil. Vennligst prøv igjen.";
@@ -128,7 +136,18 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=getAssignmentsTypes");
         });
-    }
+    };
+
+
+    //clears error messages
+    $scope.clearMsg = function() {
+        $scope.assignMsg = null;
+        $scope.assignErrMsg = null;
+        $scope.ideaMsg = null;
+        $scope.ideaErr = null;
+        $scope.addNews = null;
+        $scope.addNewsErr = null;
+    };
 
 
 
@@ -143,6 +162,10 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
 
 
 
+
+
+
+    ////////////////////////////////////////////////////////////////////////////
 
     //BOORT?
     $scope.changeView = function(view) {

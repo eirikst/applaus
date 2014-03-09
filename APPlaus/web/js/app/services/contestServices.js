@@ -80,7 +80,7 @@ services.service('ContestService', function($http) {
             method: "POST",
             data: "action=editContest&contestId=" + contest._id.$oid + "&title="
                     + contest.title + "&desc=" + contest.desc + "&prize=" + 
-                    contest.prize + "&dateEnd=" + contest.date_end + "&points=" 
+                    contest.prize + "&dateEnd=" + contest.dateSec + "&points=" 
                     + contest.points,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });

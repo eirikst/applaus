@@ -25,8 +25,9 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaServi
                     idea._id = data._id;
                     idea.date = data.date;
                     idea.username = data.username;
-                    $scope.bank.push(idea);
+                    $scope.bank.unshift(idea);
                     $scope.skip ++;
+                    $scope.createMsg = "Ide registrert!";
                     console.log("addIdea success");
                 })
                 .error(function(data, status, headers, config) {
@@ -34,7 +35,8 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaServi
                     $scope.createErrMsg = "En feil oppsto. Vennligst prøv igjen";
                 });
     };
-
+    
+    
     //init
     $scope.skip = 0;
     $scope.bank = new Array();

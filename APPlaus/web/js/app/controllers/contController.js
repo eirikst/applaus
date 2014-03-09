@@ -107,9 +107,10 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         ContestService.createContest(contest)
                 .success(function(data, status, headers, config) {
                     contest._id = data;//obj id returned
-                    $scope.activeCont.push(contest);
+                    $scope.activeCont.unshift(contest);
                     $scope.skipNext ++;
                     //route reload
+                    $scope.createSuccessMsg = "Konkurranse er lagt til!";
             console.log("createContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=createContest");
@@ -119,11 +120,10 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     
     //Edit contest
     $scope.editContest = function(contest) {
-        contest.date_end = (new Date(contest.date_end.$date)).getTime();//long format
+        contest.dateSec = (new Date(contest.date_end.$date)).getTime();//long format
         ContestService.editContest(contest)
                 .success(function(data, status, headers, config) {
-                    //ingenting
-                    
+                    $scope.activeMsg = "Konkurranse er endret!";
             console.log("editContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=editContest");
@@ -145,6 +145,15 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     $scope.copyContest = function(contest) {
         var copied = angular.copy(contest);
         return copied;
+    };
+    
+    //support method to clear msgs in view
+    $scope.clearMsg = function() {
+        $scope.activeMsg = null;
+        $scope.activeErrMsg = null;
+        $scope.createErrMsg = null;
+        $scope.createSuccessMsg = null;
+        $scope.errFetchMsg = null;
     };
     
     //init values
