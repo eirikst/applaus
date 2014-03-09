@@ -13,8 +13,19 @@ var loginApp = angular.module('loginApp',
 
 //The route provider manages routing of views
 loginApp.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/login', {templateUrl: 'loginPartials/login.html', controller: 'LoginCtrl'});
-    $routeProvider.when('/regUser', {templateUrl: 'loginPartials/regUser.html', controller: 'LoginCtrl'});
-    $routeProvider.when('/newPwd', {templateUrl: 'loginPartials/newPwd.html', controller: 'LoginCtrl'});
-    $routeProvider.otherwise({redirectTo: '/login'});
+    $routeProvider
+            .when('/login', 
+    {templateUrl: 'loginPartials/login.html', controller: 'LoginCtrl'}
+            );
+    $routeProvider
+            .when('/regUser', 
+    {templateUrl: 'loginPartials/regUser.html', controller: 'LoginCtrl'}
+            );
+    $routeProvider
+            .when('/newPwd', 
+    {templateUrl: 'loginPartials/newPwd.html', controller: 'LoginCtrl'}
+            );
+    $routeProvider
+            .otherwise({redirectTo: '/login'}
+            );
 }]);

@@ -20,18 +20,8 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     $scope.lastWeek = data[1];//sets assignment table with info from DB
                     $scope.month = data[2];//sets assignment table with info from DB
                     $scope.year = data[3];//sets assignment table with info from DB
-
-                    HomeService.getGoals()
-                            .success(function(data, status, headers, config) {
-                                console.log("getPoints success");
-                                $scope.goal = data[0];//sets assignment table with info from DB
-                                $scope.goalLast = data[1];//sets assignment table with info from DB
-                                $scope.progress = ($scope.week / $scope.goal) * 100;
-                            }).error(function(data, status, headers, config) {
-                        $scope.genError = "Det skjedde en feil ved henting av " +
-                                "mål. Vennligst prøv igjen senere.";
-                        console.log("failed http getWeekGoal");
-                    });
+                    
+                    getGoals();//WARNING:should prob use promises
                 }).error(function(data, status, headers, config) {
             $scope.genError = "Det skjedde en feil ved oppdatering av " +
                     "poeng. Vennligst prøv igjen senere.";
@@ -51,6 +41,21 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     console.log("Failed http action=setGoal");
         });
     };
+    
+    // get goals this and last week
+    getGoals = function() {
+        HomeService.getGoals()
+                 .success(function(data, status, headers, config) {
+                     console.log("getPoints success");
+                     $scope.goal = data[0];//sets assignment table with info from DB
+                     $scope.goalLast = data[1];//sets assignment table with info from DB
+                     $scope.progress = ($scope.week / $scope.goal) * 100;
+                 }).error(function(data, status, headers, config) {
+             $scope.genError = "Det skjedde en feil ved henting av " +
+                     "mål. Vennligst prøv igjen senere.";
+             console.log("failed http getWeekGoal");
+         });
+     }
 
     //News related    
     $scope.getNews = function() {

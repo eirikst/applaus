@@ -381,8 +381,6 @@ public class UserQueriesImpl implements UserQueries{
         query.put("username", username);
          
         BasicDBObject setToRole = new BasicDBObject("$set", new BasicDBObject("role_id", role));
-        System.out.println(query);
-        System.out.println(setToRole);
         coll.update(query, setToRole);
         
         return true;

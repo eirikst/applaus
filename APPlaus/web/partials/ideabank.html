@@ -13,13 +13,13 @@
         <div class="innerDrop" ng-show="dropCreate">
             <form name="createIdeaForm">
                 <p>
-                    <input name="ideaTitle" type="text"  ng-model="title" class="form-control" placeholder="Tittel" ng-class="{red:createIdeaForm.ideaTitle.$error.required && createIdeaForm.ideaTitle.$dirty, green:!createIdeaForm.ideaTitle.$error.required && createIdeaForm.ideaTitle.$dirty}" required="true">
+                    <input name="ideaTitle" type="text"  ng-model="idea.title" class="form-control" placeholder="Tittel" ng-class="{red:createIdeaForm.ideaTitle.$error.required && createIdeaForm.ideaTitle.$dirty, green:!createIdeaForm.ideaTitle.$error.required && createIdeaForm.ideaTitle.$dirty}" required="true">
                 </p>
                 <p>
-                    <textarea name="ideaText" class="form-control"  ng-model="text" placeholder="Tekst" ng-class="{red:createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty, green:!createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty}" required="true"></textarea>
+                    <textarea name="ideaText" class="form-control"  ng-model="idea.text" placeholder="Tekst" ng-class="{red:createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty, green:!createIdeaForm.ideaText.$error.required && createIdeaForm.ideaText.$dirty}" required="true"></textarea>
                 </p>
                 <p>
-                    <button class="form-control" ng-click="addIdea(title, text)" ng-disabled="createIdeaForm.$invalid">Legg til</button>
+                    <button class="form-control" ng-click="addIdea(idea)" ng-disabled="createIdeaForm.$invalid">Legg til</button>
                 </p>
                 <div class="red">
                     {{createErrMsg}}
@@ -40,7 +40,10 @@
                 {{idea.text}}
             </p>
             <p>
-                Skrevet av {{idea.username}}, Lagt til: {{idea.date.$date| date:('dd.MM.yyyy')}}
+                Skrevet av {{idea.username}}
+            </p>
+            <p>
+                Lagt til: {{idea.date.$date| date:('dd.MM.yyyy')}}
             </p>
         </div>
     </div>

@@ -108,6 +108,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
                 .success(function(data, status, headers, config) {
                     contest._id = data;//obj id returned
                     $scope.activeCont.push(contest);
+                    $scope.skipNext ++;
                     $scope.getActiveContests();
                     //route reload
             console.log("createContest success");

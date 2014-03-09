@@ -102,7 +102,6 @@ public class HomeManager {
                 }
             }
         }
-        System.out.println(points);
         return points;
     }
     

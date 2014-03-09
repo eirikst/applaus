@@ -14,11 +14,11 @@ services.service('IdeaService', function($http) {
     };
     
     //http call to add idea to db
-    this.addIdea = function(title, text) {
+    this.addIdea = function(idea) {
         var promise = $http({
             url: 'MongoConnection',
             method: "POST",
-            data: "action=addIdea&title=" + title + "&text=" + text,
+            data: "action=addIdea&title=" + idea.title + "&text=" + idea.text,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

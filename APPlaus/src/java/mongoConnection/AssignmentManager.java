@@ -32,8 +32,8 @@ public class AssignmentManager {
     }
     
     
-    public boolean createAssignment(DB db, String title, String desc, int points) {
-        return assignQ.createAssignment(db, title, desc, points);
+    public String createAssignment(DB db, String title, String desc, int points) {
+        return JSON.serialize(assignQ.createAssignment(db, title, desc, points));
     }
     
     public int registerAssignment(DB db, String username, String id, Date dateDone, String comment) {

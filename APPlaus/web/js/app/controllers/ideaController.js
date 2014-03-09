@@ -19,10 +19,14 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaServi
     };
 
     //add idea to server
-    $scope.addIdea = function(title, text) {
-        IdeaService.addIdea(title, text)
+    $scope.addIdea = function(idea) {
+        IdeaService.addIdea(idea)
                 .success(function(data, status, headers, config) {
-                    $route.reload();
+                    idea._id = data._id;
+                    idea.date = data.date;
+                    idea.username = data.username;
+                    $scope.bank.push(idea);
+                    $scope.skip ++;
                     console.log("addIdea success");
                 })
                 .error(function(data, status, headers, config) {

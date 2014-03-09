@@ -181,7 +181,6 @@ public class MongoServlet extends HttpServlet {
             else if(request.getParameter("action").equals("getAllAssignmentsUserSorted")) {
                 String username = request.getSession().getAttribute("username").toString();
                 String skipStr = request.getParameter("skip");
-                System.out.println(username + ", " + skipStr);
                 try {
                     int skip = Integer.parseInt(skipStr);
                     String toReturn = assignMan.getAllAssignmentsUserSorted(db, username
@@ -281,7 +280,6 @@ public class MongoServlet extends HttpServlet {
                     
                     ObjectId oid = contMan.createContest(db, title, desc, prize, dateEnd, 
                             points, username);
-                    System.out.println("HIE");
                     if(oid != null) {
                         out.print(JSON.serialize(oid));
                     }
@@ -343,7 +341,11 @@ public class MongoServlet extends HttpServlet {
             
             // add idea
             else if(action.equals("addIdea")) {
-                out.println(ideaMan.addIdea(mongo.getDB("applaus"), request));
+                String title = request.getParameter("title");
+                String text = request.getParameter("text");
+                String username = (String)request.getSession().getAttribute("username");
+        
+                out.println(JSON.serialize(ideaMan.addIdea(db, title, text, username)));
             }           
             
             // get ideas

@@ -21,13 +21,8 @@ import mongoQueries.IdeaQueriesImpl;
 public class IdeaManager {
     private final IdeaQueries ideaQ = new IdeaQueriesImpl();
     
-    public boolean addIdea(DB db, HttpServletRequest request){
-        String title = request.getParameter("title");
-        String text = request.getParameter("text");
-        String username = (String)request.getSession().getAttribute("username");
-        
-        ideaQ.addIdea(db, title, text, username);
-        return true;
+    public DBObject addIdea(DB db, String title, String text, String username){
+        return ideaQ.addIdea(db, title, text, username);
     }
     
     public String getIdeas(DB db, int skip) {

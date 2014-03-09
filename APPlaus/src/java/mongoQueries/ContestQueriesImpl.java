@@ -221,7 +221,6 @@ public class ContestQueriesImpl implements ContestQueries {
         WriteResult w;
         try {
             w = collection.update(query, set);
-            System.out.println(w);
         }
         catch(MongoException e) {
             throw new DBException("Exception on edit contest in mongodb.", e);

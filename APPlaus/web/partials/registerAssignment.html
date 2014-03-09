@@ -55,13 +55,14 @@
                     <p>
                         {{selectedOption.desc}}<br/>
                         Oppgaven gir {{selectedOption.points}} poeng
+                        iden er {{selectedOption._id.$oid}}
                     </p>
                     <form name="regForm">
                         <p>
                             <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" required="true" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}"></textarea>
                         </p>
                         <p>
-                            <input class="form-control" ng-model='assignment.date_done' type="date" name="regDate" required="true" ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}">
+                            <input class="form-control" ng-model='assignment.date_done.$date' type="date" name="regDate" required="true" ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}">
                         </p>
                         <p>
                             <button data-ng-click="registerAssignment(selectedOption._id.$oid, assignment)"
@@ -78,18 +79,19 @@
             </div>
 
 
-            <div ng-repeat="assignment in allAssignments">
+            <div ng-repeat="assignment in allAssignments track by $index">
                 <div class="drop" ng-init="dropArchive = false">
                     <div class="dropHeading">
                         <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
-                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.assignments.date_done.$date| date:('dd.MM')}} - {{assignment.title}}
+                        <a class="text-center" ng-click="dropArchive = !dropArchive">{{assignment.date_done.$date| date:('dd.MM')}} - {{assignment.title}}
                             <span class="clickableDiv"></span>
                         </a>
                     </div>
                     <div class="innerDrop" ng-show="dropArchive">
                         <p>Poeng:  {{assignment.points}}     </p>
-                        <p>Dato: {{assignment.assignments.date_done.$date| date:('dd.MM')}} </p>
-                        <p>Kommentar: {{assignment.assignments.comment}} </p>
+                        <p>oid: {{assignment._id.$oid}}</p>
+                        <p>Dato: {{assignment.date_done.$date| date:('dd.MM.yyyy')}} </p>
+                        <p>Kommentar: {{assignment.comment}} </p>
                     </div>
                 </div>
             </div>

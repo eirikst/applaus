@@ -15,16 +15,23 @@ import java.util.List;
 public class IdeaQueriesImpl implements IdeaQueries {
     
     @Override
-    public boolean addIdea(DB db, String title, String text, String username){
+    public DBObject addIdea(DB db, String title, String text, String username){
         DBCollection coll = db.getCollection("idea");
         DBObject query = new BasicDBObject();
         query.put("title", title);
         query.put("text", text);
-        query.put("date", new Date());
+        Date now = new Date();
+        query.put("date", now);
         query.put("username", username);
 
         coll.insert(query);
-        return true;
+        
+        DBObject returnObj = new BasicDBObject();
+        returnObj.put("date", now);
+        returnObj.put("username", username);
+        returnObj.put("_id", query.get("_id"));
+        
+        return returnObj;
     }
     
     @Override
