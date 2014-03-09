@@ -1,10 +1,12 @@
 package mongoQueries;
 
+import applausException.InputException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +17,12 @@ import java.util.List;
 public class IdeaQueriesImpl implements IdeaQueries {
     
     @Override
-    public DBObject addIdea(DB db, String title, String text, String username){
+    public DBObject addIdea(DB db, String title, String text, String username) throws InputException, MongoException {
+        if(db == null || title == null || text == null || username == null) {
+            throw new InputException("Some of the input is null.");
+        }
         DBCollection coll = db.getCollection("idea");
+        
         DBObject query = new BasicDBObject();
         query.put("title", title);
         query.put("text", text);
@@ -35,7 +41,10 @@ public class IdeaQueriesImpl implements IdeaQueries {
     }
     
     @Override
-    public List<DBObject> getIdeas(DB db, int skip) {
+    public List<DBObject> getIdeas(DB db, int skip) throws InputException, MongoException {
+        if(skip < 0) {
+            throw new InputException("Variable skip can not be less than 0.");
+        }
         DBCollection coll = db.getCollection("idea");
         
         try(DBCursor cursor = coll.find().sort

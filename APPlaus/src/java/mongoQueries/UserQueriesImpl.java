@@ -396,7 +396,7 @@ public class UserQueriesImpl implements UserQueries{
      */
     @Override
     public List<ObjectId> getStoryIdsUser(DB db, String username) 
-            throws InputException {
+            throws InputException, MongoException {
         if(db == null || username == null) {
             throw new InputException("db or username input is null.");
         }

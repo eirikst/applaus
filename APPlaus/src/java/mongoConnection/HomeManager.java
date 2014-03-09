@@ -15,6 +15,7 @@ import java.util.Calendar;
 import applausException.InputException;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
+import java.util.logging.Level;
 import org.bson.types.ObjectId;
 
 /**
@@ -138,13 +139,13 @@ public class HomeManager {
             return JSON.serialize(stories);
         }
         catch(InputException e) {
-            LOGGER.warning("Error fetching news for user." + e);
+            LOGGER.log(Level.SEVERE, "Exception while getting news stories.", e);
             return null;
         } 
     }
     
     /**
-     * Calls method in NewsQueries to add news story to the database.
+     * Calls addNewsStory() method in NewsQueries to add news story to the database.
      * @param db DB object to connect to database
      * @param title story title
      * @param text story text
@@ -154,11 +155,12 @@ public class HomeManager {
     public String addNewsStoryForAll(DB db, String title, String text, 
             String writer) {
         try {
-            return JSON.serialize(newsQ.addNewsStory(db, title, text, writer, 0));//0 means news 
+            DBObject addedInfo = newsQ.addNewsStory(db, title, text, writer, NewsQueries.FOR_ALL);
+            return JSON.serialize(addedInfo);//0 means news 
             //available for all users
         }
-        catch(InputException | DBException e) {
-            LOGGER.warning("Bad input to addNewsStory()" + e);
+        catch(InputException | MongoException e) {
+            LOGGER.log(Level.SEVERE, "Exception while adding news story.", e);
             return null;
         }
     }

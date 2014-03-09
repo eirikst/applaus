@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package mongoQueries;
 
 import static Tools.DateTools.*;
-import applausException.DBException;
 import applausException.InputException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -25,6 +18,7 @@ import org.bson.types.ObjectId;
  * @author eirikstadheim
  */
 public class NewsQueriesImpl implements NewsQueries {
+    
     /**
      * Gets related news based on a user's related stories, represented by the 
      * list of objectIds. Also gets stories for all.
@@ -33,13 +27,18 @@ public class NewsQueriesImpl implements NewsQueries {
      * @param skip number of stories to skip
      * @return list of DBObjects with the related news stories
      * @throws InputException if any input is wrong
+     * @throws MongoException if error from database
      */
     @Override
     public List<DBObject> getNews(DB db, List<ObjectId> userStories, int skip) 
-            throws InputException {
+            throws InputException, MongoException {
         if(db == null || userStories == null) {
             throw new InputException("db or userStories objects is null.");
         }
+        if(skip < 0) {
+            throw new InputException("Variable skip can not be less than 0.");
+        }
+        
         DBCollection collection = db.getCollection("news_story");
         
         DBObject forAllStories = new BasicDBObject("for", 0);
@@ -67,12 +66,12 @@ public class NewsQueriesImpl implements NewsQueries {
      * @param writer story writer's username
      * @param who 0 if news is for all, not null if not for all
      * @throws InputException if any input is wrong
-     * @throws DBException if error from database
+     * @throws MongoException if error from database
      * @return DBObject with oid of story and date
      */
     @Override
     public DBObject addNewsStory(DB db, String title, String text, String writer, int who)
-            throws InputException, DBException {
+            throws InputException, MongoException {
         if(db == null || title == null || text == null || writer == null) {
             throw new InputException("Input null caused an"
                     + " exception.");
@@ -86,16 +85,12 @@ public class NewsQueriesImpl implements NewsQueries {
         toInsert.put("for", who);
         Date now = new Date();
         toInsert.put("date", formatDate(now, TO_MONGO));
-        try {
-            collection.insert(toInsert);
-            DBObject retObj = new BasicDBObject();
-            retObj.put("date", now);
-            retObj.put("writer", writer);
-            retObj.put("_id", toInsert.get("_id"));
-            return retObj;
-        }
-        catch(MongoException e) {
-            throw new DBException("Exception on insert to mongodb.", e);
-        }
+
+        collection.insert(toInsert);
+        DBObject retObj = new BasicDBObject();
+        retObj.put("date", now);
+        retObj.put("writer", writer);
+        retObj.put("_id", toInsert.get("_id"));
+        return retObj;
     }
 }

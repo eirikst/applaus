@@ -292,8 +292,7 @@ public class MongoServlet extends HttpServlet {
                     PrintWriter pw = new PrintWriter(sw);
                     e.printStackTrace(pw);
                     LOGGER.info("Could not parse points or date to integer or "
-                            + "long. "
-                            + sw.toString());
+                            + "long. " + e);
                     response.sendError(500);//error
                 }
             }
@@ -345,7 +344,13 @@ public class MongoServlet extends HttpServlet {
                 String text = request.getParameter("text");
                 String username = (String)request.getSession().getAttribute("username");
         
-                out.println(JSON.serialize(ideaMan.addIdea(db, title, text, username)));
+                String responseStr = ideaMan.addIdea(db, title, text, username);
+                if(responseStr != null) {
+                    out.println(responseStr);
+                }
+                else {
+                    response.sendError(500);
+                }
             }           
             
             // get ideas

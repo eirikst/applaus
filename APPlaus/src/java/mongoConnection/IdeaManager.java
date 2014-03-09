@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package mongoConnection;
 
+import applausException.InputException;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mongoQueries.IdeaQueries;
 import mongoQueries.IdeaQueriesImpl;
 
@@ -19,15 +16,29 @@ import mongoQueries.IdeaQueriesImpl;
  * @author eirikstadheim
  */
 public class IdeaManager {
+    private static final Logger LOGGER = Logger.getLogger(IdeaManager.class.getName());
     private final IdeaQueries ideaQ = new IdeaQueriesImpl();
     
-    public DBObject addIdea(DB db, String title, String text, String username){
-        return ideaQ.addIdea(db, title, text, username);
+    
+    public String addIdea(DB db, String title, String text, String username) {
+        try {
+            DBObject addInfo = ideaQ.addIdea(db, title, text, username);
+            return JSON.serialize(addInfo);
+        }
+        catch(InputException | MongoException e) {
+            LOGGER.log(Level.SEVERE, "Exception while adding idea.", e);
+            return null;
+        }
     }
     
     public String getIdeas(DB db, int skip) {
-        List<DBObject> ideas = ideaQ.getIdeas(db, skip);
-        return JSON.serialize(ideas);
+        try {
+            List<DBObject> ideas = ideaQ.getIdeas(db, skip);
+            return JSON.serialize(ideas);
+        }
+        catch(InputException | MongoException e) {
+            LOGGER.log(Level.SEVERE, "Exception while getting ideas.", e);
+            return null;
+        }
     }
-
 }

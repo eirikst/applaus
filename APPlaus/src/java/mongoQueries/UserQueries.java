@@ -5,6 +5,7 @@ import applausException.InputException;
 import com.mongodb.BasicDBList;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,6 @@ public interface UserQueries {
      * @throws InputException
      */
     public List<ObjectId> getStoryIdsUser(DB db, String username) 
-            throws InputException;
+            throws InputException, MongoException;
     public Iterator<DBObject> getAllAssignmentsUserSorted(DB db, String username, int skip) throws InputException;
 }
