@@ -68,9 +68,10 @@ public class NewsQueriesImpl implements NewsQueries {
      * @param who 0 if news is for all, not null if not for all
      * @throws InputException if any input is wrong
      * @throws DBException if error from database
+     * @return DBObject with oid of story and date
      */
     @Override
-    public void addNewsStory(DB db, String title, String text, String writer, int who)
+    public DBObject addNewsStory(DB db, String title, String text, String writer, int who)
             throws InputException, DBException {
         if(db == null || title == null || text == null || writer == null) {
             throw new InputException("Input null caused an"
@@ -83,9 +84,15 @@ public class NewsQueriesImpl implements NewsQueries {
         toInsert.put("text", text);
         toInsert.put("writer", writer);
         toInsert.put("for", who);
-        toInsert.put("date", formatDate(new Date(), TO_MONGO));
+        Date now = new Date();
+        toInsert.put("date", formatDate(now, TO_MONGO));
         try {
             collection.insert(toInsert);
+            DBObject retObj = new BasicDBObject();
+            retObj.put("date", now);
+            retObj.put("writer", writer);
+            retObj.put("_id", toInsert.get("_id"));
+            return retObj;
         }
         catch(MongoException e) {
             throw new DBException("Exception on insert to mongodb.", e);

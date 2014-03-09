@@ -468,7 +468,10 @@ public class MongoServlet extends HttpServlet {
                             .getSession().getAttribute("username").toString();
                 String title = request.getParameter("title");
                 String text = request.getParameter("text");
-                if(adminMan.addNewsStoryForAll(db, title, text, writer)) {
+                
+                String responseStr = homeMan.addNewsStoryForAll(db, title, text, writer);
+                if(responseStr != null) {
+                    out.print(responseStr);
                     response.setStatus(200);
                 }
                 else {

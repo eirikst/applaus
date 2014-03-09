@@ -118,13 +118,13 @@
                     <div class="innerDrop" ng-show="dropIdea">
                         <form name="ideabankForm">
                             <p>
-                                <input name="ideaTitle" type="text"  ng-model="title" class="form-control" placeholder="Tittel" required="true" ng-class="{red:ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty, green:!ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty}">
+                                <input name="ideaTitle" type="text"  ng-model="idea.title" class="form-control" placeholder="Tittel" required="true" ng-class="{red:ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty, green:!ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty}">
                             </p>
                             <p>
-                                <textarea name="ideaText" class="form-control"  ng-model="text" placeholder="Tekst" required="true" ng-class="{red:ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty, green:!ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty}"></textarea>
+                                <textarea name="ideaText" class="form-control"  ng-model="idea.text" placeholder="Tekst" required="true" ng-class="{red:ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty, green:!ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty}"></textarea>
                             </p>
                             <p>
-                                <button class="form-control" ng-click="addIdea(title, text)" ng-disabled="ideabankForm.$invalid">Legg til</button>
+                                <button class="form-control" ng-click="addIdea(idea)" ng-disabled="ideabankForm.$invalid">Legg til</button>
                             </p>
                             <div class="red">
                                 {{ideaErr}}<!--idea error message-->

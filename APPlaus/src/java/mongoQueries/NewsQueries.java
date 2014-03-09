@@ -35,7 +35,8 @@ public interface NewsQueries {
      * @param who 0 if news is for all, not null if not for all
      * @throws InputException if any input is wrong
      * @throws DBException if error from database
+     * @return DBObject with oid of story and date
      */
-    public void addNewsStory(DB db, String title, String text, String writer, int who)
+    public DBObject addNewsStory(DB db, String title, String text, String writer, int who)
             throws InputException, DBException;
 }

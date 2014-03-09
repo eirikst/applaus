@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import mongoQueries.*;
 import Tools.DateTools;
+import applausException.DBException;
 import java.util.Calendar;
 import applausException.InputException;
 import com.mongodb.MongoException;
@@ -140,5 +141,25 @@ public class HomeManager {
             LOGGER.warning("Error fetching news for user." + e);
             return null;
         } 
+    }
+    
+    /**
+     * Calls method in NewsQueries to add news story to the database.
+     * @param db DB object to connect to database
+     * @param title story title
+     * @param text story text
+     * @param writer story writer's username
+     * @return true if ok, false if not okay
+     */
+    public String addNewsStoryForAll(DB db, String title, String text, 
+            String writer) {
+        try {
+            return JSON.serialize(newsQ.addNewsStory(db, title, text, writer, 0));//0 means news 
+            //available for all users
+        }
+        catch(InputException | DBException e) {
+            LOGGER.warning("Bad input to addNewsStory()" + e);
+            return null;
+        }
     }
 }

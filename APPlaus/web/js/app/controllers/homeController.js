@@ -34,7 +34,7 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         HomeService.setGoal(goal)
                 .success(function(data, status, headers, config) {
                     console.log("setGoal success");
-                    $route.reload();
+                    $scope.goal = goal;
                 }).error(function(data, status, headers, config) {
             $scope.setGoalErr = "Det skjedde en feil ved oppdatering av " +
                     "målsetting. Vennligst prøv igjen senere.";
@@ -77,8 +77,12 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     $scope.addNewsAll = function(story) {
         HomeService.addNewsAll(story)
                 .success(function(data, status, headers, config) {
-                    $route.reload();
-            console.log("addNewsAll success");
+                    story._id = data._id;
+                    story.date = data.date;
+                    story.writer = data.writer;
+                    $scope.news.push(story);
+                    skip ++;
+                    console.log("addNewsAll success");
                 }).error(function(data, status, headers, config) {
             $scope.addNewsErr = "Det skjedde en feil. "
                     + "Vennligst prøv igjen senere";
@@ -89,10 +93,9 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     //idea related
 
     //adds ideas
-    $scope.addIdea = function(title, text) {
-        IdeaService.addIdea(title, text)
+    $scope.addIdea = function(idea) {
+        IdeaService.addIdea(idea)
                 .success(function(data, status, headers, config) {
-                    $route.reload();
             console.log("addIdea success");
                 }).error(function(data, status, headers, config) {
             $scope.ideaErr = "Det skjedde en feil. "
