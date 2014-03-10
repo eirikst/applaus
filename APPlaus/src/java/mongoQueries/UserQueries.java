@@ -24,7 +24,7 @@ public interface UserQueries {
             throws InputException, MongoException;
     public boolean userExist(DB db, String username)
             throws InputException, MongoException;
-    public List<DBObject> getUsers(DB db) throws InputException, MongoException;
+    public List<DBObject> getUserInfo(DB db) throws InputException, MongoException;
     public boolean emailExist(DB db, String username)
             throws InputException, MongoException;
     public void setRole(DB db, String username, int role)

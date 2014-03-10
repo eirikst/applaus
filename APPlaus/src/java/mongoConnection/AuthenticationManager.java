@@ -77,7 +77,7 @@ public class AuthenticationManager {
     
     public String getAdminList(DB db) {
         try {
-            List<DBObject> adminList = userQ.getUsers(db);
+            List<DBObject> adminList = userQ.getUserInfo(db);
             return JSON.serialize(adminList);
         }
         catch(InputException e) {

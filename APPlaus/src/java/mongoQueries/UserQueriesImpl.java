@@ -400,15 +400,23 @@ public class UserQueriesImpl implements UserQueries{
         }
     }
     
+    //only username, firstname, lastname, role_id
     @Override
-    public List<DBObject> getUsers(DB db)
+    public List<DBObject> getUserInfo(DB db)
             throws InputException, MongoException {
         if(db == null) {
             throw new InputException("DB object null.");
         }
-        
+        DBObject query = new BasicDBObject();
+        DBObject toFetch = new BasicDBObject();
+        toFetch.put("username", 1);
+        toFetch.put("firstname", 1);
+        toFetch.put("lastname", 1);
+        toFetch.put("role_id", 1);
+        toFetch.put("_id", 0);
+
         DBCollection coll = db.getCollection("user");
-        DBCursor cursor = coll.find();
+        DBCursor cursor = coll.find(query, toFetch);
         
         List<DBObject> users = cursor.toArray();
         return users;
