@@ -32,7 +32,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                     console.log("registerAssignment success");
                     }
                     else if(data == -1) {
-                        $scope.regErrMsg = "Du kan bare registrere for denne uka";
+                        $scope.regErrMsg = "Du kan bare registrere for dager tidligere denne uka eller idag";
                         console.log("Date not this week.");
                     }
                 }).error(function(data, status, headers, config) {
@@ -41,7 +41,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
         });
     };
 
-    //gets the logged-in user assignment list
+    //gets the seven next elements in the logged-in user's assignment list
     $scope.getAllAssignments = function(skip) {
         AssignService.getAllAssignments(skip)
                 .success(function(data, status, headers, config) {

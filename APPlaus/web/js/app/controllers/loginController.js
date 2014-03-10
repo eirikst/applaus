@@ -23,7 +23,8 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
                 + " og passord. Vennligst prøv igjen.";
             }
         }).error(function(data, status, headers, config) {
-            console.log("Failed http action=login");
+                $scope.loginErr = "En uventet feil skjedde. Vennligst prøv igjen";
+                console.log("Failed http action=login");
         });
     };
            
@@ -50,7 +51,7 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
                 console.log("Invalid password");
             }
         }).error(function(data, status, headers, config) {
-            $scope.errMsg = "En feil skjedde. Prøv igjen senere.";
+            $scope.errMsg = "En uforutsett feil oppsto. Vennligst prøv igjen.";
             console.log("Failed http action=registerUser");
         });
     };

@@ -1,5 +1,6 @@
 package mongoQueries;
 
+import applausException.InputException;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -7,7 +8,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import java.util.List;
 import com.mongodb.DBObject;
-import com.mongodb.WriteResult;
+import com.mongodb.MongoException;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -17,16 +18,28 @@ import java.util.Iterator;
  */
 public class AssignmentQueriesImpl implements AssignmentQueries {
     @Override
-    public List<DBObject> getAssignments(DB db) {
+    public List<DBObject> getAssignments(DB db) throws InputException, MongoException {
+        if(db == null) {
+            throw new InputException("Variable db is null.");
+        }
+        
+        DBObject sort = new BasicDBObject();
+        sort.put("title", 1);
+        
         DBCollection coll = db.getCollection("assignment");
-        DBCursor cursor = coll.find();
-        List<DBObject> assignments = cursor.toArray();
-        return assignments;
+        try (DBCursor cursor = coll.find().sort(sort)) {
+            List<DBObject> assignments = cursor.toArray();
+            return assignments;
+        }
     }
     
     
     @Override
-    public BasicDBList getAllAssignmentsUser(DB db, String username) {
+    public BasicDBList getAllAssignmentsUser(DB db, String username) throws InputException, MongoException {
+        if(db == null || username == null) {
+        throw new InputException("Variables db or username is null.");
+        }
+        
         DBCollection coll = db.getCollection("user");
         DBObject query = new BasicDBObject();
         query.put("username", username);
@@ -45,9 +58,15 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
      * @param db DB object to connect to the database
      * @return iterator of DBObject objects with the information about the
      * assignments
+     * @throws InputException if db is null
+     * @throws MongoException if database error
      */
     @Override
-    public Iterator<DBObject> getAssignmentsIt(DB db) {
+    public Iterator<DBObject> getAssignmentsIt(DB db) throws InputException, MongoException {
+        if(db == null) {
+            throw new InputException("Variable db is null.");
+        }
+        
         DBCollection coll = db.getCollection("assignment");
         try(DBCursor cursor = coll.find()) {
             return cursor.iterator();
@@ -55,7 +74,13 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     }
     
     @Override
-    public void registerAssignment(DB db, String username, String id, Date dateDone, String comment) {
+    public void registerAssignment(DB db, String username, String id, Date 
+            dateDone, String comment) throws InputException, MongoException {
+        if(db == null || username == null || id == null || dateDone == null
+                || comment == null) {
+            throw new InputException("One or several input objects is null.");
+        }
+        
         DBCollection coll = db.getCollection("user");
         DBObject query = new BasicDBObject();
         query.put("username", username);
@@ -64,14 +89,23 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
         field.put("date_done", dateDone);
         field.put("comment", comment);
         
-        BasicDBObject pushToAssign = new BasicDBObject("$push", new BasicDBObject("assignments", field));
+        BasicDBObject pushToAssign = new BasicDBObject("$push", 
+                new BasicDBObject("assignments", field));
         
-        System.out.println(coll.update(query, pushToAssign));
-        System.out.println("OKAY!");
+        coll.update(query, pushToAssign);
     }
     
     @Override
-    public DBObject createAssignment(DB db, String title, String desc, int points) {
+    public DBObject createAssignment(DB db, String title, String desc,
+            int points) throws InputException, MongoException {
+        if(db == null || title == null || desc == null) {
+            throw new InputException("One or several input objects is null.");
+        }
+        if(points < 0) {
+            throw new InputException("Assignignment can't have negative value"
+                    + ".");
+        }
+        
         DBCollection coll = db.getCollection("assignment");
         DBObject query = new BasicDBObject();
         query.put("title", title);
@@ -82,7 +116,6 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
         
         DBObject returnObj = new BasicDBObject();
         returnObj.put("_id", query.get("_id"));
-        
         return returnObj;
     }
 }

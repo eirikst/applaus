@@ -119,7 +119,7 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                         $scope.assignMsg = "Oppgave lagt til!";
                     }
                     else if(data == -1) {
-                        $scope.assignErrMsg = "Du kan bare registrere for denne uka";
+                        $scope.assignErrMsg = "Du kan bare registrere for dager tidligere denne uka eller idag";
                     }
             console.log("registerAssignment success");
         }).error(function(data, status, headers, config) {

@@ -10,17 +10,15 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import java.util.Date;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import mongoConnection.AuthenticationManager;
 import Tools.DateTools;
-import applausException.DBException;
 import applausException.InputException;
 import com.mongodb.AggregationOutput;
 import com.mongodb.MongoException;
-import com.mongodb.WriteResult;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import org.bson.types.ObjectId;
 
 /**
@@ -31,17 +29,23 @@ public class UserQueriesImpl implements UserQueries{
     private final static Logger LOGGER = Logger.getLogger
         (AuthenticationManager.class.getName());
     
-    
     /**
-     * Checks the mongodb if the user(and only one instance) excists.
+     * Checks the if the user(and only one instance) exists.
      * @param db database connection
      * @param username username submitted
      * @param password password submitted
      * @return the role(int) on success, or -1 on fail.
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
     public int checkLogin(DB db,
-            String username, String password) {
+            String username, String password) throws InputException,
+            MongoException {
+        if(db == null || username == null || password == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
         DBCollection coll = db.getCollection("user");
         
         BasicDBObject query = new BasicDBObject();
@@ -60,6 +64,8 @@ public class UserQueriesImpl implements UserQueries{
                     return -1;
             }
             else {
+                LOGGER.log(Level.WARNING, "Multiple instances of a username in the database."
+                + " User: " + username);
                 return -2;//more than one instance
             }
         }
@@ -72,19 +78,26 @@ public class UserQueriesImpl implements UserQueries{
      * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public void participate(DB db, String username, String contestId) {
+    public void participate(DB db, String username, String contestId) throws
+            InputException, MongoException {
+        if(db == null || username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
         //fetching active ids to check if the id parameter matches any of the
         //active contests
         DBCollection contestColl = db.getCollection("contest");
         BasicDBObject query = new BasicDBObject();
 	query.put("date_end", BasicDBObjectBuilder.start("$gte"
-                , new Date()).get());
+                , DateTools.getToday()).get());
         DBObject field = new BasicDBObject();
         field.put("_id", 1);
 
-        //sort with next date first
+        //finds id, sets to participate on given contest
         try(DBCursor cursor = contestColl.find(query, field)) {
             while(cursor.hasNext()) {
                 if(cursor.next().get("_id").equals(contestId)) {
@@ -106,15 +119,39 @@ public class UserQueriesImpl implements UserQueries{
      * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public void dontParticipate(DB db, String username, String contestId){
-        DBCollection coll = db.getCollection("user");
-        BasicDBObject userDoc = new BasicDBObject();
-        userDoc.put("username", username);
-        String json = "{$pull:{contests:\"" + contestId + "\"}}";
-        DBObject push = (DBObject) JSON.parse(json);
-        coll.update(userDoc, push);
+    public void dontParticipate(DB db, String username, String contestId)
+            throws InputException, MongoException {
+        if(db == null || username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
+        //fetching active ids to check if the id parameter matches any of the
+        //active contests
+        DBCollection contestColl = db.getCollection("contest");
+        BasicDBObject query = new BasicDBObject();
+	query.put("date_end", BasicDBObjectBuilder.start("$gte"
+                , DateTools.getToday()).get());
+        DBObject field = new BasicDBObject();
+        field.put("_id", 1);
+
+        //finds id, sets to participate on given contest
+        try(DBCursor cursor = contestColl.find(query, field)) {
+            while(cursor.hasNext()) {
+                if(cursor.next().get("_id").equals(contestId)) {
+                    DBCollection userColl = db.getCollection("user");
+                    BasicDBObject userDoc = new BasicDBObject();
+                    userDoc.put("username", username);
+                    String json = "{$pull:{contests:\"" + contestId + "\"}}";
+                    DBObject push = (DBObject) JSON.parse(json);
+                    userColl.update(userDoc, push);
+                    break;
+                }
+            }
+        }
     }
     
     /**
@@ -122,9 +159,16 @@ public class UserQueriesImpl implements UserQueries{
      * @param db DB object to contact database
      * @param username of given user
      * @return BasicDBList of the contests the user is participating in
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public BasicDBList userActiveContList(DB db, String username){
+    public BasicDBList userActiveContList(DB db, String username)
+            throws InputException, MongoException {
+        if(db == null || username == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
         DBCollection coll = db.getCollection("user");
         DBObject query = new BasicDBObject();
         query.put("username", username);
@@ -146,15 +190,23 @@ public class UserQueriesImpl implements UserQueries{
      * @return goal of the week specified if registered. 0 if not goal is set.
      * -1 if goal is less than zero, though that should not be allowed. -2 if
      * several instances is stored for that day, should not be allowed.
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public int getWeekGoal(DB db, String username, int week) {
+    public int getWeekGoal(DB db, String username, int week)
+            throws InputException, MongoException {
+        if(db == null || username == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
         DBCollection coll = db.getCollection("user");
         BasicDBObject query = new BasicDBObject();
 	query.put("username", username);
         
         BasicDBObject matchEl = new BasicDBObject();
-        matchEl.put("date_end", DateTools.formatDate(DateTools.getMonday(week), DateTools.TO_MONGO));//2 = monday
+        matchEl.put("date_end", DateTools.formatDate(DateTools.getMonday(week),
+                DateTools.TO_MONGO));//2 = monday
         
         BasicDBObject up = new BasicDBObject();
         up.put("$elemMatch", matchEl);
@@ -178,9 +230,13 @@ public class UserQueriesImpl implements UserQueries{
             if(goal > 0) {
                 return goal;
             }
+            LOGGER.log(Level.WARNING, "Noticed a goal set to zero or less for"
+                    + " user " + username + ".");
             return -3;//goal set is zero or less, not allowed
         }
         else if(size > 1) {
+            LOGGER.log(Level.WARNING, "More than one goal instance for a given"
+                    + " week for user " + username + ".");
             return -2;//should not be more than one instance stored in db
         }
         else {
@@ -197,9 +253,16 @@ public class UserQueriesImpl implements UserQueries{
      * @param to last date in scope
      * @return  Iterator<DBObject> with the assignments registered between the 
      * dates.
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public Iterator<DBObject> getAssignmentsUser(DB db, String username, Date from, Date to) {
+    public Iterator<DBObject> getAssignmentsUser(DB db, String username, 
+            Date from, Date to) throws InputException {
+        if(db == null || username == null || from == null || to == null) {
+            throw new InputException("One or more input values is null");
+        }
+        
         DBCollection collection = db.getCollection("user");
         
         BasicDBObject match = new BasicDBObject();
@@ -231,7 +294,8 @@ public class UserQueriesImpl implements UserQueries{
         BasicDBObject matchDate = new BasicDBObject("$match", dateDone);
 
         
-        AggregationOutput output = collection.aggregate(match, project, unwind, group, unwindDate, matchDate);
+        AggregationOutput output = collection.aggregate(match, project, unwind,
+                group, unwindDate, matchDate);
         
         Iterable<DBObject> it = output.results();
         return it.iterator();
@@ -242,10 +306,12 @@ public class UserQueriesImpl implements UserQueries{
      * @param db DB object to contact database
      * @param username of given user
      * @param points points to set as goal this week
-     * @throws InputException when bad input
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public void setGoal(DB db, String username, int points) throws InputException {
+    public void setGoal(DB db, String username, int points)
+            throws InputException, MongoException {
         if(points <= 0 || username == null || db == null) {
             throw new InputException("points variable must be an"
                     + "integer more than 0.");
@@ -271,29 +337,32 @@ public class UserQueriesImpl implements UserQueries{
      * Removes given contestId in database from all users participating
      * @param db DB object to connect to database
      * @param contestId id of the given contest
-     * @throws InputException if 
-     * @throws DBException 
+     * @throws InputException if invalid input
+     * @throws MongoException if database error 
      */
     @Override
-    public void deleteContest(DB db, String contestId) throws InputException, DBException {
+    public void deleteContest(DB db, String contestId)
+            throws InputException, MongoException {
         if(db == null) {
             throw new InputException("DB object null.");
         }
+        
         DBCollection collection = db.getCollection("user");
         BasicDBObject update = new BasicDBObject();
         update.put("$pull", new BasicDBObject("contests", contestId));
         
-        WriteResult result;
-        try {
-            result = collection.updateMulti(new BasicDBObject(), update);
-        }
-        catch(MongoException e) {
-            throw new DBException("Error updating mongodb.", e);
-        }
+        collection.updateMulti(new BasicDBObject(), update);
     }
     
     @Override
-    public int registerUser(DB db, String username, String password, String firstname, String lastname, String email){
+    public int registerUser(DB db, String username, String password, 
+            String firstname, String lastname, String email)
+            throws InputException, MongoException {
+        if(db == null || username == null || password == null ||
+                firstname == null || lastname == null || email == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
         if (userExist(db, username)){
             return -1;
         }
@@ -315,7 +384,13 @@ public class UserQueriesImpl implements UserQueries{
         }
     }
     
-    public boolean userExist(DB db, String username){
+    @Override
+    public boolean userExist(DB db, String username)
+            throws InputException, MongoException {
+        if(db == null || username == null) {
+            throw new InputException("Some input is invalid.");
+        }
+
         DBCollection coll = db.getCollection("user");
         BasicDBObject query = new BasicDBObject();
 	query.put("username", username);
@@ -325,7 +400,13 @@ public class UserQueriesImpl implements UserQueries{
         }
     }
     
-    public List<DBObject> getUsers(DB db){
+    @Override
+    public List<DBObject> getUsers(DB db)
+            throws InputException, MongoException {
+        if(db == null) {
+            throw new InputException("DB object null.");
+        }
+        
         DBCollection coll = db.getCollection("user");
         DBCursor cursor = coll.find();
         
@@ -340,9 +421,16 @@ public class UserQueriesImpl implements UserQueries{
      * @param email email address
      * @param password new password
      * @return true on okay insert
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-    public int newPassword(DB db, String email, String password){
+    public int newPassword(DB db, String email, String password)
+            throws InputException, MongoException {
+        if(db == null || email == null || password == null) {
+            throw new InputException("Some input is invalid.");
+        }
+        
         if(!emailExist(db, email)) {
             return 0;
         }
@@ -351,30 +439,47 @@ public class UserQueriesImpl implements UserQueries{
         BasicDBObject query = new BasicDBObject();
         query.put("email", email);
          
-        BasicDBObject setToPassword = new BasicDBObject("$set", new BasicDBObject("password", password));
+        BasicDBObject setToPassword = new BasicDBObject("$set", 
+                new BasicDBObject("password", password));
 
         coll.update(query, setToPassword);
         return 1;
     }
     
     /**
-     * Checks if a email is registered on a user
+     * Checks if an email address is registered on a user
      * @param db DB object to connect to
      * @param email email of user
      * @return true if email is registered on a user, false if not
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
-     public boolean emailExist(DB db, String email) {
-            DBCollection collection = db.getCollection("user");
-            DBObject query = new BasicDBObject();
-            query.put("email", email);
-
-            try(DBCursor cursor = collection.find(query)) {
-                return cursor.hasNext();
-            }
+     public boolean emailExist(DB db, String email)
+             throws InputException, MongoException {
+        if(db == null || email == null) {
+            throw new InputException("Some input is invalid.");
         }
+
+        DBCollection collection = db.getCollection("user");
+        DBObject query = new BasicDBObject();
+        query.put("email", email);
+
+        try(DBCursor cursor = collection.find(query)) {
+            return cursor.hasNext();
+        }
+    }
     
-    public boolean setRole(DB db, String username, int role){
+    @Override
+    public void setRole(DB db, String username, int role)
+            throws InputException, MongoException {
+        if(db == null || username == null) {
+            throw new InputException("Some input is invalid.");
+        }
+        if(role != 1 && role != 2 && role != 3) {
+            throw new InputException("Role must be one of 1,2,3.");
+        }
+        
         DBCollection coll = db.getCollection("user");
         
         BasicDBObject query = new BasicDBObject();
@@ -382,21 +487,20 @@ public class UserQueriesImpl implements UserQueries{
          
         BasicDBObject setToRole = new BasicDBObject("$set", new BasicDBObject("role_id", role));
         coll.update(query, setToRole);
-        
-        return true;
     }
     
     
     /**
-     * Gets the ids of a news stories related to a user.
+     * Gets the ids of news stories related to a user.
      * @param db DB object to connect to database
      * @param username username of user
      * @return List of object ids for the contests
-     * @throws InputException
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
     public List<ObjectId> getStoryIdsUser(DB db, String username) 
-            throws InputException, MongoException {
+            throws InputException {
         if(db == null || username == null) {
             throw new InputException("db or username input is null.");
         }
@@ -432,13 +536,17 @@ public class UserQueriesImpl implements UserQueries{
      * @param username user's username
      * @param skip number of assignments to skip
      * @return sorted list of user's assignments
-     * @throws InputException if error in input
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
      */
     @Override
     public Iterator<DBObject> getAllAssignmentsUserSorted(DB db, String username, int skip)
             throws InputException {
         if(db == null || username == null) {
             throw new InputException("db or username is null.");
+        }
+        if(skip < 0) {
+            throw new InputException("Variable skip can not be less than 0.");
         }
         DBCollection collection = db.getCollection("user");
         
@@ -475,18 +583,5 @@ public class UserQueriesImpl implements UserQueries{
         
         Iterable<DBObject> it = output.results();
         return it.iterator();
-    }
-    
-    /**
-     * Takes a HttpServletRequest, username and role and sets the request 
-     * session attributes username and role to the given values.
-     * @param request HttpServletRequest to add session to
-     * @param username session username
-     * @param role session role id
-     */
-    private void setSession(HttpServletRequest request, String username,
-            int role) {
-        request.getSession().setAttribute("username", username);
-        request.getSession().setAttribute("role", role);
     }
 }

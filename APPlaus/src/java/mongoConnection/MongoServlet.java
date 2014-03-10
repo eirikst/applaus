@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import static java.lang.Integer.parseInt;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,7 +31,6 @@ public class MongoServlet extends HttpServlet {
     private AuthenticationManager authMan;
     private AssignmentManager assignMan;
     private ContestManager contMan;
-    private AdminManager adminMan;
     private IdeaManager ideaMan;
     
     @Override
@@ -40,7 +39,6 @@ public class MongoServlet extends HttpServlet {
         authMan = new AuthenticationManager();
         assignMan = new AssignmentManager();
         contMan = new ContestManager();
-        adminMan = new AdminManager();
         ideaMan = new IdeaManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
@@ -65,242 +63,74 @@ public class MongoServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("text/html");
-        request.getSession().setMaxInactiveInterval(604800);
         //printwriter
         
         
         try (PrintWriter out = response.getWriter()) {
             String action = request.getParameter("action");
             if(action == null) {
-                LOGGER.severe("Bad request. POST action is NULL.");
-                response.sendError(400);
-                return;
-            }
-            //getActiveContests
-            if(action.equals("getActiveContests")) {
-                out.println(contMan.getActiveContests(db));
-                response.setStatus(200);//success
+                LOGGER.log(Level.INFO, "Bad request. POST action is NULL.");
+                response.sendError(400);//bad request
             }
             
-            //getInactiveContests
-            else if(action.equals("getInactiveContests")) {
-                try {
-                    int skip = Integer.parseInt(request.getParameter("skip"));
-                    out.println(contMan.getInactiveContests(db, skip));
-                    response.setStatus(200);//success
-                }
-                catch(NumberFormatException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Could not parse skip to an integer. " + sw.toString());
-                    response.sendError(400);//error
-                }
-            }
+            //first comes methods accessible to anybody:
             
-            //participate
-            else if(action.equals("participate")) {
-                try {
-                    contMan.participate(db, request.getSession().
-                            getAttribute("username").toString(),
-                            request.getParameter("contestId"));
-                    response.setStatus(200);//success
-                }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongo. " + sw.toString());
-                    response.sendError(500);
-                }
-            }
-            
-            //dontParticipate
-            else if(action.equals("dontParticipate")) {
-                    contMan.dontParticipate(db, request.getSession().
-                            getAttribute("username").toString(),
-                            request.getParameter("contestId"));
-                    response.setStatus(200);//success
-            }
-            
-            //userActiveContList
-            else if(action.equals("userActiveContList")) {
-                try {
-                    out.println(contMan.userActiveContList(db, request.
-                            getSession().getAttribute("username").toString()));
-                    response.setStatus(200);//success
-                }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);//error
-                }
-            }
-            
-            //create assignment
-            else if(request.getParameter("action").equals("createAssignment")) {
-                try{
-                    out.println(assignMan.createAssignment(db, request.
-                            getParameter("title").toString(), request.getParameter("desc").toString(),
-                            parseInt(request.getParameter("points"))));
-                    response.setStatus(200);//success
-                }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);//error
-                }
-            }
-            
-            
-            // register assignment
-            else if(request.getParameter("action").equals("registerAssignment")) {
-                long date = Long.parseLong(request.getParameter("date_done"));
-                try{
-                    out.println(assignMan.registerAssignment(db, request.getSession().
-                            getAttribute("username").toString(), request.
-                            getParameter("id").toString(), new java.util.Date(date), request.getParameter("comment").toString()));
-                    response.setStatus(200);//success
-                }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);//error
-                }
-            }
-            
-            //get all registered assignments from a user
-            else if(request.getParameter("action").equals("getAllAssignmentsUserSorted")) {
-                String username = request.getSession().getAttribute("username").toString();
-                String skipStr = request.getParameter("skip");
-                try {
-                    int skip = Integer.parseInt(skipStr);
-                    String toReturn = assignMan.getAllAssignmentsUserSorted(db, username
-                    , skip);
-                    if(toReturn != null) {
-                        out.println(toReturn);
-                        response.setStatus(200);//success
-                    }
-                    else {
-                        response.sendError(500);
-                    }
-                }
-                catch(NumberFormatException e) {
-                    response.sendError(500);
+            //login
+            else if(action.equals("login")) {
+                String username = request.getParameter("usr");
+                String password = request.getParameter("pwd");
+                if(username == null || password == null) {
+                    response.sendError(400);//bad request
+                    return;
                 }
                 
+                int role = authMan.login(db, username, password, request);
+                if(role == -2 || role == -3 || role == -4) {
+                    response.sendError(500);//internal error
+                    return;
+                } 
+
+                //returning role id if okay, -1 if bad details
+                out.println(JSON.serialize(new int[]{role}));
+
+                if(role == 1 || role == 2 || role == 3) {
+                    Cookie cookie = new Cookie("role", "" + role);
+                    cookie.setMaxAge(24*60*60);
+                    response.addCookie(cookie); 
+
+                    request.getSession().setMaxInactiveInterval(604800);
+                }
+                response.setStatus(200);//success
+                return;
             }
             
-            //get assignments types
-            else if(request.getParameter("action").equals("getAssignmentsTypes")) {
-                try{
-                    out.println(assignMan.getAssignmentsTypes(db));
+            // new password
+            else if(action.equals("newPassword")) {
+                String email = request.getParameter("email");
+                if(email == null) {
+                    response.sendError(400);//bad request
+                    return;
+                }
+                
+                int ok = authMan.newPassword(db, email);
+                if(ok == 1) {
+                    out.print(1);//ok email, all good
                     response.setStatus(200);//success
-                }catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);//error
+                    return;
+                }
+                else if(ok == 0) {
+                    out.print(0);//wrong email
+                    response.setStatus(200);//success
+                    return;
+                }
+                else if(ok == -1 || ok == -2) {
+                    response.sendError(500);//internal error
+                    return;
                 }
             }
             
-            else if(action.equals("getWeekGoal")) {
-                try {
-                    int[] goals = homeMan.getWeekGoals(db, request
-                            .getSession().getAttribute("username").toString());
-                    if(goals[0] <= -2 || goals[1] <= -2) {
-                        response.sendError(500);
-                    }
-                    else {
-                        out.print(JSON.serialize(goals));
-                    }
-                }
-                catch(NumberFormatException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception parsing double. " + sw.toString());
-                    response.sendError(500);//error
-                }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);//error
-                }
-            }
-            else if(action.equals("getPointsHome")) {
-                int[] points = homeMan.getHomePoints(db, (String)request.getSession().getAttribute("username"));
-                out.print(JSON.serialize(points));
-            }
-            else if(action.equals("setGoal")) {
-                String username = (String)request.getSession().getAttribute("username");
-                try {
-                    int goal = Integer.parseInt(request.getParameter("points"));
-                    boolean ok = homeMan.setGoal(db, username, goal);
-                    if(ok) {
-                        response.setStatus(200);
-                    }
-                    else {
-                        response.sendError(500);
-                    }
-                }
-                catch(NumberFormatException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.info("Could not parse goal points to integer. "
-                            + sw.toString());
-                    response.sendError(500);//error
-                }
-            }
-            
-            else if(action.equals("createContest")) {
-                String title = (String)request.getParameter("title");
-                String desc = (String)request.getParameter("desc");
-                String prize = (String)request.getParameter("prize");
-                String username = (String)request.getSession().
-                        getAttribute("username");
-                try {
-                    Long dateEndLong = Long.parseLong(request.
-                            getParameter("dateEnd"));
-                    Date dateEnd = new Date(dateEndLong);
-                    int points = Integer.parseInt((String)request.
-                            getParameter("points"));
-                    
-                    ObjectId oid = contMan.createContest(db, title, desc, prize, dateEnd, 
-                            points, username);
-                    if(oid != null) {
-                        out.print(JSON.serialize(oid));
-                    }
-                    else {
-                        response.sendError(500);
-                    }
-                }
-                catch(NumberFormatException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.info("Could not parse points or date to integer or "
-                            + "long. " + e);
-                    response.sendError(500);//error
-                }
-            }
-            
-            // admin list
-            else if(action.equals("getAdminList")) {
-                out.println(authMan.getAdminList(mongo.getDB("applaus")));
-            }
             
             // register user
             else if(action.equals("registerUser")) {
@@ -311,129 +141,191 @@ public class MongoServlet extends HttpServlet {
                 String lastname = request.getParameter("lname");
                 String email = request.getParameter("email");
                 
-                out.println(authMan.registerUser(db, 
-                        username, password, pwdRepeat, firstname, lastname,
-                        email));
-            }
-            
-            // new password
-            else if(action.equals("newPassword")) {
-                String email = request.getParameter("email");
-                int ok = authMan.newPassword(mongo.getDB("applaus"), email);
-                if(ok == 1) {
-                    out.print(1);//ok email, all good
-                    response.setStatus(200);
+                if(username == null && password == null && pwdRepeat == null ||
+                        firstname == null || lastname == null || email == null) 
+                {
+                    response.sendError(400);//bad request
+                    return;
                 }
-                else if(ok == 0) {
-                    out.print(0);//wrong email
-                    response.setStatus(200);
+                
+                int res = authMan.registerUser(db, 
+                        username, password, pwdRepeat, firstname, lastname,
+                        email);
+                if(res == 1 || res == -1 || res == -2 || res == -3) {
+                    out.println(res);
+                    response.setStatus(200);//success
+                    return;
                 }
                 else {
-                    response.sendError(500);//error
+                    response.sendError(500);//internal error
+                    return;
                 }
             }
             
+            
+            ////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+            
+            /*init username and role id before access restricted methods*/
+            String username;
+            int roleId;
+            try {
+                Object usernameObj = request.getSession().getAttribute("username");
+                Object roleIdObj = request.getSession().getAttribute("role");
+                if(usernameObj == null || roleIdObj == null) {
+                    System.out.println("null, access denied");
+                    response.sendError(401);//access denied
+                    return;
+                }
+                username = (String)usernameObj;
+                roleId = (Integer)roleIdObj;
+            }
+            catch(IllegalStateException e) {
+                response.sendError(401);//access denied
+                return;
+            }
+            catch(NumberFormatException e) {
+                response.sendError(500);//internal error, roleId not parseable
+                return;
+            }
+            /*end init*/
+            
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            //following method only accessible to super admin(roleid=1):
+            
+            ////////////////////////////////////////////////////////////////////
+
+            
+            // admin list
+            if(action.equals("getAdminList")) {
+                if(!isSuperAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String responseStr = authMan.getAdminList(db);
+                if(responseStr == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.print(responseStr);
+                    response.setStatus(200);//success
+                    return;
+                }
+            }
+
             // set role for users
             else if(action.equals("setRole")) {
-                out.println(authMan.setRole(mongo.getDB("applaus"), request));
-            }
-            
-            // add idea
-            else if(action.equals("addIdea")) {
-                String title = request.getParameter("title");
-                String text = request.getParameter("text");
-                String username = (String)request.getSession().getAttribute("username");
-        
-                String responseStr = ideaMan.addIdea(db, title, text, username);
-                if(responseStr != null) {
-                    out.println(responseStr);
+                if(!isSuperAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
                 }
-                else {
-                    response.sendError(500);
+                String userToSet = request.getParameter("username");
+                String roleToSetStr = request.getParameter("role");
+                if(userToSet == null || roleToSetStr == null) {
+                    LOGGER.warning("Some post variable is null.");
+                    response.sendError(400);//bad request
+                    return;
                 }
-            }           
-            
-            // get ideas
-            else if(action.equals("getIdeas")) {
-                String skipStr = request.getParameter("skip");
-                try {
-                    int skip = Integer.parseInt(skipStr);
-                    out.println(ideaMan.getIdeas(mongo.getDB("applaus"), skip));
-                    response.setStatus(200);
-                }
-                catch(NumberFormatException e) {
-                    response.sendError(500);
-                }
-            }   
-            
-            //login
-            else if(action.equals("login")) {
-                String username = request.getParameter("usr");
-                String password = request.getParameter("pwd");
-                
-                try {
-                    int role = authMan.login(db, username, password, request);
-                    //returning role id, -1 if bad details
-                    out.println(JSON.serialize(new int[]{role}));
-                    
-                    if(role != -1) {
-                        Cookie cookie = new Cookie("role", "" + role);
-                        cookie.setMaxAge(24*60*60);
-                        response.addCookie(cookie); 
+                else try {
+                    int roleToSet = Integer.parseInt(roleToSetStr);
+                    String responseStr = authMan.setRole(db, userToSet, roleToSet);
+                    if(responseStr == null) {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                    else {
+                        out.print(responseStr);
+                        response.setStatus(200);//success
+                        return;
                     }
                 }
-                //Does not throw com.mongodb.MongoException as the doc says 
-                //it should
                 catch(NumberFormatException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Role could not be parsed as integer. " + sw.toString());
-                    response.sendError(500);
-                }
-                catch(NullPointerException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Role null. " + sw.toString());
-                    response.sendError(500);
-                }
-                catch(RuntimeException e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
-                    e.printStackTrace(pw);
-                    LOGGER.severe("Exception mongodb. " + sw.toString());
-                    response.sendError(500);
+                    LOGGER.log(Level.INFO, "roleId not parseable to int", e);
+                    response.sendError(400);//bad request
+                    return;
                 }
             }
             
-            else if(action.equals("deleteContest")) {
-                int deleted = contMan.deleteContest(db, request
-                        .getParameter("contestId"));
-                if(deleted == 1) {
-                    response.setStatus(200);
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            //admin features, not accessible if role id is not 1 or 2.
+            
+            ////////////////////////////////////////////////////////////////////
+
+
+            //create assignment
+            else if(action.equals("createAssignment")) {
+                if(!isAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
                 }
-                else {
-                    response.sendError(500);
+                String title = request.getParameter("title");
+                String desc = request.getParameter("desc");
+                String pointsStr = request.getParameter("points");
+                if(title == null || desc == null || pointsStr ==null) {
+                    LOGGER.warning("Some post variable is null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+
+                try{
+                    int points = Integer.parseInt(pointsStr);
+                    String responseStr = assignMan.createAssignment(db, title, desc, points);
+                    if(responseStr == null) {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                    else {
+                        out.print(responseStr);
+                        response.setStatus(200);//success
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "points not parseable to integer.");
+                    response.setStatus(400);//bad request
+                    return;
                 }
             }
-            
-            else if(action.equals("editContest")) {
-                String contestId = (String)request.getParameter("contestId");
-                String title = (String)request.getParameter("title");
-                String desc = (String)request.getParameter("desc");
-                String prize = (String)request.getParameter("prize");
+
+            //create contest
+            else if(action.equals("createContest")) {
+                if(!isAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String title = request.getParameter("title");
+                String desc = request.getParameter("desc");
+                String prize = request.getParameter("prize");
+                String dateEndStr = request.getParameter("dateEnd");
+                String pointsStr = request.getParameter("points");
+                if(title == null || desc == null || prize ==null || 
+                        dateEndStr == null || pointsStr == null) {
+                    LOGGER.warning("Some post variable is null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+
                 try {
-                    Long dateEndLong = Long.parseLong(request.
-                            getParameter("dateEnd"));
+                    Long dateEndLong = Long.parseLong(dateEndStr);
                     Date dateEnd = new Date(dateEndLong);
-                    int points = Integer.parseInt((String)request.
-                            getParameter("points"));
-                    
-                    boolean edit = contMan.editContest(db, contestId, title, desc, prize, 
-                            dateEnd, points);
-                    if(!edit) {
-                        response.sendError(500);//error
+                    int points = Integer.parseInt(pointsStr);
+
+                    ObjectId oid = contMan.createContest(db, title, desc, prize,
+                            dateEnd, points, username);
+                    if(oid != null) {
+                        out.print(JSON.serialize(oid));
+                        response.setStatus(200);//success
+                        return;
+                    }
+                    else {
+                        response.sendError(500);//internal error
+                        return;
                     }
                 }
                 catch(NumberFormatException e) {
@@ -441,63 +333,498 @@ public class MongoServlet extends HttpServlet {
                     PrintWriter pw = new PrintWriter(sw);
                     e.printStackTrace(pw);
                     LOGGER.info("Could not parse points or date to integer or "
-                            + "long. "
-                            + sw.toString());
-                    response.sendError(500);//error
+                            + "long. " + e);
+                    response.sendError(400);//error
+                    return;
                 }
-            }
-            
-            // get news stories
-            else if(action.equals("getNews")) {
-                String username = request
-                            .getSession().getAttribute("username").toString();
-                int skip = 0;
-                try {
-                    skip = Integer.parseInt(request.getParameter("skip"));
+            }   
+
+            //delete contest
+            else if(action.equals("deleteContest")) {
+                if(!isAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
                 }
-                catch(NumberFormatException e) {
-                    LOGGER.warning("skip post value not an integer");
+                String contestId = request.getParameter("contestId");
+                if(contestId == null) {
+                    LOGGER.info("contestId post variable null.");
+                    response.sendError(400);//bad request
+                    return;
                 }
-                String returnStr = homeMan.getNews(db, username, skip);
-                if(returnStr != null) {
-                    out.println(returnStr);
+                int deleted = contMan.deleteContest(db, contestId);
+                if(deleted == 1) {
+                    response.setStatus(200);//success
+                    return;
                 }
                 else {
-                    response.sendError(500);
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+
+            //edit contest
+            else if(action.equals("editContest")) {
+                if(!isAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String id = request.getParameter("id");
+                String title = request.getParameter("title");
+                String desc = request.getParameter("desc");
+                String prize = request.getParameter("prize");
+                String dateEndStr = request.getParameter("dateEnd");
+                String pointsStr = request.getParameter("points");
+                if(id == null || title == null || desc == null || prize == null
+                        || dateEndStr == null || pointsStr == null) {
+                    LOGGER.warning("Some post variable is null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+
+                try {
+                    Long dateEndLong = Long.parseLong(dateEndStr);
+                    Date dateEnd = new Date(dateEndLong);
+                    int points = Integer.parseInt(pointsStr);
+
+                    boolean ok = contMan.editContest(db, id, title, desc,
+                            prize, dateEnd, points);
+                    if(ok) {
+                        response.setStatus(200);//succes
+                        return;
+                    }
+                    else {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.info("Could not parse points or date to integer or "
+                            + "long. " + e);
+                    response.sendError(400);//error
+                    return;
                 }
             }
 
             //add news story
             else if(action.equals("addNewsAll")) {
-                String writer = request
-                            .getSession().getAttribute("username").toString();
+                if(!isAdmin(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
                 String title = request.getParameter("title");
                 String text = request.getParameter("text");
-                
-                String responseStr = homeMan.addNewsStoryForAll(db, title, text, writer);
+                if(title == null || text == null) {
+                    LOGGER.warning("Some post variable is null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                String responseStr = homeMan.addNewsStoryForAll(db, title, text
+                        , username);
                 if(responseStr != null) {
                     out.print(responseStr);
-                    response.setStatus(200);
+                    response.setStatus(200);//success
+                    return;
                 }
                 else {
-                    response.sendError(500);
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            //following code can only be accessed by a logged in user
+            
+            ////////////////////////////////////////////////////////////////////
+
+            
+            //getActiveContests
+            else if(action.equals("getActiveContests")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String responseStr = contMan.getActiveContests(db);
+                if(responseStr == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.println(responseStr);
+                    response.setStatus(200);//success
+                    return;
                 }
             }
 
+            //getInactiveContests
+            else if(action.equals("getInactiveContests")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String skipStr = request.getParameter("skip");
+                if(skipStr == null) {
+                    LOGGER.log(Level.INFO, "skip value null");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                try {
+                    int skip = Integer.parseInt(skipStr);
+                    String responseStr = contMan.getInactiveContests(db, skip);
+                    if(responseStr == null) {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                    out.println(responseStr);
+                    response.setStatus(200);//success
+                    return;
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "skip not parseable to int", e);
+                    response.sendError(400);//bad request
+                    return;
+                }
+            }
+
+            //participate
+            else if(action.equals("participate")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String contestId = request.getParameter("contestId");
+                System.out.println(contestId);
+                if(contestId == null) {
+                    LOGGER.log(Level.INFO, "contestId value null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                int ok = contMan.participate(db, username,
+                        contestId);
+                if(ok == 1) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.setStatus(500);//internal error
+                    return;
+                }
+            }
+
+            //userActiveContList
+            else if(action.equals("userActiveContList")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String responseStr = contMan.userActiveContList(db, username);
+                if(responseStr != null) {
+                    out.print(responseStr);
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.setStatus(500);//internal error
+                    return;
+                }
+            }
+
+            //dontParticipate
+            else if(action.equals("dontParticipate")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String contestId = request.getParameter("contestId");
+                if(contestId == null) {
+                    LOGGER.log(Level.INFO, "contestId value null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                int ok = contMan.dontParticipate(db, username,
+                        contestId);
+                if(ok == 1) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.setStatus(500);//internal error
+                    return;
+                }
+            }
+
+            // register assignment
+            else if(action.equals("registerAssignment")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String dateStr = request.getParameter("date_done");
+                String id = request.getParameter("id");
+                String comment = request.getParameter("comment");
+
+                if(dateStr == null || id == null || comment == null) {
+                    LOGGER.log(Level.INFO, "One of the parameters are null.");
+                    response.setStatus(400);//bad request
+                    return;
+                }
+                    try {
+                        long dateL = Long.parseLong(dateStr);//str to long
+                        Date date = new Date(dateL);//long to Date
+
+                        int ok = assignMan.registerAssignment(db, username, id, 
+                                date, comment);
+                        System.out.println(ok);
+                        if(ok == 1 || ok == -1) {
+                            response.setStatus(200);//success
+                            out.print(ok);
+                            return;
+                        }
+                        else {
+                            response.setStatus(500);//internal error
+                            return;
+                        }
+                    }
+                    catch(NumberFormatException e) {
+                        LOGGER.log(Level.INFO, "date not long.");
+                        response.setStatus(400);//bad request
+                        return;
+                    }
+            }
+
+            //get all registered assignments from a user
+            else if(action.equals("getAllAssignmentsUserSorted")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String skipStr = request.getParameter("skip");
+                if(skipStr == null) {
+                    LOGGER.log(Level.INFO, "Skip parameter is null.");
+                    response.setStatus(400);//bad request
+                    return;
+                }
+                try {
+                    int skip = Integer.parseInt(skipStr);
+                    String toReturn = assignMan.getAllAssignmentsUserSorted(db, username
+                    , skip);
+                    if(toReturn != null) {
+                        out.println(toReturn);
+                        response.setStatus(200);//success
+                        return;
+                    }
+                    else {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "Skip parameter not an integer.");
+                    response.sendError(400);
+                    return;
+                }
+            }
+
+            //get assignments types
+            else if(action.equals("getAssignmentsTypes")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String responseStr = assignMan.getAssignmentsTypes(db);
+                if(responseStr == null) {
+                    response.sendError(400);//bad request
+                    return;
+                }
+                else {
+                    out.println(responseStr);
+                    response.setStatus(200);//success
+                    return;
+                }
+            }
+
+            // get week goal
+            else if(action.equals("getWeekGoal")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                int[] goals = homeMan.getWeekGoals(db, username);
+                if(goals == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                if(goals[0] <= -2 || goals[1] <= -2) {
+                    response.sendError(500);//Internal error
+                    return;
+                }
+                else {
+                    out.print(JSON.serialize(goals));
+                    response.setStatus(200);//success
+                    return;
+                }
+            }
+
+            //set week goal
+            else if(action.equals("setGoal")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String goalStr = request.getParameter("points");
+                if(goalStr == null) {
+                    LOGGER.log(Level.INFO, "Points variable null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                try {
+                    int goal = Integer.parseInt(goalStr);
+                    boolean ok = homeMan.setGoal(db, username, goal);
+                    if(ok) {
+                        response.setStatus(200);//success
+                        return;
+                    }
+                    else {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "Skip parameter not integer"
+                            + " parseable.");
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+
+            else if(action.equals("getPointsHome")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                int[] points = homeMan.getHomePoints(db, username);
+                if(points == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.print(JSON.serialize(points));
+                    response.setStatus(200);//success
+                    return;
+                }
+            }
+
+            // add idea
+            else if(action.equals("addIdea")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String title = request.getParameter("title");
+                String text = request.getParameter("text");
+                if(title == null || text == null) {
+                    LOGGER.log(Level.INFO, "One of the post variables are null"
+                            + ".");
+                    response.sendError(400);//bad request
+                    return;
+                }
+
+                String responseStr = ideaMan.addIdea(db, title, text, username);
+                if(responseStr != null) {
+                    out.println(responseStr);
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }           
+
+            // get ideas
+            else if(action.equals("getIdeas")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String skipStr = request.getParameter("skip");
+                if(skipStr == null) {
+                    LOGGER.log(Level.INFO, "Skip parameter is null.");
+                    response.setStatus(400);//bad request
+                    return;
+                }
+                try {
+                    int skip = Integer.parseInt(skipStr);
+                    String toReturn = ideaMan.getIdeas(db, skip);
+                    if(toReturn != null) {
+                        out.println(toReturn);
+                        response.setStatus(200);//success
+                        return;
+                    }
+                    else {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "Skip parameter not an integer.");
+                    response.sendError(400);
+                    return;
+                }
+            }   
+
+            // get news stories
+            else if(action.equals("getNews")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String skipStr = request.getParameter("skip");
+                if(skipStr == null) {
+                    LOGGER.warning("skip post value null");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                try {
+                    int skip = Integer.parseInt(skipStr);
+                    String returnStr = homeMan.getNews(db, username, skip);
+                    if(returnStr != null) {
+                        out.println(returnStr);
+                        response.setStatus(200);//success
+                        return;
+                    }
+                    else {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.warning("skip post value not an integer");
+                    response.sendError(400);//bad request
+                    return;
+                }
+            }
             
-            //no match, bad request
             else {
+                //no match, bad request
                 LOGGER.warning("Bad request. POST action specified doesn't match"
                         + " any actions.");
-                response.sendError(400);
+                response.sendError(400);//bad request
+                return;
             }
         }
+        
         catch(UnsupportedEncodingException e) {
                     StringWriter sw = new StringWriter();
                     PrintWriter pw = new PrintWriter(sw);
                     e.printStackTrace(pw);
                     LOGGER.severe("Character encoding returned by getCharacter"
                             + "Encoding cannot be used. " + sw.toString());
+                    response.sendError(500);//internal error
         }
         catch(IllegalStateException e) {
                     StringWriter sw = new StringWriter();
@@ -505,6 +832,7 @@ public class MongoServlet extends HttpServlet {
                     e.printStackTrace(pw);
                     LOGGER.severe("getOutputStream method has already been call"
                             + "ed for this response object. " + sw.toString());
+                    response.sendError(500);//internal error
         }
         catch(IOException e) {
                     StringWriter sw = new StringWriter();
@@ -512,9 +840,36 @@ public class MongoServlet extends HttpServlet {
                     e.printStackTrace(pw);
                     LOGGER.severe("In/out-put error occurred. "
                             + sw.toString());
+                    response.sendError(500);//internal error
         }
     }
+    
+    /**
+     * Checks if a role id is of a user(1, 2, 3)
+     * @param role int id
+     * @return true if role is of a user, false if not
+     */
+    private boolean isUser(int role) {
+        return (role == 1 || role == 2 || role == 3);
+    }
+    
+    /**
+     * Checks if a role id is of an admin(1, 2)
+     * @param role int id
+     * @return true if role is of a user, false if not
+     */
+    private boolean isAdmin(int role) {
+        return (role == 1 || role == 2);
+    }
 
+    /**
+     * Checks if a role id is of a super admin(1)
+     * @param role int id
+     * @return true if role is of a user, false if not
+     */
+    private boolean isSuperAdmin(int role) {
+        return (role == 1);
+    }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

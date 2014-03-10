@@ -59,7 +59,6 @@
                     <p>
                         {{selectedOption.desc}}<br/>
                         Oppgaven gir {{selectedOption.points}} poeng
-                        iden er {{selectedOption._id.$oid}}
                     </p>
                     <form name="regForm">
                         <p>
@@ -97,7 +96,6 @@
                     </div>
                     <div class="innerDrop" ng-show="dropArchive">
                         <p>Poeng:  {{assignment.points}}     </p>
-                        <p>oid: {{assignment._id.$oid}}</p>
                         <p>Dato: {{assignment.date_done.$date| date:('dd.MM.yyyy')}} </p>
                         <p>Kommentar: {{assignment.comment}} </p>
                     </div>

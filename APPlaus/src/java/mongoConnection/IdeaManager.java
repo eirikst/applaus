@@ -25,8 +25,12 @@ public class IdeaManager {
             DBObject addInfo = ideaQ.addIdea(db, title, text, username);
             return JSON.serialize(addInfo);
         }
-        catch(InputException | MongoException e) {
-            LOGGER.log(Level.SEVERE, "Exception while adding idea.", e);
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while adding idea.", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while adding idea.", e);
             return null;
         }
     }
@@ -36,8 +40,12 @@ public class IdeaManager {
             List<DBObject> ideas = ideaQ.getIdeas(db, skip);
             return JSON.serialize(ideas);
         }
-        catch(InputException | MongoException e) {
-            LOGGER.log(Level.SEVERE, "Exception while getting ideas.", e);
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while getting ideas.", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting ideas.", e);
             return null;
         }
     }

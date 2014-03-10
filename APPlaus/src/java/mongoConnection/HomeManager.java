@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import mongoQueries.*;
 import Tools.DateTools;
-import applausException.DBException;
 import java.util.Calendar;
 import applausException.InputException;
 import com.mongodb.MongoException;
@@ -26,7 +25,6 @@ public class HomeManager {
     private static final Logger LOGGER = Logger.getLogger(HomeManager.class.getName());
     private final UserQueries userQ = new UserQueriesImpl();
     private final AssignmentQueries assignQ = new AssignmentQueriesImpl();
-    private final IdeaQueries ideaQ = new IdeaQueriesImpl();
     private final NewsQueries newsQ = new NewsQueriesImpl();
 
     //this first, then last
@@ -37,16 +35,20 @@ public class HomeManager {
      * @return 
      */
     public int[] getWeekGoals(DB db, String username) {
-        int[] goals = new int[2];
-                goals[0] = userQ.getWeekGoal(db, username, 0);
-        if(goals[0] <= -2) {
-            LOGGER.info("Error fetching stretch goals.");
+        try {
+            int[] goals = new int[2];
+            goals[0] = userQ.getWeekGoal(db, username, 0);
+            goals[1] = userQ.getWeekGoal(db, username, -1);
+            return goals;
         }
-                goals[1] = userQ.getWeekGoal(db, username, -1);
-        if(goals[1] <= -2) {
-            LOGGER.info("Error fetching stretch goals.");
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while getting week goals.", e);
+            return null;
         }
-        return goals;
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting week goals.", e);
+            return null;
+        }
     }
     
     
@@ -57,6 +59,11 @@ public class HomeManager {
         points[1] = getPoints(db, username, DateTools.LAST_WEEK);
         points[2] = getPoints(db, username, DateTools.MONTH);
         points[3] = getPoints(db, username, DateTools.YEAR);
+        for(int i = 0; i < points.length; i++) {
+            if(points[i] < 0) {
+                return null;//error, logged in getPoints method
+            }
+        }
         return points;
     }
     
@@ -83,28 +90,43 @@ public class HomeManager {
             from = DateTools.getFirstDateOfYear();
         }
         else {
-            throw new IllegalArgumentException("period must be WEEK, LAST_WEEK, MONTH or YEAR(7, -7, 30, 365).");
+            throw new IllegalArgumentException("period must be WEEK, LAST_WEEK,"
+                    + " MONTH or YEAR(7, -7, 30, 365).");
         }
-        
-        Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(db, username, from, to);
-        Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt(db);
-        ArrayList<DBObject> assignments = new ArrayList<>();
-        while(assignmentsIt.hasNext()) {
-            assignments.add(assignmentsIt.next());
-        }
-        
-        int points = 0;
-        while(userAssignments.hasNext()) {
-            BasicDBObject userAssignment = (BasicDBObject) userAssignments.next();
+        try {
+            Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(db,
+                    username, from, to);
+            Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt(db);
             
-            for(int i = 0; i < assignments.size(); i++) {
-                BasicDBObject assignment = (BasicDBObject) assignments.get(i);
-                if(userAssignment.getString("_id").equals(assignment.getObjectId("_id").toString())) {
-                    points += assignment.getInt("points");
+            ArrayList<DBObject> assignments = new ArrayList<>();
+            while(assignmentsIt.hasNext()) {
+                assignments.add(assignmentsIt.next());
+            }
+
+            int points = 0;
+            while(userAssignments.hasNext()) {
+                BasicDBObject userAssignment = (BasicDBObject) userAssignments
+                        .next();
+
+                for(int i = 0; i < assignments.size(); i++) {
+                    BasicDBObject assignment = (BasicDBObject) assignments
+                            .get(i);
+                    if(userAssignment.getString("_id").equals(assignment
+                            .getObjectId("_id").toString())) {
+                        points += assignment.getInt("points");
+                    }
                 }
             }
+            return points;
         }
-        return points;
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while getting points.", e);
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting points.", e);
+            return -2;
+        }
     }
     
     
@@ -114,11 +136,11 @@ public class HomeManager {
             return true;
         }
         catch(InputException e) {
-            LOGGER.warning("Bad input" + e);
+            LOGGER.log(Level.INFO, "Exception while setting goals.", e);
             return false;
         }
         catch(MongoException e) {
-            LOGGER.warning("Error when quering database" + e);
+            LOGGER.log(Level.WARNING, "Exception while setting goal.", e);
             return false;
         }
     }
@@ -139,9 +161,13 @@ public class HomeManager {
             return JSON.serialize(stories);
         }
         catch(InputException e) {
-            LOGGER.log(Level.SEVERE, "Exception while getting news stories.", e);
+            LOGGER.log(Level.INFO, "Exception while getting news stories.", e);
             return null;
-        } 
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting news stories.", e);
+            return null;
+        }
     }
     
     /**
@@ -159,8 +185,12 @@ public class HomeManager {
             return JSON.serialize(addedInfo);//0 means news 
             //available for all users
         }
-        catch(InputException | MongoException e) {
-            LOGGER.log(Level.SEVERE, "Exception while adding news story.", e);
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while adding news story.", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while adding news story.", e);
             return null;
         }
     }

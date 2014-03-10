@@ -10,7 +10,7 @@
                 <div class="col-sm-6">
                     <div class="container contStrct">
                         <h2 class="h2-contest">Aktive konkurranser</h2>
-                        <div class="drop">
+                        <div class="drop" ng-show="(roleCookie == 1 || roleCookie == 2)">
                             <div class="dropHeading">
                                 <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
                                 <a class="text-center" ng-click="dropCreate = !dropCreate">Ny konkurranse
@@ -60,9 +60,6 @@
                             </div>
                             <div class="innerDrop" ng-show="dropActive">
                                 <form name="editContForm">
-                                    <p>
-                                        oid: {{contest._id.$oid}}
-                                    </p>
                                     <p>
                                         Administrator: {{contest.username}}
                                     </p>

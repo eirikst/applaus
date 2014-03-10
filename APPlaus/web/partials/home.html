@@ -207,11 +207,11 @@
     <div class="container">
         <h2 class="text-center">Nyheter</h2>
         <!--dropdown-->
-        <div class="drop" ng-init="dropNewStory = false">
+        <div class="drop" ng-init="dropNewStory = false" ng-show="(roleCookie == 1 || roleCookie == 2)">
             <!--drop header-->
             <div class="dropHeading">
                 <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropNewStory, 'glyphicon-chevron-right': !dropNewStory}"></a>
-                <a class="text-center" ng-click="dropNewStory = !dropNewStory">Ny nyhet
+                <a class="text-center" ng-click="dropNewStory = !dropNewStory">Publiser nyhet
                     <span class="clickableDiv"></span>
                 </a> 
             </div>

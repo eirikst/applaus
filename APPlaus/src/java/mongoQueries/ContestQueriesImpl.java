@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.GregorianCalendar;
 import org.bson.types.ObjectId;
 import applausException.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -28,9 +29,16 @@ public class ContestQueriesImpl implements ContestQueries {
      * Gets the active contests from the database sorted on closest end date
      * @param db DB object to contact database
      * @return list of contest DBObject
+     * @throws InputException if any input is null
+     * @throws MongoException if database error
      */
     @Override
-    public List<DBObject> getActiveContests(DB db) {
+    public List<DBObject> getActiveContests(DB db)
+            throws InputException, MongoException {
+        if(db == null) {
+            throw new InputException("Variable db is null.");
+        }
+        
         //tomorrows date is needed or else mongo will not show today's contests
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(calendar.DAY_OF_MONTH, -1);
@@ -40,6 +48,7 @@ public class ContestQueriesImpl implements ContestQueries {
         BasicDBObject query = new BasicDBObject();
 	query.put("date_end", BasicDBObjectBuilder.start("$gte"
                 , tomorrow).get());
+        
         //sort with next date first
         try(DBCursor cursor = coll.find(query).sort
         (new BasicDBObject( "date_end" , 1 ))) {
@@ -53,9 +62,19 @@ public class ContestQueriesImpl implements ContestQueries {
      * @param db DB object to contact database
      * @param skip number of documents to skip before fetching the documents
      * @return  list of the seven(or less) documents (DBObject)
+     * @throws InputException if any input is null
+     * @throws MongoException if database error
      */
     @Override
-    public List<DBObject> getInactiveContests(DB db, int skip) {
+    public List<DBObject> getInactiveContests(DB db, int skip)
+            throws InputException, MongoException {
+        if(db == null) {
+            throw new InputException("Variable db is null.");
+        }
+        if(skip < 0) {
+            throw new InputException("Variable skip can not be less than 0.");
+        }
+        
         //tomorrows date is needed or else mongo will show today's contests
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(calendar.DAY_OF_MONTH, -1);
@@ -79,11 +98,10 @@ public class ContestQueriesImpl implements ContestQueries {
      * @param objId contest object id represented by a String
      * @return true if one instance was deleted, false if none was deleted
      * @throws InputException if any of the input was wrong
-     * @throws DBException if remove operation on database failed
+     * @throws MongoException if database error
      */
     @Override
-    public boolean deleteContest(DB db, String objId) throws InputException, DBException {
-        //checking input
+    public boolean deleteContest(DB db, String objId) throws InputException, MongoException {
         if(db == null || objId == null) {
             throw new InputException("db or objId is null.");
         }
@@ -101,13 +119,7 @@ public class ContestQueriesImpl implements ContestQueries {
         query.put("date_end", new BasicDBObject("$gte", formatDate(getToday(), TO_MONGO)));
         
         //remove if objectid and date query matches
-        WriteResult w;
-        try {
-            w = collection.remove(query);
-        }
-        catch(MongoException e) {
-            throw new DBException("Exception on remove from mongodb.", e);
-        }
+        WriteResult w = collection.remove(query);
         int status = w.getN();
         
         if(status == 0) {
@@ -117,7 +129,7 @@ public class ContestQueriesImpl implements ContestQueries {
             return true;
         }
         else {
-            LOGGER.warning("N field returned was not 0 or 1 on remove by"
+            LOGGER.log(Level.WARNING, "N field returned was not 0 or 1 on remove by"
                     + " objectId.");
             return true;
         }
@@ -134,24 +146,25 @@ public class ContestQueriesImpl implements ContestQueries {
      * @param username username of the admin who created the contest
      * @throws InputException if any of the input objects is null or points is 
      * less than 0
-     * @throws DBException if any errors from the mongodb
+     * @throws MongoException if any errors from the mongodb
      * @return ObjectId of document
      */
     @Override
     public ObjectId createContest(DB db, String title, String desc, String prize,
              Date dateEnd, int points, String username)
-            throws InputException, DBException {
+            throws InputException, MongoException {
         if(db == null || title == null || desc == null || prize == null || 
                 dateEnd == null || username == null) {
             throw new InputException("Input null caused an"
                     + " exception.");
         }
         if(points < 0) {
-            throw new InputException("points < 0 caused an exception.");
+            throw new InputException("Variable points can not be less than 0.");
         }
         if(dateEnd.before(DateTools.getToday())) {
             throw new InputException("Date cannot be before today");
         }
+        
         DBCollection collection = db.getCollection("contest");
         DBObject toInsert = new BasicDBObject();
         toInsert.put("title", title);
@@ -162,13 +175,13 @@ public class ContestQueriesImpl implements ContestQueries {
         toInsert.put("points", points);
         toInsert.put("username", username);
         
+        collection.insert(toInsert);
         try {
-            collection.insert(toInsert);
             ObjectId oid = (ObjectId)toInsert.get("_id");
             return oid;
         }
-        catch(MongoException e) {
-            throw new DBException("Exception on insert to mongodb.", e);
+        catch(IllegalArgumentException e) {
+            throw new InputException(e);
         }
     }
     
@@ -182,12 +195,12 @@ public class ContestQueriesImpl implements ContestQueries {
      * @param points number of points a user gets for participating
      * @return true on successful update, false if not(none updated)
      * @throws InputException if any input is not okay
-     * @throws DBException if trouble with mongo database connection
+     * @throws MongoException if trouble with mongo database connection
      */
     @Override
     public boolean editContest(DB db, String contestId, String title, String desc, 
             String prize, Date dateEnd, int points)
-            throws InputException, DBException {
+            throws InputException, MongoException {
         if(db == null || contestId == null || title == null || desc == null || prize == null || 
                 dateEnd == null) {
             throw new InputException("Input null caused an exception.");
@@ -198,6 +211,7 @@ public class ContestQueriesImpl implements ContestQueries {
         if(dateEnd.before(DateTools.getToday())) {
             throw new InputException("Date cannot be before today.");
         }
+        
         ObjectId objId;
         try {
             objId = new ObjectId(contestId);
@@ -218,13 +232,8 @@ public class ContestQueriesImpl implements ContestQueries {
         //set to not overwrite date_created
         DBObject set = new BasicDBObject("$set", toUpdate);
         
-        WriteResult w;
-        try {
-            w = collection.update(query, set);
-        }
-        catch(MongoException e) {
-            throw new DBException("Exception on edit contest in mongodb.", e);
-        }
+        WriteResult w = collection.update(query, set);
+
         if(w.getN() == 1) {
             return true;
         }

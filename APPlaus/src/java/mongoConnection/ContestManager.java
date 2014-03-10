@@ -1,12 +1,12 @@
 package mongoConnection;
 
-import applausException.DBException;
 import applausException.InputException;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.util.List;
 import com.mongodb.DBObject;
 import java.util.Date;
+import java.util.logging.Level;
 import mongoQueries.*;
 import java.util.logging.Logger;
 import org.bson.types.ObjectId;
@@ -23,12 +23,23 @@ public class ContestManager {
     /**
      * Calls ContestQueriesImpl.getActiveContests(). Serializes list and returns.
      * @param db DB object to contact database
-     * @return json array of contest objects
+     * @return json array of contest objects or null if input or db error
      */
     public String getActiveContests(DB db) {
-        List<DBObject> contests = contQ.getActiveContests(db);
-        return JSON.serialize(contests);
-        
+        try {
+            List<DBObject> contests = contQ.getActiveContests(db);
+            return JSON.serialize(contests);
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while getting active contests."
+                    , e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting active contests."
+                    , e);
+            return null;
+        }
     }
 
     /**
@@ -38,8 +49,20 @@ public class ContestManager {
      * @return json serialized array of the seven(or less) documents
      */
     public String getInactiveContests(DB db, int skip) {
-        List<DBObject> contests = contQ.getInactiveContests(db, skip);
-        return JSON.serialize(contests);
+        try {
+            List<DBObject> contests = contQ.getInactiveContests(db, skip);
+            return JSON.serialize(contests);
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while getting inactive contests."
+                    , e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting inactive "
+                    + "contests.", e);
+            return null;
+        }
     }
 
     /**
@@ -48,9 +71,21 @@ public class ContestManager {
      * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
+     * @return 1 if okay, -1 if invalid input, -2 if database error
      */
-    public void participate(DB db, String username, String contestId) {
-        userQ.participate(db, username, contestId);
+    public int participate(DB db, String username, String contestId) {
+        try {
+            userQ.participate(db, username, contestId);
+            return 1;
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while participate.", e);
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while participate.", e);
+            return -2;
+        }
     }
     
     /**
@@ -59,9 +94,23 @@ public class ContestManager {
      * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
+     * @return 1 if okay, -1 if invalid input, -2 if database error
      */
-    public void dontParticipate(DB db, String username, String contestId){
-        userQ.dontParticipate(db, username, contestId);
+    public int dontParticipate(DB db, String username, String contestId){
+        try {
+            userQ.dontParticipate(db, username, contestId);
+            return 1;
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to set participate "
+                    + "false.", e);
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while trying to set participate "
+                    + "false.", e);
+            return -2;
+        }
     }
     
     /**
@@ -72,7 +121,19 @@ public class ContestManager {
      * @return json serialized array of contests
      */
     public String userActiveContList(DB db, String username){
-        return JSON.serialize(userQ.userActiveContList(db, username));
+        try {
+            return JSON.serialize(userQ.userActiveContList(db, username));
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to get active "
+                    + "contest list", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while trying to get active "
+                    + "contest list", e);
+            return null;
+        }
     }
     
     /**
@@ -94,11 +155,13 @@ public class ContestManager {
             }
         }
         catch(InputException e) {
-                    LOGGER.severe(e.toString());
+            LOGGER.log(Level.INFO, "Exception while trying to delete "
+                    + "contest.", e);
             return -1;
         }
-        catch(DBException e) {
-            LOGGER.warning(e.toString());
+        catch(MongoException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to delete "
+                    + "contest.", e);
             return -2;
         }
     }
@@ -120,8 +183,12 @@ public class ContestManager {
         try {
             return contQ.createContest(db, title, desc, prize, dateEnd, points, username);
         }
-        catch(InputException | DBException e) {
-            LOGGER.warning(e.toString());
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while creating contest.", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while creating contest.", e);
             return null;
         }
     }
@@ -143,8 +210,12 @@ public class ContestManager {
             return contQ.editContest(db, contestId, title, desc, prize
                     , dateEnd, points);
         }
-        catch(InputException | DBException e) {
-            LOGGER.warning(e.toString());
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while editing contest.", e);
+            return false;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while editing contest.", e);
             return false;
         }
     }
