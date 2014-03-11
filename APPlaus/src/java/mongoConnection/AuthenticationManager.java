@@ -28,7 +28,8 @@ public class AuthenticationManager {
      * @param username username of user to log in
      * @param password of user to log in
      * @param request http request
-     * @return the role(int) on success, -1 on fail. -3 if bad input, -4 if
+     * @return the role(int) on success, -1 on no match. -2 if multiple users 
+     * with same username. -3 if bad input, -4 if
      * database error
      */
     public int login(DB db, String username, String password,
@@ -49,7 +50,6 @@ public class AuthenticationManager {
             return -4;
         }
     }
-    
     
     public int registerUser(DB db, String username, String password, 
             String pwdRepeat, String firstname, String lastname, String email) {
@@ -96,7 +96,7 @@ public class AuthenticationManager {
      * last calls UserQueries' newPassword() to set the new password
      * @param db DB object to connect to database
      * @param email email address typed in by user
-     * @return 
+     * @return 1 if okay, 0 if email does not exist. -1 and -2 on internal error
      */
     public int newPassword(DB db, String email) {
         String password = Password.generateNew();

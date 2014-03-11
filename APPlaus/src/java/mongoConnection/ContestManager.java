@@ -21,7 +21,7 @@ public class ContestManager {
     private final UserQueries userQ = new UserQueriesImpl();
     
     /**
-     * Calls ContestQueriesImpl.getActiveContests(). Serializes list and returns.
+     * Calls ContestQueriesImpl.getActiveContests(). JSON serializes list and returns.
      * @param db DB object to contact database
      * @return json array of contest objects or null if input or db error
      */
@@ -46,7 +46,8 @@ public class ContestManager {
      * Calls ContestQueriesImpl.getInactiveContests(). Serializes list and returns.
      * @param db DB object to contact database
      * @param skip number of documents to skip before fetching the documents
-     * @return json serialized array of the seven(or less) documents
+     * @return json serialized array of the seven(or less) documents. null on 
+     * fail.
      */
     public String getInactiveContests(DB db, int skip) {
         try {
@@ -66,8 +67,8 @@ public class ContestManager {
     }
 
     /**
-     * Calls UserQueriesImpl.participate() which registers that given user partici-
- pates in contest with id contestId
+     * Calls UserQueriesImpl.participate() which registers that given user
+     * participates in contest with id contestId
      * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
@@ -90,7 +91,7 @@ public class ContestManager {
     
     /**
      * Calls UserQueriesImpl.dontParticipate() which registers that given user 
- doesn't participate in contest with id contestId
+     * doesn't participate in contest with id contestId
      * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
@@ -115,10 +116,10 @@ public class ContestManager {
     
     /**
      * Calls UserQueriesImpl.userActiveContList to find the list of contests
- the user are participating in.
+     * the user are participating in.
      * @param db DB object to contact database
      * @param username of given user
-     * @return json serialized array of contests
+     * @return JSON serialized array of contests or null on fail.
      */
     public String userActiveContList(DB db, String username){
         try {
@@ -138,10 +139,11 @@ public class ContestManager {
     
     /**
      * Deletes a contest from the database if it matches the given contest id 
-     * and id still active(end date is later than this date)
+     * and contest is still active(end date is later than this date)
      * @param db DB object to connect to database
      * @param objId contest object id represented by a String
-     * @return true if one instance was deleted, false if none was deleted
+     * @return 1 if one instance was deleted, 0 if none was deleted. -1 if 
+     * input error, -2 if database error.
      */
     public int deleteContest(DB db, String objId) {
         try {

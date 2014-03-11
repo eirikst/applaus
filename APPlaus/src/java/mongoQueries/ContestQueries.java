@@ -1,6 +1,5 @@
 package mongoQueries;
 
-import applausException.DBException;
 import applausException.InputException;
 import com.mongodb.DB;
 import com.mongodb.DBObject;

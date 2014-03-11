@@ -428,7 +428,7 @@ public class UserQueriesImpl implements UserQueries{
      * @param db DB object to connect to database
      * @param email email address
      * @param password new password
-     * @return true on okay insert
+     * @return 1 on okay insert, 0 if email is not found
      * @throws InputException if invalid input
      * @throws MongoException if database error
      */

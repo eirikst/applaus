@@ -103,6 +103,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
 
     //Create contest
     $scope.createContest = function(contest) {
+        console.log(contest.date_end.$date);
         contest.dateSec = (new Date(contest.date_end.$date)).getTime();//long format
         ContestService.createContest(contest)
                 .success(function(data, status, headers, config) {

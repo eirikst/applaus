@@ -42,7 +42,7 @@ public class MongoServlet extends HttpServlet {
         ideaMan = new IdeaManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
-            db = mongo.getDB("applaus");
+            db = mongo.getDB("applausDemo");
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");

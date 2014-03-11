@@ -25,7 +25,7 @@ public class AssignmentManager {
      * AssignmentQueriesImpl.getAssignments(). JSON serializes and returns the 
      * string
      * @param db DB object to connect to the database
-     * @return JSON serialized array of assignments
+     * @return JSON serialized array of assignments. null on fail.
      */
     public String getAssignmentsTypes(DB db) {
         try {
@@ -82,6 +82,14 @@ public class AssignmentManager {
         return 1;//ok
     }
     
+    /**
+     * Gets a sorted list of 7 assignments json serialized after "skip" skipped 
+     * assignments.
+     * @param db DB object to connect to database.
+     * @param username username of the user to get the assignments from.
+     * @param skip number of assignments to skip before getting the 7.
+     * @return JSON serialized list of assignments on success. null on fail.
+     */
     public String getAllAssignmentsUserSorted(DB db, String username, int skip) {
         try {
             Iterator<DBObject> assignments = userQ.getAllAssignmentsUserSorted(db, username, skip);
