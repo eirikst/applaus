@@ -101,4 +101,30 @@ public class AssignmentManager {
             return null;
         }
     }
+    
+    
+    public boolean editAssignment(DB db, String contestId, String comment, Date date_done) {
+        try {
+            return userQ.editAssignment(db, contestId, comment, date_done);
+        }
+        catch(InputException | MongoException e) {
+            LOGGER.warning(e.toString());
+            return false;
+        }
+    }
+    
+    public int deleteAssignment(DB db, String objId) {
+        try {
+            boolean okDelete = userQ.deleteAssignment(db, objId);
+            return 0;
+        }
+        catch(InputException e) {
+                    LOGGER.severe(e.toString());
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.warning(e.toString());
+            return -2;
+        }
+    }
 }

@@ -43,4 +43,25 @@ services.service('AssignService', function($http) {
         });
         return promise;
     };
+    
+    this.editAssignment =  function(assignment) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=editAssignment&assignId=" + assignment._id.$oid + "&comment=" + 
+                    assignment.comment + "&date_done=" + assignment.dateSec,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
+    this.deleteAssignment =  function(assignment) {
+        var promise = $http({
+            url: 'MongoConnection',
+            method: "POST",
+            data: "action=deleteAssignment&assignId=" + assignment._id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
 });

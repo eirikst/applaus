@@ -12,9 +12,14 @@ import java.util.Date;
 import java.util.logging.Logger;
 import mongoConnection.AuthenticationManager;
 import Tools.DateTools;
+import static Tools.DateTools.TO_MONGO;
+import static Tools.DateTools.formatDate;
+import static Tools.DateTools.getToday;
+import applausException.DBException;
 import applausException.InputException;
 import com.mongodb.AggregationOutput;
 import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -591,5 +596,93 @@ public class UserQueriesImpl implements UserQueries{
         
         Iterable<DBObject> it = output.results();
         return it.iterator();
+    }
+    
+    
+    public boolean editAssignment(DB db, String assignId, String comment, Date date_done)
+            throws InputException, MongoException {
+        if(db == null || assignId == null || comment == null || date_done == null) {
+            throw new InputException("Input null caused an exception.");
+        }
+        if(date_done.before(DateTools.getToday())) {
+            throw new InputException("Date cannot be before today.");
+        }
+        ObjectId objId;
+        try {
+            objId = new ObjectId(assignId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("objId not on the right format.", e);
+        }
+        
+        DBCollection collection = db.getCollection("assignment");
+        DBObject query = new BasicDBObject("_id", objId);
+        DBObject toUpdate = new BasicDBObject();
+        toUpdate.put("comment", comment);
+        toUpdate.put("date_done", date_done);
+        
+        //set to not overwrite date_created
+        DBObject set = new BasicDBObject("$set", toUpdate);
+        
+        WriteResult w;
+        try {
+            w = collection.update(query, set);
+        }
+        catch(MongoException e) {
+            throw new MongoException("Exception on edit assignment in mongodb.", e);
+        }
+        if(w.getN() == 1) {
+            return true;
+        }
+        else if(w.getN() > 1) {
+            LOGGER.warning("Several documents got updated when updating contest"
+                    );
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    
+    public boolean deleteAssignment(DB db, String objId) throws InputException, MongoException {
+        //checking input
+        if(db == null || objId == null) {
+            throw new InputException("db or objId is null.");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(objId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("objId not on the right format.", e);
+        }
+
+        DBCollection collection = db.getCollection("assignment");
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", id);
+        query.put("date_end", new BasicDBObject("$gte", formatDate(getToday(), TO_MONGO)));
+        
+        //remove if objectid and date query matches
+        WriteResult w;
+        try {
+            w = collection.remove(query);
+        }
+        catch(MongoException e) {
+            throw new MongoException("Exception on remove from mongodb.", e);
+        }
+        int status = w.getN();
+        
+        if(status == 0) {
+            return false;//nothing removed, wrong oid or inactive comp
+        }
+        else if(status == 1) {
+            return true;
+        }
+        else {
+            LOGGER.warning("N field returned was not 0 or 1 on remove by"
+                    + " objectId.");
+            return true;
+        }
     }
 }

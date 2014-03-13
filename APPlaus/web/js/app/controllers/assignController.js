@@ -93,6 +93,52 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
         }
     };
     
+    
+    //Edit assignment
+    $scope.editAssignment = function(assignment) {
+        assignment.dateSec = (new Date(assignment.date_done.$date)).getTime();//long format
+        AssignService.editAssignment(assignment)
+                .success(function(data, status, headers, config) {
+                    $scope.activeMsg = "Oppgave er endret!";
+            console.log("editAssignment success");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=editAssignment");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+
+    //Delete assignment
+    $scope.deleteAssignment = function(assignment) {
+        AssignService.deleteAssignment(assignment)
+                .success(function(data, status, headers, config) {
+                
+                $scope.getAllAssignments;
+                
+                /**
+                for(var i = 0; i < $scope.activeCont.length; i++) {
+                    if(contest._id.$oid === $scope.activeCont[i]._id.$oid) {
+                        $scope.activeCont.splice(i, 1);
+                        //removes given assignment
+                        console.log("deleteAssignment success");
+                    }
+                }
+                **/
+                
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=deleteAssignment");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+    
+    //support method to the view
+    //copies an assignment and return the copy
+    $scope.copyAssignment = function(assignment) {
+        var copied = angular.copy(assignment);
+        return copied;
+    };
+    
+    
+
     //clears error messages
     $scope.clearMsg = function() {
         $scope.regMsg = null;

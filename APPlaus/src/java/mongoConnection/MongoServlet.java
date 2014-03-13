@@ -42,7 +42,7 @@ public class MongoServlet extends HttpServlet {
         ideaMan = new IdeaManager();
         try {
             mongo = new MongoClient( "localhost" , 27017 );
-            db = mongo.getDB("applausDemo");
+            db = mongo.getDB("applaus");
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -644,6 +644,43 @@ public class MongoServlet extends HttpServlet {
                     out.println(responseStr);
                     response.setStatus(200);//success
                     return;
+                }
+            }
+            
+            //delete assignment
+            else if(action.equals("deleteAssignment")) {
+                int deleted = assignMan.deleteAssignment(db, request
+                        .getParameter("assignId"));
+                if(deleted == 1) {
+                    response.setStatus(200);
+                }
+                else {
+                    response.sendError(500);
+                }
+            }
+            
+            // edit assignment
+            else if(action.equals("editAssignment")) {
+                String assignId = (String)request.getParameter("assignId");
+                String comment = (String)request.getParameter("comment");
+                try {
+                    Long dateDoneLong = Long.parseLong(request.
+                            getParameter("date_done"));
+                    Date date_done = new Date(dateDoneLong);
+                    
+                    boolean edit = assignMan.editAssignment(db, assignId, comment, date_done);
+                    if(!edit) {
+                        response.sendError(500);//error
+                    }
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.info("Could not parse points or date to integer or "
+                            + "long. "
+                            + sw.toString());
+                    response.sendError(500);//error
                 }
             }
 
