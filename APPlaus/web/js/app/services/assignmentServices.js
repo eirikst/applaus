@@ -4,7 +4,7 @@ services.service('AssignService', function($http) {
     
     this.createAssignment = function(assignment) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=createAssignment&title=" + assignment.title + "&points=" + assignment.points
             + "&desc=" + assignment.desc,
@@ -15,7 +15,7 @@ services.service('AssignService', function($http) {
     
     this.registerAssignment = function(id ,assignment) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=registerAssignment&id=" + id + "&date_done=" + assignment.time
             + "&comment=" + assignment.comment,
@@ -26,7 +26,7 @@ services.service('AssignService', function($http) {
     
     this.getAllAssignments = function(skip) {
         var promise = $http({
-          url: 'MongoConnection',
+          url: 'APPlausServlet',
           method: "POST",
           data: "action=getAllAssignmentsUserSorted&skip=" + skip,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -36,7 +36,7 @@ services.service('AssignService', function($http) {
     
     this.getAssignmentTypes = function() {
         var promise = $http({
-          url: 'MongoConnection',
+          url: 'APPlausServlet',
           method: "POST",
           data: "action=getAssignmentsTypes",
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -46,7 +46,7 @@ services.service('AssignService', function($http) {
     
     this.editAssignment =  function(assignment) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=editAssignment&assignId=" + assignment._id.$oid + "&comment=" + 
                     assignment.comment + "&date_done=" + assignment.dateSec,
@@ -57,7 +57,7 @@ services.service('AssignService', function($http) {
     
     this.deleteAssignment =  function(assignment) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=deleteAssignment&assignId=" + assignment._id.$oid,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}

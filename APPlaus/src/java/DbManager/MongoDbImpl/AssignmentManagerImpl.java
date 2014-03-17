@@ -1,13 +1,15 @@
-package mongoConnection;
+package DbManager.MongoDbImpl;
 
+import DAO.UserQueries;
+import DAO.AssignmentQueries;
 import Tools.DateTools;
-import applausException.InputException;
+import APPlausException.InputException;
+import DbManager.AssignmentManager;
 import com.google.common.collect.Lists;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.util.Date;
 import java.util.Iterator;
-import mongoQueries.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,21 +17,26 @@ import java.util.logging.Logger;
  *
  * @author Audun
  */
-public class AssignmentManager {
-    private static final Logger LOGGER = Logger.getLogger(HomeManager.class.getName());
-    private final AssignmentQueries assignQ = new AssignmentQueriesImpl();
-    private final UserQueries userQ = new UserQueriesImpl();
+public class AssignmentManagerImpl implements AssignmentManager {
+    private static final Logger LOGGER = Logger.getLogger(HomeManagerImpl.class.getName());
+    private final AssignmentQueries assignQ;
+    private final UserQueries userQ;
+    
+    public AssignmentManagerImpl(AssignmentQueries assignQ, UserQueries userQ) {
+        this.assignQ = assignQ;
+        this.userQ = userQ;
+    }
     
     /**
      * Gets all the assignments as a List of DBObject objects with a call to
      * AssignmentQueriesImpl.getAssignments(). JSON serializes and returns the 
      * string
-     * @param db DB object to connect to the database
      * @return JSON serialized array of assignments. null on fail.
      */
-    public String getAssignmentsTypes(DB db) {
+    @Override
+    public String getAssignmentsTypes() {
         try {
-            List<DBObject> assignments = assignQ.getAssignments(db);
+            List<DBObject> assignments = assignQ.getAssignments();
             return JSON.serialize(assignments);
         }
         catch(InputException e) {
@@ -41,11 +48,11 @@ public class AssignmentManager {
             return null;
         }
     }
-    
-    
-    public String createAssignment(DB db, String title, String desc, int points) {
+
+    @Override
+    public String createAssignment(String title, String desc, int points) {
         try {
-            DBObject addedInfo = assignQ.createAssignment(db, title, desc, points);
+            DBObject addedInfo = assignQ.createAssignment(title, desc, points);
             return JSON.serialize(addedInfo);
         }
         catch(InputException e) {
@@ -60,14 +67,15 @@ public class AssignmentManager {
         }
     }
     
-    public int registerAssignment(DB db, String username, String id, Date dateDone, String comment) {
+    @Override
+    public int registerAssignment(String username, String id, Date dateDone, String comment) {
         Date now = new Date();
         Date lastMonday = DateTools.getMonday(-1);
         if(dateDone.after(now) || dateDone.before(lastMonday)) {
             return -1;//date error
         }
         try {
-            assignQ.registerAssignment(db, username, id, dateDone, comment);
+            assignQ.registerAssignment(username, id, dateDone, comment);
         }
         catch(InputException e) {
             LOGGER.log(Level.INFO, "Exception while creating an assignment."
@@ -85,14 +93,14 @@ public class AssignmentManager {
     /**
      * Gets a sorted list of 7 assignments json serialized after "skip" skipped 
      * assignments.
-     * @param db DB object to connect to database.
      * @param username username of the user to get the assignments from.
      * @param skip number of assignments to skip before getting the 7.
      * @return JSON serialized list of assignments on success. null on fail.
      */
-    public String getAllAssignmentsUserSorted(DB db, String username, int skip) {
+    @Override
+    public String getAllAssignmentsUserSorted(String username, int skip) {
         try {
-            Iterator<DBObject> assignments = userQ.getAllAssignmentsUserSorted(db, username, skip);
+            Iterator<DBObject> assignments = userQ.getAllAssignmentsUserSorted(username, skip);
             return JSON.serialize(Lists.newArrayList(assignments));
         }
         catch(InputException e) {
@@ -103,9 +111,10 @@ public class AssignmentManager {
     }
     
     
-    public boolean editAssignment(DB db, String contestId, String comment, Date date_done) {
+    @Override
+    public boolean editAssignment(String contestId, String comment, Date date_done) {
         try {
-            return userQ.editAssignment(db, contestId, comment, date_done);
+            return userQ.editAssignment(contestId, comment, date_done);
         }
         catch(InputException | MongoException e) {
             LOGGER.warning(e.toString());
@@ -113,9 +122,10 @@ public class AssignmentManager {
         }
     }
     
-    public int deleteAssignment(DB db, String objId) {
+    @Override
+    public int deleteAssignment(String objId) {
         try {
-            boolean okDelete = userQ.deleteAssignment(db, objId);
+            boolean okDelete = userQ.deleteAssignment(objId);
             return 0;
         }
         catch(InputException e) {

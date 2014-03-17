@@ -1,15 +1,15 @@
-package mongoConnection;
+package DbManager.MongoDbImpl;
 
-import com.mongodb.DB;
+import DAO.UserQueries;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import mongoQueries.*;
 import Tools.*;
-import applausException.InputException;
+import APPlausException.InputException;
+import DbManager.AuthenticationManager;
 import java.util.logging.Level;
 import javax.servlet.http.HttpSession;
 
@@ -17,14 +17,17 @@ import javax.servlet.http.HttpSession;
  *
  * @author eirikstadheim
  */
-public class AuthenticationManager {
+public class AuthenticationManagerImpl implements AuthenticationManager {
     private final static Logger LOGGER = Logger.getLogger
-        (AuthenticationManager.class.getName());
-    private final UserQueries userQ = new UserQueriesImpl();
+        (AuthenticationManagerImpl.class.getName());
+    private final UserQueries userQ;
+    
+    public AuthenticationManagerImpl(UserQueries userQ) {
+        this.userQ = userQ;
+    }
     
     /**
      * Checks the database if the user(and only one instance) exists.
-     * @param db database connection
      * @param username username of user to log in
      * @param password of user to log in
      * @param request http request
@@ -32,10 +35,10 @@ public class AuthenticationManager {
      * with same username. -3 if bad input, -4 if
      * database error
      */
-    public int login(DB db, String username, String password,
+    public int login(String username, String password,
             HttpServletRequest request) {
         try {
-            int role = userQ.checkLogin(db, username, password);
+            int role = userQ.checkLogin(username, password);
             if(role > 0) {
                 setSession(request, username, role);
             }
@@ -51,7 +54,7 @@ public class AuthenticationManager {
         }
     }
     
-    public int registerUser(DB db, String username, String password, 
+    public int registerUser(String username, String password, 
             String pwdRepeat, String firstname, String lastname, String email) {
         if(username.trim().isEmpty() || firstname.trim().isEmpty() || 
                 lastname.trim().isEmpty() || email.trim().isEmpty()) {
@@ -59,7 +62,7 @@ public class AuthenticationManager {
         }
         if (password.equals(pwdRepeat)){
             try {
-                return userQ.registerUser(db, username, password, firstname, lastname, email);
+                return userQ.registerUser(username, password, firstname, lastname, email);
             }
             catch(InputException e) {
                 LOGGER.log(Level.INFO, "Exception while registering user.", e);
@@ -75,9 +78,9 @@ public class AuthenticationManager {
         }
     }
     
-    public String getAdminList(DB db) {
+    public String getAdminList() {
         try {
-            List<DBObject> adminList = userQ.getUserInfo(db);
+            List<DBObject> adminList = userQ.getUserInfo();
             return JSON.serialize(adminList);
         }
         catch(InputException e) {
@@ -94,15 +97,14 @@ public class AuthenticationManager {
      * First calls Password.generateNew() to get generate a new password
      * Then calls EmailSender.sendNewPassword() to send password by email. At 
      * last calls UserQueries' newPassword() to set the new password
-     * @param db DB object to connect to database
      * @param email email address typed in by user
      * @return 1 if okay, 0 if email does not exist. -1 and -2 on internal error
      */
-    public int newPassword(DB db, String email) {
+    public int newPassword(String email) {
         String password = Password.generateNew();
         try {
             EmailSender.sendNewPassword(email, password);
-            return userQ.newPassword(db, email, password);
+            return userQ.newPassword(email, password);
         }
         catch(InputException e) {
             LOGGER.log(Level.INFO, "Exception while getting new password.", e);
@@ -116,7 +118,7 @@ public class AuthenticationManager {
     }
     
     //ikke servlet-request
-    public String setRole(DB db, String username, int role) {        
+    public String setRole(String username, int role) {        
         if (role == 2){
             role = 3;
         } else if (role == 3){
@@ -124,7 +126,7 @@ public class AuthenticationManager {
         }
         
         try {
-            userQ.setRole(db, username, role);
+            userQ.setRole(username, role);
         }
         catch(InputException e) {
             LOGGER.log(Level.INFO, "Exception while setting role.", e);
@@ -135,7 +137,7 @@ public class AuthenticationManager {
             return null;
         }
         
-        return getAdminList(db);
+        return getAdminList();
     }    
     
     /**

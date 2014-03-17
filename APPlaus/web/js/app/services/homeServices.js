@@ -4,7 +4,7 @@ services.service('HomeService', function($http) {
     
     this.getPoints = function() {
         var promise = $http({
-          url: 'MongoConnection',
+          url: 'APPlausServlet',
           method: "POST",
           data: "action=getPointsHome",
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -14,7 +14,7 @@ services.service('HomeService', function($http) {
     
     this.getGoals = function() {
         var promise = $http({
-              url: 'MongoConnection',
+              url: 'APPlausServlet',
               method: "POST",
               data: "action=getWeekGoal",
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -25,7 +25,7 @@ services.service('HomeService', function($http) {
 
     this.getNews = function(skip) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=getNews&skip=" + skip,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -35,7 +35,7 @@ services.service('HomeService', function($http) {
     
     this.addNewsAll = function(story) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=addNewsAll&title=" + story.title + "&text=" + 
                     story.text,
@@ -46,7 +46,7 @@ services.service('HomeService', function($http) {
     
     this.setGoal = function(goal) {
         var promise = $http({
-              url: 'MongoConnection',
+              url: 'APPlausServlet',
               method: "POST",
               data: "action=setGoal&points=" + goal,
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}

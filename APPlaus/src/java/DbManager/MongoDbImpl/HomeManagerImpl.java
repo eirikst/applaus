@@ -1,17 +1,19 @@
-package mongoConnection;
+package DbManager.MongoDbImpl;
 
+import DAO.UserQueries;
+import DAO.AssignmentQueries;
+import DAO.NewsQueries;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-import mongoQueries.*;
 import Tools.DateTools;
 import java.util.Calendar;
-import applausException.InputException;
+import APPlausException.InputException;
+import DbManager.HomeManager;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.util.logging.Level;
@@ -21,24 +23,30 @@ import org.bson.types.ObjectId;
  *
  * @author eirikstadheim
  */
-public class HomeManager {
-    private static final Logger LOGGER = Logger.getLogger(HomeManager.class.getName());
-    private final UserQueries userQ = new UserQueriesImpl();
-    private final AssignmentQueries assignQ = new AssignmentQueriesImpl();
-    private final NewsQueries newsQ = new NewsQueriesImpl();
+public class HomeManagerImpl implements HomeManager {
+    private static final Logger LOGGER = Logger.getLogger(HomeManagerImpl.class.getName());
+    private final UserQueries userQ;
+    private final AssignmentQueries assignQ;
+    private final NewsQueries newsQ;
+    
+    public HomeManagerImpl(UserQueries userQ, AssignmentQueries assignQ, 
+            NewsQueries newsQ) {
+        this.userQ = userQ;
+        this.assignQ = assignQ;
+        this.newsQ = newsQ;
+    }
 
     //this first, then last
     /**
      * Calls UserQueriesImpl.getWeekGoal() twice to get the h
-     * @param db
      * @param username
      * @return 
      */
-    public int[] getWeekGoals(DB db, String username) {
+    public int[] getWeekGoals(String username) {
         try {
             int[] goals = new int[2];
-            goals[0] = userQ.getWeekGoal(db, username, 0);
-            goals[1] = userQ.getWeekGoal(db, username, -1);
+            goals[0] = userQ.getWeekGoal(username, 0);
+            goals[1] = userQ.getWeekGoal(username, -1);
             return goals;
         }
         catch(InputException e) {
@@ -53,12 +61,12 @@ public class HomeManager {
     
     
     //first element this week, second last week, third month, fourth year
-    public int[] getHomePoints(DB db, String username) {
+    public int[] getHomePoints(String username) {
         int[] points = new int[4];
-        points[0] = getPoints(db, username, DateTools.WEEK);
-        points[1] = getPoints(db, username, DateTools.LAST_WEEK);
-        points[2] = getPoints(db, username, DateTools.MONTH);
-        points[3] = getPoints(db, username, DateTools.YEAR);
+        points[0] = getPoints(username, DateTools.WEEK);
+        points[1] = getPoints(username, DateTools.LAST_WEEK);
+        points[2] = getPoints(username, DateTools.MONTH);
+        points[3] = getPoints(username, DateTools.YEAR);
         for(int i = 0; i < points.length; i++) {
             if(points[i] < 0) {
                 return null;//error, logged in getPoints method
@@ -69,7 +77,7 @@ public class HomeManager {
     
     //WEEK, MONTH, YEAR
     //when: 0 this, -1 last etc
-    public int getPoints(DB db, String username, int period) {
+    public int getPoints(String username, int period) {
         Date from = new Date();
         Date to = new Date();
         if(period == DateTools.WEEK) {
@@ -94,9 +102,9 @@ public class HomeManager {
                     + " MONTH or YEAR(7, -7, 30, 365).");
         }
         try {
-            Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(db,
+            Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(
                     username, from, to);
-            Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt(db);
+            Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt();
             
             ArrayList<DBObject> assignments = new ArrayList<>();
             while(assignmentsIt.hasNext()) {
@@ -130,9 +138,9 @@ public class HomeManager {
     }
     
     
-    public boolean setGoal(DB db, String username, int points) {
+    public boolean setGoal(String username, int points) {
         try {
-            userQ.setGoal(db, username, points);
+            userQ.setGoal(username, points);
             return true;
         }
         catch(InputException e) {
@@ -149,15 +157,14 @@ public class HomeManager {
      * Calls for getStoryIdsUser() in UserQueries and getNews() in NewsQueries
      * to get the related news for a user, meaning stories for all and stories
      * this person wants to see because of a contest for example.
-     * @param db DB object to connect to
      * @param username username of user
      * @param skip number of stories to skip
      * @return JSON serialized string if okay, null if not okay
      */
-    public String getNews(DB db, String username, int skip) {
+    public String getNews(String username, int skip) {
         try {
-            List<ObjectId> oids = userQ.getStoryIdsUser(db, username);
-            List<DBObject> stories = newsQ.getNews(db, oids, skip);
+            List<ObjectId> oids = userQ.getStoryIdsUser(username);
+            List<DBObject> stories = newsQ.getNews(oids, skip);
             return JSON.serialize(stories);
         }
         catch(InputException e) {
@@ -172,16 +179,15 @@ public class HomeManager {
     
     /**
      * Calls addNewsStory() method in NewsQueries to add news story to the database.
-     * @param db DB object to connect to database
      * @param title story title
      * @param text story text
      * @param writer story writer's username
      * @return true if ok, false if not okay
      */
-    public String addNewsStoryForAll(DB db, String title, String text, 
+    public String addNewsStoryForAll(String title, String text, 
             String writer) {
         try {
-            DBObject addedInfo = newsQ.addNewsStory(db, title, text, writer, NewsQueries.FOR_ALL);
+            DBObject addedInfo = newsQ.addNewsStory(title, text, writer, NewsQueries.FOR_ALL);
             return JSON.serialize(addedInfo);//0 means news 
             //available for all users
         }

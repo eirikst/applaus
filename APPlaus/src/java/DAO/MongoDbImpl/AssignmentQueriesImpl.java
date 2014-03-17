@@ -1,6 +1,7 @@
-package mongoQueries;
+package DAO.MongoDbImpl;
 
-import applausException.InputException;
+import DAO.AssignmentQueries;
+import APPlausException.InputException;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -9,6 +10,7 @@ import com.mongodb.DBCursor;
 import java.util.List;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -17,8 +19,24 @@ import java.util.Iterator;
  * @author eirikstadheim
  */
 public class AssignmentQueriesImpl implements AssignmentQueries {
+    private static AssignmentQueriesImpl INSTANCE;
+    private final DB db;
+    
+    private AssignmentQueriesImpl() throws UnknownHostException {
+        db = MongoConnection.getInstance().getDB();
+        System.out.println(db.getCollection("contest").find());
+    }
+    
+    public static AssignmentQueriesImpl getInstance() throws UnknownHostException {
+        if(INSTANCE == null) {
+            System.out.println("Null :)");
+            INSTANCE = new AssignmentQueriesImpl();
+        }
+        return INSTANCE;
+    }
+    
     @Override
-    public List<DBObject> getAssignments(DB db) throws InputException, MongoException {
+    public List<DBObject> getAssignments() throws InputException, MongoException {
         if(db == null) {
             throw new InputException("Variable db is null.");
         }
@@ -35,7 +53,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     
     
     @Override
-    public BasicDBList getAllAssignmentsUser(DB db, String username) throws InputException, MongoException {
+    public BasicDBList getAllAssignmentsUser(String username) throws InputException, MongoException {
         if(db == null || username == null) {
         throw new InputException("Variables db or username is null.");
         }
@@ -62,7 +80,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
      * @throws MongoException if database error
      */
     @Override
-    public Iterator<DBObject> getAssignmentsIt(DB db) throws InputException, MongoException {
+    public Iterator<DBObject> getAssignmentsIt() throws InputException, MongoException {
         if(db == null) {
             throw new InputException("Variable db is null.");
         }
@@ -74,7 +92,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     }
     
     @Override
-    public void registerAssignment(DB db, String username, String id, Date 
+    public void registerAssignment(String username, String id, Date 
             dateDone, String comment) throws InputException, MongoException {
         if(db == null || username == null || id == null || dateDone == null
                 || comment == null) {
@@ -96,7 +114,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     }
     
     @Override
-    public DBObject createAssignment(DB db, String title, String desc,
+    public DBObject createAssignment(String title, String desc,
             int points) throws InputException, MongoException {
         if(db == null || title == null || desc == null) {
             throw new InputException("One or several input objects is null.");

@@ -49,8 +49,8 @@
                 <!--nav icons-->
                 <a href="#profile" ng-show="!isActive('/profile')"><img class="index-icon" src="img/Profile.png"></a>
                 <a href="#profile" ng-show="isActive('/profile')"><img class="index-icon" src="img/Profile_selected.png"></a>
-                <a href="#registerAssignment" ng-show="!isActive('/registerAssignment')"><img class="index-icon" src="img/Assignment.png"></a>
-                <a href="#registerAssignment" ng-show="isActive('/registerAssignment')"><img class="index-icon" src="img/Assignment_selected.png"></a>
+                <a href="#assignments" ng-show="!isActive('/assignments')"><img class="index-icon" src="img/Assignment.png"></a>
+                <a href="#assignments" ng-show="isActive('/assignments')"><img class="index-icon" src="img/Assignment_selected.png"></a>
                 <a href="#home" ng-show="!isActive('/home')"><img class="index-icon" src="img/Home.png"></a>
                 <a href="#home" ng-show="isActive('/home')"><img class="index-icon" src="img/Home_selected.png"></a>
                 <a href="#contests" ng-show="!isActive('/contests')"><img class="index-icon" src="img/Contest.png"></a>

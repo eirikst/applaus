@@ -4,7 +4,7 @@ services.service('AdminService', function($http) {
 
     this.getAdminList = function() {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=getAdminList",
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -14,7 +14,7 @@ services.service('AdminService', function($http) {
     
     this.setRole = function(username, role_id) {
         var promise = $http({
-              url: 'MongoConnection',
+              url: 'APPlausServlet',
               method: "POST",
               data: "action=setRole&username=" + username + "&role=" + role_id,
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}

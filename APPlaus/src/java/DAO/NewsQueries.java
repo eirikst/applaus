@@ -1,6 +1,6 @@
-package mongoQueries;
+package DAO;
 
-import applausException.InputException;
+import APPlausException.InputException;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
@@ -23,7 +23,7 @@ public interface NewsQueries {
      * @throws InputException if any input is wrong
      * @throws MongoException if error from database
      */
-    public List<DBObject> getNews(DB db, List<ObjectId> userStories, int skip) 
+    public List<DBObject> getNews(List<ObjectId> userStories, int skip) 
             throws InputException, MongoException;
     /**
      * Adds a news story with the given attributes to the database.
@@ -36,6 +36,6 @@ public interface NewsQueries {
      * @throws MongoException if error from database
      * @return DBObject with oid of story and date
      */
-    public DBObject addNewsStory(DB db, String title, String text, String writer, int who)
+    public DBObject addNewsStory(String title, String text, String writer, int who)
             throws InputException, MongoException;
 }

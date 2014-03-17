@@ -1,5 +1,7 @@
-package mongoQueries;
+package DAO.MongoDbImpl;
 
+import APPlausException.InputException;
+import DAO.ContestQueries;
 import Tools.DateTools;
 import static Tools.DateTools.*;
 import com.mongodb.BasicDBObject;
@@ -10,11 +12,11 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import java.util.GregorianCalendar;
 import org.bson.types.ObjectId;
-import applausException.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,16 +26,29 @@ import java.util.logging.Logger;
  */
 public class ContestQueriesImpl implements ContestQueries {
     private static final Logger LOGGER = Logger.getLogger(ContestQueriesImpl.class.getName());
+    private static ContestQueriesImpl INSTANCE;
+    private final DB db;
     
+    private ContestQueriesImpl() throws UnknownHostException {
+        db = MongoConnection.getInstance().getDB();
+        System.out.println(db.getCollection("contest").find());
+    }
+    
+    public static ContestQueriesImpl getInstance() throws UnknownHostException {
+        if(INSTANCE == null) {
+            System.out.println("Null :)");
+            INSTANCE = new ContestQueriesImpl();
+        }
+        return INSTANCE;
+    }
     /**
      * Gets the active contests from the database sorted on closest end date
-     * @param db DB object to contact database
      * @return list of contest DBObject
      * @throws InputException if any input is null
      * @throws MongoException if database error
      */
     @Override
-    public List<DBObject> getActiveContests(DB db)
+    public List<DBObject> getActiveContests()
             throws InputException, MongoException {
         if(db == null) {
             throw new InputException("Variable db is null.");
@@ -59,14 +74,13 @@ public class ContestQueriesImpl implements ContestQueries {
     
     /**
      * Gets the next 7(or less) inactive(finished) contests from the database.
-     * @param db DB object to contact database
      * @param skip number of documents to skip before fetching the documents
      * @return  list of the seven(or less) documents (DBObject)
      * @throws InputException if any input is null
      * @throws MongoException if database error
      */
     @Override
-    public List<DBObject> getInactiveContests(DB db, int skip)
+    public List<DBObject> getInactiveContests(int skip)
             throws InputException, MongoException {
         if(db == null) {
             throw new InputException("Variable db is null.");
@@ -94,14 +108,13 @@ public class ContestQueriesImpl implements ContestQueries {
     /**
      * Deletes a contest from the database if it matches the given contest id 
      * and id still active(end date is later than this date)
-     * @param db DB object to connect to database
      * @param objId contest object id represented by a String
      * @return true if one instance was deleted, false if none was deleted
      * @throws InputException if any of the input was wrong
      * @throws MongoException if database error
      */
     @Override
-    public boolean deleteContest(DB db, String objId) throws InputException, MongoException {
+    public boolean deleteContest(String objId) throws InputException, MongoException {
         if(db == null || objId == null) {
             throw new InputException("db or objId is null.");
         }
@@ -137,7 +150,6 @@ public class ContestQueriesImpl implements ContestQueries {
     
      /**
      * Inserts the given information as a contest int the database.
-     * @param db DB object to connect to database.
      * @param title title of contest
      * @param desc description of contest
      * @param prize prize of contest
@@ -150,7 +162,7 @@ public class ContestQueriesImpl implements ContestQueries {
      * @return ObjectId of document
      */
     @Override
-    public ObjectId createContest(DB db, String title, String desc, String prize,
+    public ObjectId createContest(String title, String desc, String prize,
              Date dateEnd, int points, String username)
             throws InputException, MongoException {
         if(db == null || title == null || desc == null || prize == null || 
@@ -186,7 +198,6 @@ public class ContestQueriesImpl implements ContestQueries {
     }
     
     /**
-     * @param db DB object to connect to database.
      * @param contestId String rep of contest object id
      * @param title title of contest
      * @param desc description of contest
@@ -198,7 +209,7 @@ public class ContestQueriesImpl implements ContestQueries {
      * @throws MongoException if trouble with mongo database connection
      */
     @Override
-    public boolean editContest(DB db, String contestId, String title, String desc, 
+    public boolean editContest(String contestId, String title, String desc, 
             String prize, Date dateEnd, int points)
             throws InputException, MongoException {
         if(db == null || contestId == null || title == null || desc == null || prize == null || 

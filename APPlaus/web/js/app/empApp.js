@@ -18,8 +18,8 @@ var employeeApp = angular.module('employeeApp',
 //The route provider manages routing of views
 employeeApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider
-            .when('/registerAssignment', 
-    {templateUrl: 'partials/registerAssignment.html', controller: 'AssignCtrl'}
+            .when('/assignments', 
+    {templateUrl: 'partials/assignments.html', controller: 'AssignCtrl'}
             );
     $routeProvider
             .when('/contests', 

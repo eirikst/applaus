@@ -1,13 +1,15 @@
-package mongoQueries;
+package DAO.MongoDbImpl;
 
+import DAO.NewsQueries;
 import static Tools.DateTools.*;
-import applausException.InputException;
+import APPlausException.InputException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +20,22 @@ import org.bson.types.ObjectId;
  * @author eirikstadheim
  */
 public class NewsQueriesImpl implements NewsQueries {
+    private static NewsQueriesImpl INSTANCE;
+    private final DB db;
     
+    private NewsQueriesImpl() throws UnknownHostException {
+        db = MongoConnection.getInstance().getDB();
+        System.out.println(db.getCollection("contest").find());
+    }
+    
+    public static NewsQueriesImpl getInstance() throws UnknownHostException {
+        if(INSTANCE == null) {
+            System.out.println("Null :)");
+            INSTANCE = new NewsQueriesImpl();
+        }
+        return INSTANCE;
+    }
+
     /**
      * Gets related news based on a user's related stories, represented by the 
      * list of objectIds. Also gets stories for all.
@@ -30,7 +47,7 @@ public class NewsQueriesImpl implements NewsQueries {
      * @throws MongoException if error from database
      */
     @Override
-    public List<DBObject> getNews(DB db, List<ObjectId> userStories, int skip) 
+    public List<DBObject> getNews(List<ObjectId> userStories, int skip) 
             throws InputException, MongoException {
         if(db == null || userStories == null) {
             throw new InputException("db or userStories objects is null.");
@@ -70,7 +87,7 @@ public class NewsQueriesImpl implements NewsQueries {
      * @return DBObject with oid of story and date
      */
     @Override
-    public DBObject addNewsStory(DB db, String title, String text, String writer, int who)
+    public DBObject addNewsStory(String title, String text, String writer, int who)
             throws InputException, MongoException {
         if(db == null || title == null || text == null || writer == null) {
             throw new InputException("Input null caused an"

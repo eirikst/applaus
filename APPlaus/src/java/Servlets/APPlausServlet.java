@@ -1,11 +1,28 @@
-package mongoConnection;
+package Servlets;
 
+import DAO.MongoDbImpl.AssignmentQueriesImpl;
+import DAO.MongoDbImpl.ContestQueriesImpl;
+import DAO.MongoDbImpl.IdeaQueriesImpl;
+import DAO.MongoDbImpl.MongoConnection;
+import DAO.MongoDbImpl.NewsQueriesImpl;
+import DAO.MongoDbImpl.UserQueriesImpl;
+import DbManager.AssignmentManager;
+import DbManager.AuthenticationManager;
+import DbManager.ContestManager;
+import DbManager.HomeManager;
+import DbManager.IdeaManager;
+import DbManager.MongoDbImpl.AssignmentManagerImpl;
+import DbManager.MongoDbImpl.AuthenticationManagerImpl;
+import DbManager.MongoDbImpl.ContestManagerImpl;
+import DbManager.MongoDbImpl.HomeManagerImpl;
+import DbManager.MongoDbImpl.IdeaManagerImpl;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,12 +38,10 @@ import org.bson.types.ObjectId;
  *
  * @author eirikstadheim
  */
-@WebServlet(name = "MongoConnection", urlPatterns = {"/MongoConnection"})
-public class MongoServlet extends HttpServlet {
+@WebServlet(name = "APPlausServlet", urlPatterns = {"/APPlausServlet"})
+public class APPlausServlet extends HttpServlet {
     private final static Logger LOGGER = Logger.getLogger
-        (MongoServlet.class.getName());
-    private static MongoClient mongo;
-    private static DB db;
+        (APPlausServlet.class.getName());
     private HomeManager homeMan;
     private AuthenticationManager authMan;
     private AssignmentManager assignMan;
@@ -35,14 +50,17 @@ public class MongoServlet extends HttpServlet {
     
     @Override
     public void init() throws ServletException {
-        homeMan = new HomeManager();
-        authMan = new AuthenticationManager();
-        assignMan = new AssignmentManager();
-        contMan = new ContestManager();
-        ideaMan = new IdeaManager();
         try {
-            mongo = new MongoClient( "localhost" , 27017 );
-            db = mongo.getDB("applaus");
+            homeMan = new HomeManagerImpl(UserQueriesImpl.getInstance(), 
+                    AssignmentQueriesImpl.getInstance(), 
+            NewsQueriesImpl.getInstance());
+            authMan = new AuthenticationManagerImpl(UserQueriesImpl.
+                    getInstance());
+            assignMan = new AssignmentManagerImpl(AssignmentQueriesImpl.
+                    getInstance(), UserQueriesImpl.getInstance());
+            contMan = new ContestManagerImpl(ContestQueriesImpl.getInstance(), 
+                    UserQueriesImpl.getInstance());
+            ideaMan = new IdeaManagerImpl(IdeaQueriesImpl.getInstance());
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -86,7 +104,7 @@ public class MongoServlet extends HttpServlet {
                     return;
                 }
                 
-                int role = authMan.login(db, username, password, request);
+                int role = authMan.login(username, password, request);
                 if(role == -2 || role == -3 || role == -4) {
                     response.sendError(500);//internal error
                     return;
@@ -114,7 +132,7 @@ public class MongoServlet extends HttpServlet {
                     return;
                 }
                 
-                int ok = authMan.newPassword(db, email);
+                int ok = authMan.newPassword(email);
                 if(ok == 1) {
                     out.print(1);//ok email, all good
                     response.setStatus(200);//success
@@ -148,9 +166,8 @@ public class MongoServlet extends HttpServlet {
                     return;
                 }
                 
-                int res = authMan.registerUser(db, 
-                        username, password, pwdRepeat, firstname, lastname,
-                        email);
+                int res = authMan.registerUser(username, password, pwdRepeat, 
+                        firstname, lastname, email);
                 if(res == 1 || res == -1 || res == -2 || res == -3) {
                     out.println(res);
                     response.setStatus(200);//success
@@ -205,7 +222,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(401);//internal error
                     return;
                 }
-                String responseStr = authMan.getAdminList(db);
+                String responseStr = authMan.getAdminList();
                 if(responseStr == null) {
                     response.sendError(500);//internal error
                     return;
@@ -232,7 +249,7 @@ public class MongoServlet extends HttpServlet {
                 }
                 else try {
                     int roleToSet = Integer.parseInt(roleToSetStr);
-                    String responseStr = authMan.setRole(db, userToSet, roleToSet);
+                    String responseStr = authMan.setRole(userToSet, roleToSet);
                     if(responseStr == null) {
                         response.sendError(500);//internal error
                         return;
@@ -275,7 +292,7 @@ public class MongoServlet extends HttpServlet {
 
                 try{
                     int points = Integer.parseInt(pointsStr);
-                    String responseStr = assignMan.createAssignment(db, title, desc, points);
+                    String responseStr = assignMan.createAssignment(title, desc, points);
                     if(responseStr == null) {
                         response.sendError(500);//internal error
                         return;
@@ -316,7 +333,7 @@ public class MongoServlet extends HttpServlet {
                     Date dateEnd = new Date(dateEndLong);
                     int points = Integer.parseInt(pointsStr);
 
-                    ObjectId oid = contMan.createContest(db, title, desc, prize,
+                    ObjectId oid = contMan.createContest(title, desc, prize,
                             dateEnd, points, username);
                     if(oid != null) {
                         out.print(JSON.serialize(oid));
@@ -351,7 +368,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(400);//bad request
                     return;
                 }
-                int deleted = contMan.deleteContest(db, contestId);
+                int deleted = contMan.deleteContest(contestId);
                 if(deleted == 1) {
                     response.setStatus(200);//success
                     return;
@@ -386,7 +403,7 @@ public class MongoServlet extends HttpServlet {
                     Date dateEnd = new Date(dateEndLong);
                     int points = Integer.parseInt(pointsStr);
 
-                    boolean ok = contMan.editContest(db, id, title, desc,
+                    boolean ok = contMan.editContest(id, title, desc,
                             prize, dateEnd, points);
                     if(ok) {
                         response.setStatus(200);//succes
@@ -421,7 +438,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(400);//bad request
                     return;
                 }
-                String responseStr = homeMan.addNewsStoryForAll(db, title, text
+                String responseStr = homeMan.addNewsStoryForAll(title, text
                         , username);
                 if(responseStr != null) {
                     out.print(responseStr);
@@ -448,7 +465,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(401);//internal error
                     return;
                 }
-                String responseStr = contMan.getActiveContests(db);
+                String responseStr = contMan.getActiveContests();
                 if(responseStr == null) {
                     response.sendError(500);//internal error
                     return;
@@ -474,7 +491,7 @@ public class MongoServlet extends HttpServlet {
                 }
                 try {
                     int skip = Integer.parseInt(skipStr);
-                    String responseStr = contMan.getInactiveContests(db, skip);
+                    String responseStr = contMan.getInactiveContests(skip);
                     if(responseStr == null) {
                         response.sendError(500);//internal error
                         return;
@@ -503,7 +520,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(400);//bad request
                     return;
                 }
-                int ok = contMan.participate(db, username,
+                int ok = contMan.participate(username,
                         contestId);
                 if(ok == 1) {
                     response.setStatus(200);//success
@@ -521,7 +538,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(401);//internal error
                     return;
                 }
-                String responseStr = contMan.userActiveContList(db, username);
+                String responseStr = contMan.userActiveContList(username);
                 if(responseStr != null) {
                     out.print(responseStr);
                     response.setStatus(200);//success
@@ -545,7 +562,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(400);//bad request
                     return;
                 }
-                int ok = contMan.dontParticipate(db, username,
+                int ok = contMan.dontParticipate(username,
                         contestId);
                 if(ok == 1) {
                     response.setStatus(200);//success
@@ -576,7 +593,7 @@ public class MongoServlet extends HttpServlet {
                         long dateL = Long.parseLong(dateStr);//str to long
                         Date date = new Date(dateL);//long to Date
 
-                        int ok = assignMan.registerAssignment(db, username, id, 
+                        int ok = assignMan.registerAssignment(username, id, 
                                 date, comment);
                         System.out.println(ok);
                         if(ok == 1 || ok == -1) {
@@ -610,7 +627,7 @@ public class MongoServlet extends HttpServlet {
                 }
                 try {
                     int skip = Integer.parseInt(skipStr);
-                    String toReturn = assignMan.getAllAssignmentsUserSorted(db, username
+                    String toReturn = assignMan.getAllAssignmentsUserSorted(username
                     , skip);
                     if(toReturn != null) {
                         out.println(toReturn);
@@ -635,7 +652,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(401);//internal error
                     return;
                 }
-                String responseStr = assignMan.getAssignmentsTypes(db);
+                String responseStr = assignMan.getAssignmentsTypes();
                 if(responseStr == null) {
                     response.sendError(400);//bad request
                     return;
@@ -649,7 +666,7 @@ public class MongoServlet extends HttpServlet {
             
             //delete assignment
             else if(action.equals("deleteAssignment")) {
-                int deleted = assignMan.deleteAssignment(db, request
+                int deleted = assignMan.deleteAssignment(request
                         .getParameter("assignId"));
                 if(deleted == 1) {
                     response.setStatus(200);
@@ -668,7 +685,7 @@ public class MongoServlet extends HttpServlet {
                             getParameter("date_done"));
                     Date date_done = new Date(dateDoneLong);
                     
-                    boolean edit = assignMan.editAssignment(db, assignId, comment, date_done);
+                    boolean edit = assignMan.editAssignment(assignId, comment, date_done);
                     if(!edit) {
                         response.sendError(500);//error
                     }
@@ -690,7 +707,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(401);//internal error
                     return;
                 }
-                int[] goals = homeMan.getWeekGoals(db, username);
+                int[] goals = homeMan.getWeekGoals(username);
                 if(goals == null) {
                     response.sendError(500);//internal error
                     return;
@@ -720,7 +737,7 @@ public class MongoServlet extends HttpServlet {
                 }
                 try {
                     int goal = Integer.parseInt(goalStr);
-                    boolean ok = homeMan.setGoal(db, username, goal);
+                    boolean ok = homeMan.setGoal(username, goal);
                     if(ok) {
                         response.setStatus(200);//success
                         return;
@@ -743,7 +760,7 @@ public class MongoServlet extends HttpServlet {
                     response.sendError(401);//internal error
                     return;
                 }
-                int[] points = homeMan.getHomePoints(db, username);
+                int[] points = homeMan.getHomePoints(username);
                 if(points == null) {
                     response.sendError(500);//internal error
                     return;
@@ -770,7 +787,7 @@ public class MongoServlet extends HttpServlet {
                     return;
                 }
 
-                String responseStr = ideaMan.addIdea(db, title, text, username);
+                String responseStr = ideaMan.addIdea(title, text, username);
                 if(responseStr != null) {
                     out.println(responseStr);
                     response.setStatus(200);//success
@@ -796,7 +813,7 @@ public class MongoServlet extends HttpServlet {
                 }
                 try {
                     int skip = Integer.parseInt(skipStr);
-                    String toReturn = ideaMan.getIdeas(db, skip);
+                    String toReturn = ideaMan.getIdeas(skip);
                     if(toReturn != null) {
                         out.println(toReturn);
                         response.setStatus(200);//success
@@ -828,7 +845,7 @@ public class MongoServlet extends HttpServlet {
                 }
                 try {
                     int skip = Integer.parseInt(skipStr);
-                    String returnStr = homeMan.getNews(db, username, skip);
+                    String returnStr = homeMan.getNews(username, skip);
                     if(returnStr != null) {
                         out.println(returnStr);
                         response.setStatus(200);//success
@@ -944,7 +961,7 @@ public class MongoServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Servlet for connecting to the mongodb of APPlaus and handling"
+        return "Servlet for connecting to the database of APPlaus and handling"
                 + "session data.";
     }// </editor-fold>
  
@@ -953,6 +970,12 @@ public class MongoServlet extends HttpServlet {
      */
    @Override
     public void destroy() {
-        mongo.close();
+        try {
+            MongoConnection connection = MongoConnection.getInstance();
+            connection.close();
+        }
+        catch(UnknownHostException e) {
+            LOGGER.log(Level.SEVERE, "Error closing MongoConnection.", e);
+        }
     }
 }

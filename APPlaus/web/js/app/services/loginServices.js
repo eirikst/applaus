@@ -5,7 +5,7 @@ services.service('LoginService', function($http) {
     //http call to check username and password towards the database
     this.login = function(usr, pwd) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=login&usr=" + usr + "&pwd=" + pwd,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -17,7 +17,7 @@ services.service('LoginService', function($http) {
     //http call to register a new user to the system
     this.registerUser = function(user) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=registerUser&usr=" + user.usr + "&pwd=" + user.pwd + "&pwdRepeat=" +  user.pwdRepeat
                                        + "&fname=" + user.fname + "&lname=" +  user.lname + "&email=" +  user.email,
@@ -29,7 +29,7 @@ services.service('LoginService', function($http) {
     //http call to register a new user to the system
     this.newPassword = function(email) {
         var promise = $http({
-            url: 'MongoConnection',
+            url: 'APPlausServlet',
             method: "POST",
             data: "action=newPassword&email=" + email,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}

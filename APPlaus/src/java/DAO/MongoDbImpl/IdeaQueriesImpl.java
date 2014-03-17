@@ -1,12 +1,14 @@
-package mongoQueries;
+package DAO.MongoDbImpl;
 
-import applausException.InputException;
+import DAO.IdeaQueries;
+import APPlausException.InputException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +17,24 @@ import java.util.List;
  * @author eirikstadheim
  */
 public class IdeaQueriesImpl implements IdeaQueries {
+    private static IdeaQueriesImpl INSTANCE;
+    private final DB db;
+    
+    private IdeaQueriesImpl() throws UnknownHostException {
+        db = MongoConnection.getInstance().getDB();
+        System.out.println(db.getCollection("contest").find());
+    }
+    
+    public static IdeaQueriesImpl getInstance() throws UnknownHostException {
+        if(INSTANCE == null) {
+            System.out.println("Null :)");
+            INSTANCE = new IdeaQueriesImpl();
+        }
+        return INSTANCE;
+    }
     
     @Override
-    public DBObject addIdea(DB db, String title, String text, String username) throws InputException, MongoException {
+    public DBObject addIdea(String title, String text, String username) throws InputException, MongoException {
         if(db == null || title == null || text == null || username == null) {
             throw new InputException("Some of the input is null.");
         }
@@ -41,7 +58,7 @@ public class IdeaQueriesImpl implements IdeaQueries {
     }
     
     @Override
-    public List<DBObject> getIdeas(DB db, int skip) throws InputException, MongoException {
+    public List<DBObject> getIdeas(int skip) throws InputException, MongoException {
         if(skip < 0) {
             throw new InputException("Variable skip can not be less than 0.");
         }
