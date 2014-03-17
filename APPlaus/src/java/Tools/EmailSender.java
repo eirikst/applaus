@@ -14,8 +14,10 @@ import javax.mail.internet.MimeMessage;
  * @author eirikstadheim
  */
 public class EmailSender {
-
-    public static void sendNewPassword(String email, String password) {
+    private static final EmailSender INSTANCE = new EmailSender();
+    private final Session session;
+    
+    private EmailSender() {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -24,15 +26,20 @@ public class EmailSender {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
 
-        Session session = Session.getInstance(props,
+        session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("evry.applaus@gmail.com", "evryErBest");
-                    }
-                });
-
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("evry.applaus@gmail.com", "evryErBest");
+            }
+        });
+    }
+    
+    public static EmailSender getInstance() {
+        return INSTANCE;
+    }
+    
+    public void sendNewPassword(String email, String password) {
         try {
-
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("APPlaus"));
             message.setRecipients(Message.RecipientType.TO,

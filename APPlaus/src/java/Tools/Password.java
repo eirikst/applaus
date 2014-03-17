@@ -10,12 +10,17 @@ public class Password {
             + "OPQRSTUVWXYZ0123456789!#$&-_";
     private static final int n = 8;
     private static final Random gen = new Random();
+    private static Password INSTANCE = new Password();
+    
+    public static Password getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Generates a new password with lower case, upper case and/or !#$&-_ 
      * @return new password as a String
      */
-    public static String generateNew() {
+    public String generateNew() {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < n; i++) {
             int k = gen.nextInt(availChar.length() - 1);

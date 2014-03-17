@@ -100,10 +100,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
      * @param email email address typed in by user
      * @return 1 if okay, 0 if email does not exist. -1 and -2 on internal error
      */
+    @Override
     public int newPassword(String email) {
-        String password = Password.generateNew();
+        String password = Password.getInstance().generateNew();
         try {
-            EmailSender.sendNewPassword(email, password);
+            EmailSender.getInstance().sendNewPassword(email, password);
             return userQ.newPassword(email, password);
         }
         catch(InputException e) {
