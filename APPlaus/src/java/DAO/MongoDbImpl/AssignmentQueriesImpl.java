@@ -29,7 +29,6 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     
     public static AssignmentQueriesImpl getInstance() throws UnknownHostException {
         if(INSTANCE == null) {
-            System.out.println("Null :)");
             INSTANCE = new AssignmentQueriesImpl();
         }
         return INSTANCE;

@@ -45,14 +45,12 @@ public class UserQueriesImpl implements UserQueries{
     
     public static UserQueriesImpl getInstance() throws UnknownHostException {
         if(INSTANCE == null) {
-            System.out.println("Null :)");
             INSTANCE = new UserQueriesImpl();
         }
         return INSTANCE;
     }
     /**
      * Checks the if the user(and only one instance) exists.
-     * @param db database connection
      * @param username username submitted
      * @param password password submitted
      * @return the role(int) on success, or -1 on fail.
@@ -62,7 +60,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public int checkLogin(String username, String password)
             throws InputException, MongoException {
-        if(db == null || username == null || password == null) {
+        if(username == null || password == null) {
             throw new InputException("Some of the input is null");
         }
         
@@ -95,7 +93,6 @@ public class UserQueriesImpl implements UserQueries{
     /**
      * Registers that a user with username is participating in contest with 
      * given id.
-     * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
      * @throws InputException if invalid input
@@ -104,7 +101,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public void participate(String username, String contestId) throws
             InputException, MongoException {
-        if(db == null || username == null || contestId == null) {
+        if(username == null || contestId == null) {
             throw new InputException("Some of the input is null");
         }
         
@@ -136,7 +133,6 @@ public class UserQueriesImpl implements UserQueries{
     /**
      * Registers that given user doesn't participate in contest with id
      * contestId
-     * @param db DB object to contact database
      * @param username username of participant
      * @param contestId id of contest
      * @throws InputException if invalid input
@@ -145,7 +141,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public void dontParticipate(String username, String contestId)
             throws InputException, MongoException {
-        if(db == null || username == null || contestId == null) {
+        if(username == null || contestId == null) {
             throw new InputException("Some of the input is null");
         }
         
@@ -176,7 +172,6 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Finds the list of contests the user are participating in.
-     * @param db DB object to contact database
      * @param username of given user
      * @return BasicDBList of the contests the user is participating in
      * @throws InputException if invalid input
@@ -185,7 +180,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public BasicDBList userActiveContList(String username)
             throws InputException, MongoException {
-        if(db == null || username == null) {
+        if(username == null) {
             throw new InputException("Some of the input is null");
         }
         
@@ -204,7 +199,6 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Gets the goal of the given week from the database.
-     * @param db DB object to contact database
      * @param username of given user
      * @param week for which week. 0 for this, -1 for last.
      * @return goal of the week specified if registered. 0 if not goal is set.
@@ -216,7 +210,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public int getWeekGoal(String username, int week)
             throws InputException, MongoException {
-        if(db == null || username == null) {
+        if(username == null) {
             throw new InputException("Some of the input is null");
         }
         
@@ -267,7 +261,6 @@ public class UserQueriesImpl implements UserQueries{
     /**
      * Fetches assignments a user has registered since date from to date to,
      * from the database.
-     * @param db DB object to contact database
      * @param username of given user
      * @param from first date in scope
      * @param to last date in scope
@@ -279,7 +272,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public Iterator<DBObject> getAssignmentsUser(String username, 
             Date from, Date to) throws InputException {
-        if(db == null || username == null || from == null || to == null) {
+        if(username == null || from == null || to == null) {
             throw new InputException("One or more input values is null");
         }
         
@@ -323,7 +316,6 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Sets the goal for next monday if it doesn't already exist
-     * @param db DB object to contact database
      * @param username of given user
      * @param points points to set as goal this week
      * @throws InputException if invalid input
@@ -332,7 +324,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public void setGoal(String username, int points)
             throws InputException, MongoException {
-        if(points <= 0 || username == null || db == null) {
+        if(points <= 0 || username == null) {
             throw new InputException("points variable must be an"
                     + "integer more than 0.");
         }
@@ -355,18 +347,11 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Removes given contestId in database from all users participating
-     * @param db DB object to connect to database
      * @param contestId id of the given contest
-     * @throws InputException if invalid input
      * @throws MongoException if database error 
      */
     @Override
-    public void deleteContest(String contestId)
-            throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("DB object null.");
-        }
-        
+    public void deleteContest(String contestId) throws MongoException {
         DBCollection collection = db.getCollection("user");
         BasicDBObject update = new BasicDBObject();
         update.put("$pull", new BasicDBObject("contests", contestId));
@@ -378,9 +363,14 @@ public class UserQueriesImpl implements UserQueries{
     public int registerUser(String username, String password, 
             String firstname, String lastname, String email)
             throws InputException, MongoException {
-        if(db == null || username == null || password == null ||
+        if(username == null || password == null ||
                 firstname == null || lastname == null || email == null) {
             throw new InputException("Some of the input is null");
+        }
+        if(username.trim().isEmpty() || password.trim().isEmpty() || 
+                firstname.trim().isEmpty() || lastname.trim().isEmpty() || 
+                email.trim().isEmpty()) {
+            return -4;
         }
         
         if (userExist(username)){
@@ -407,7 +397,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public boolean userExist(String username)
             throws InputException, MongoException {
-        if(db == null || username == null) {
+        if(username == null) {
             throw new InputException("Some input is invalid.");
         }
 
@@ -422,11 +412,7 @@ public class UserQueriesImpl implements UserQueries{
     
     //only username, firstname, lastname, role_id
     @Override
-    public List<DBObject> getUserInfo()
-            throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("DB object null.");
-        }
+    public List<DBObject> getUserInfo() throws MongoException {
         DBObject query = new BasicDBObject();
         DBObject toFetch = new BasicDBObject();
         toFetch.put("username", 1);
@@ -445,7 +431,6 @@ public class UserQueriesImpl implements UserQueries{
     /**
      * Sets a new password to the database for given email. First calls isAUser
      * to see if a user is registered with the given email address.
-     * @param db DB object to connect to database
      * @param email email address
      * @param password new password
      * @return 1 on okay insert, 0 if email is not found
@@ -455,7 +440,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public int newPassword(String email, String password)
             throws InputException, MongoException {
-        if(db == null || email == null || password == null) {
+        if(email == null || password == null) {
             throw new InputException("Some input is invalid.");
         }
         
@@ -476,7 +461,6 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Checks if an email address is registered on a user
-     * @param db DB object to connect to
      * @param email email of user
      * @return true if email is registered on a user, false if not
      * @throws InputException if invalid input
@@ -485,7 +469,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
      public boolean emailExist(String email)
              throws InputException, MongoException {
-        if(db == null || email == null) {
+        if(email == null) {
             throw new InputException("Some input is invalid.");
         }
 
@@ -501,7 +485,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public void setRole(String username, int role)
             throws InputException, MongoException {
-        if(db == null || username == null) {
+        if(username == null) {
             throw new InputException("Some input is invalid.");
         }
         if(role != 1 && role != 2 && role != 3) {
@@ -520,7 +504,6 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Gets the ids of news stories related to a user.
-     * @param db DB object to connect to database
      * @param username username of user
      * @return List of object ids for the contests
      * @throws InputException if invalid input
@@ -529,7 +512,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public List<ObjectId> getStoryIdsUser(String username) 
             throws InputException {
-        if(db == null || username == null) {
+        if(username == null) {
             throw new InputException("db or username input is null.");
         }
         DBCollection collection = db.getCollection("user");
@@ -560,7 +543,6 @@ public class UserQueriesImpl implements UserQueries{
     
     /**
      * Gets a sorted list of a user's assignments
-     * @param db DB object to connect to database
      * @param username user's username
      * @param skip number of assignments to skip
      * @return sorted list of user's assignments
@@ -570,7 +552,7 @@ public class UserQueriesImpl implements UserQueries{
     @Override
     public Iterator<DBObject> getAllAssignmentsUserSorted(String username, int skip)
             throws InputException {
-        if(db == null || username == null) {
+        if(username == null) {
             throw new InputException("db or username is null.");
         }
         if(skip < 0) {
@@ -613,10 +595,10 @@ public class UserQueriesImpl implements UserQueries{
         return it.iterator();
     }
     
-    
+    @Override
     public boolean editAssignment(String assignId, String comment, Date date_done)
             throws InputException, MongoException {
-        if(db == null || assignId == null || comment == null || date_done == null) {
+        if(assignId == null || comment == null || date_done == null) {
             throw new InputException("Input null caused an exception.");
         }
         if(date_done.before(DateTools.getToday())) {
@@ -662,7 +644,7 @@ public class UserQueriesImpl implements UserQueries{
     
     public boolean deleteAssignment(String objId) throws InputException, MongoException {
         //checking input
-        if(db == null || objId == null) {
+        if(objId == null) {
             throw new InputException("db or objId is null.");
         }
         ObjectId id;

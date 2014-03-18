@@ -1,5 +1,6 @@
 package Tools;
 
+import APPlausException.InputException;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -38,7 +39,11 @@ public class EmailSender {
         return INSTANCE;
     }
     
-    public void sendNewPassword(String email, String password) {
+    public void sendNewPassword(String email, String password)
+            throws InputException {
+        if(email == null || password == null) {
+            throw new InputException("Email or password is null.");
+        }
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("APPlaus"));

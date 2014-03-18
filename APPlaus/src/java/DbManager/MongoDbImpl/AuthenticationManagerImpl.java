@@ -56,9 +56,9 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     
     public int registerUser(String username, String password, 
             String pwdRepeat, String firstname, String lastname, String email) {
-        if(username.trim().isEmpty() || firstname.trim().isEmpty() || 
-                lastname.trim().isEmpty() || email.trim().isEmpty()) {
-            return -4;
+        if(password == null || pwdRepeat == null) {
+            return -5;  //null value input(bad input, just like inputexcpetion
+                        //below, samme error)
         }
         if (password.equals(pwdRepeat)){
             try {
@@ -78,6 +78,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         }
     }
     
+    @Override
     public String getAdminList() {
         try {
             List<DBObject> adminList = userQ.getUserInfo();
@@ -119,6 +120,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
     
     //ikke servlet-request
+    @Override
     public String setRole(String username, int role) {        
         if (role == 2){
             role = 3;
@@ -137,7 +139,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             LOGGER.log(Level.WARNING, "Exception while setting role.", e);
             return null;
         }
-        
         return getAdminList();
     }    
     
