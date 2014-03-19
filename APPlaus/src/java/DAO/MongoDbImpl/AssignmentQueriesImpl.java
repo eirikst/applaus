@@ -2,7 +2,6 @@ package DAO.MongoDbImpl;
 
 import DAO.AssignmentQueries;
 import APPlausException.InputException;
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -50,29 +49,8 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
         }
     }
     
-    
-    @Override
-    public BasicDBList getAllAssignmentsUser(String username) throws InputException, MongoException {
-        if(db == null || username == null) {
-        throw new InputException("Variables db or username is null.");
-        }
-        
-        DBCollection coll = db.getCollection("user");
-        DBObject query = new BasicDBObject();
-        query.put("username", username);
-        DBObject field = new BasicDBObject();
-        field.put("assignments", 1);
-        field.put("_id", 0);
-
-        try (DBCursor cursor = coll.find(query, field)) {
-            BasicDBList assignments = (BasicDBList) cursor.next().get("assignments");
-            return assignments;
-        }
-    }
-    
     /**
      * Gets all the assignments in the system
-     * @param db DB object to connect to the database
      * @return iterator of DBObject objects with the information about the
      * assignments
      * @throws InputException if db is null

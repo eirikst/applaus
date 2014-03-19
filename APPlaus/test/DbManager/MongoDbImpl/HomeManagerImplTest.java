@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
  * @author eirikstadheim
  */
 public class HomeManagerImplTest {
+    private final String dummy = "dummy";
     
     public HomeManagerImplTest() {
     }
