@@ -423,7 +423,7 @@ public class AuthenticationManagerImplTest {
     
     
     /**
-     * Helper method, to set a list DBObjects of users
+     * Helper method, to set a list BasicDBObjects of users
      * @param users List to set
      */
     private void setUserList(List<BasicDBObject> users) {
@@ -445,6 +445,10 @@ public class AuthenticationManagerImplTest {
         users.add(obj);
     }
     
+    /**
+     * Helper method, to set a list DBObjects of users
+     * @param users List to set
+     */
     private void setUserListDBObject(List<DBObject> users) {
         for(int i = 0; i < 5; i++) {
             DBObject obj = new BasicDBObject();

@@ -27,8 +27,6 @@ public class UserQueriesMock implements UserQueries {
             throw new InputException("Some of the input is null");
         }
         
-        System.out.println("g"+username);
-        System.out.println("g"+password);
         int toRet = 0;
         for(int i = 0; i < users.size(); i++) {
             if(username.equals(users.get(i).getString("username"))) {
