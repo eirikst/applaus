@@ -41,7 +41,6 @@ public class NewsQueriesMock implements NewsQueries {
                 }
             }
         }
-        System.out.println(JSON.serialize(usersNews));
         
         if(skip >= usersNews.size()) {
             return new ArrayList<>();

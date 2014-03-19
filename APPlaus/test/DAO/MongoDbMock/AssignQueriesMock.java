@@ -2,7 +2,6 @@ package DAO.MongoDbMock;
 
 import APPlausException.InputException;
 import DAO.AssignmentQueries;
-import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import java.util.ArrayList;
@@ -22,11 +21,12 @@ public class AssignQueriesMock implements AssignmentQueries {
             throws InputException, MongoException {
         return null;
     }
+    
     @Override
-    public Iterator<DBObject> getAssignmentsIt()
-            throws InputException, MongoException {
-        return null;
+    public Iterator<DBObject> getAssignmentsIt() {
+        return assignments.iterator();
     }
+
     @Override
     public void registerAssignment(String username, String id, Date date,
             String comment) throws InputException, MongoException {

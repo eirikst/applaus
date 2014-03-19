@@ -6,7 +6,6 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
-import com.mongodb.util.JSON;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -22,6 +21,8 @@ public class UserQueriesMock implements UserQueries {
     public List<DBObject> usersDBObj = new ArrayList();
     public List<ObjectId> usersNewsOids = new ArrayList();
     public List<BasicDBObject> userGoals = new ArrayList();
+    public List<DBObject> assignments = new ArrayList();
+    
     
     public int checkLogin(String username, String password)
             throws InputException, MongoException {
@@ -174,9 +175,27 @@ public class UserQueriesMock implements UserQueries {
         }
     }
 
-    public Iterator<DBObject> getAssignmentsUser(String username,
+    @Override
+    public Iterator<DBObject> getAssignmentsUser(String username, 
             Date from, Date to) throws InputException {
-        return null;
+        if(username == null || from == null || to == null) {
+            throw new InputException("One or more input values is null");
+        }
+        if(assignments.size() < 4) {
+            throw new RuntimeException("To test, the public assignments list "
+                    + "must have a size of 4 or more.");
+        }
+        List<DBObject> assignToRet = new ArrayList();
+        for(int i = 0; i < 4; i++) {
+            for(int a = 0; a < 2; a++) {
+                DBObject obj = new BasicDBObject();
+                obj.put("_id", assignments.get(i).get("_id").toString());
+                obj.put("date_end", new Date());
+                obj.put("comment", "comment" + i + "" + a);
+                assignToRet.add(obj);
+            }
+        }
+        return assignToRet.iterator();
     }
     
     @Override
@@ -199,8 +218,7 @@ public class UserQueriesMock implements UserQueries {
             throws InputException {
         if(username == null) {
             throw new InputException("db or username input is null.");
-        }//FJERN PRINTLN
-        System.out.println("HEI" + JSON.serialize(usersNewsOids));
+        }
         return usersNewsOids;
     }
     

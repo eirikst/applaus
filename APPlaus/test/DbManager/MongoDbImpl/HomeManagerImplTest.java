@@ -3,6 +3,7 @@ package DbManager.MongoDbImpl;
 import DAO.MongoDbMock.AssignQueriesMock;
 import DAO.MongoDbMock.NewsQueriesMock;
 import DAO.MongoDbMock.UserQueriesMock;
+import Tools.DateTools;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
@@ -180,34 +181,113 @@ public class HomeManagerImplTest {
     }
 
     /**
-     * Test of getHomePoints method, of class HomeManagerImpl.
+     * Test of getHomePoints method, of class HomeManagerImpl. Testing on 
+     * success.
      */
     @Test
-    public void testGetHomePoints() {
+    public void testGetHomePointsSuccess() {
         System.out.println("getHomePoints");
-        String username = "";
-        HomeManagerImpl instance = null;
-        int[] expResult = null;
+        
+        
+        //init mock and test class
+        NewsQueriesMock newsQMock = new NewsQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setAssignList(userQMock.assignments);
+        AssignQueriesMock assignQMock = new AssignQueriesMock();
+        setAssignList(assignQMock.assignments);
+        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
+                newsQMock);
+        
+        
+        String username = "username1";
+        
+        //exp
+        int[] expResult = {52, 52, 52, 52};
+        
+        //result
         int[] result = instance.getHomePoints(username);
         assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
-     * Test of getPoints method, of class HomeManagerImpl.
+     * Test of getHomePoints method, of class HomeManagerImpl. Testing on 
+     * invalid input(username null)
      */
     @Test
-    public void testGetPoints() {
+    public void testGetHomePointsInvalidInput() {
+        System.out.println("getHomePoints");
+        
+        //init mock and test class
+        NewsQueriesMock newsQMock = new NewsQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setAssignList(userQMock.assignments);
+        AssignQueriesMock assignQMock = new AssignQueriesMock();
+        setAssignList(assignQMock.assignments);
+        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
+                newsQMock);
+        
+        
+        String username = "username1";
+        
+        //result
+        int[] result = instance.getHomePoints(null);
+        assertNull(result);
+    }
+
+    /**
+     * Test of getPoints method, of class HomeManagerImpl. Success scenario is 
+     * tested in this method
+     */
+    @Test
+    public void testGetPointsSuccess() {
         System.out.println("getPoints");
-        String username = "";
-        int period = 0;
-        HomeManagerImpl instance = null;
-        int expResult = 0;
+        
+        //init mock and test class
+        NewsQueriesMock newsQMock = new NewsQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setAssignList(userQMock.assignments);
+        AssignQueriesMock assignQMock = new AssignQueriesMock();
+        setAssignList(assignQMock.assignments);
+        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
+                newsQMock);
+
+        String username = "username1";
+        int period = DateTools.WEEK;
+        
+        //exp
+        int expResult = 52;
+        
+        //result
+        int result = instance.getPoints(username, period);//according to method
+        //setAssignList, this should return 52 points 2*(5+6+7+8)
+        assertEquals("Expecting 52 to be returned", expResult, result);
+    }
+
+    /**
+     * Test of getPoints method, of class HomeManagerImpl. Input is invalid in 
+     * this test.
+     */
+    public void testGetPointsInvalidInput() {
+        System.out.println("getPoints");
+        
+        //init mock and test class
+        NewsQueriesMock newsQMock = new NewsQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setAssignList(userQMock.assignments);
+        AssignQueriesMock assignQMock = new AssignQueriesMock();
+        setAssignList(assignQMock.assignments);
+        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
+                newsQMock);
+
+        String username = "username1";
+        int period = DateTools.WEEK;
+        
+        //exp
+        int expResult = -1;
+        
+        //result
         int result = instance.getPoints(username, period);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Expecting -1 on invalid input", expResult, result);
     }
 
     /**
@@ -478,6 +558,22 @@ public class HomeManagerImplTest {
             obj.put("for", 1);
             obj.put("date", new Date(1000000));
             news.add(obj);
+        }
+    }
+    
+    
+    /**
+     * Helper method, to set a list of DBObjects of assignments
+     * @param users List to set
+     */
+    private void setAssignList(List<DBObject> assignments) {
+        for(int i = 0; i < 10; i++) {
+            DBObject obj = new BasicDBObject();
+            obj.put("_id", new ObjectId("00000000000000000000000" + i));
+            obj.put("title", "title" + i);
+            obj.put("desc", "desc" + i);
+            obj.put("points", 5 + i);
+            assignments.add(obj);
         }
     }
 }
