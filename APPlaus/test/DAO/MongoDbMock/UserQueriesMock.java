@@ -4,7 +4,6 @@ import APPlausException.InputException;
 import DAO.UserQueries;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import java.util.ArrayList;
