@@ -39,7 +39,6 @@ public class NewsQueriesImpl implements NewsQueries {
     /**
      * Gets related news based on a user's related stories, represented by the 
      * list of objectIds. Also gets stories for all.
-     * @param db DB object to connect to database.
      * @param userStories objectIds of stories related to the user
      * @param skip number of stories to skip
      * @return list of DBObjects with the related news stories
@@ -49,7 +48,7 @@ public class NewsQueriesImpl implements NewsQueries {
     @Override
     public List<DBObject> getNews(List<ObjectId> userStories, int skip) 
             throws InputException, MongoException {
-        if(db == null || userStories == null) {
+        if(userStories == null) {
             throw new InputException("db or userStories objects is null.");
         }
         if(skip < 0) {
@@ -77,7 +76,6 @@ public class NewsQueriesImpl implements NewsQueries {
     
     /**
      * Adds a news story with the given attributes to the database.
-     * @param db DB object to connect to database
      * @param title story title
      * @param text story text
      * @param writer story writer's username
@@ -89,7 +87,7 @@ public class NewsQueriesImpl implements NewsQueries {
     @Override
     public DBObject addNewsStory(String title, String text, String writer, int who)
             throws InputException, MongoException {
-        if(db == null || title == null || text == null || writer == null) {
+        if(title == null || text == null || writer == null) {
             throw new InputException("Input null caused an"
                     + " exception.");
         }
