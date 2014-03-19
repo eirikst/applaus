@@ -6,6 +6,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import com.mongodb.util.JSON;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,6 +20,7 @@ import org.bson.types.ObjectId;
 public class UserQueriesMock implements UserQueries {
     public List<BasicDBObject> users = new ArrayList();
     public List<DBObject> usersDBObj = new ArrayList();
+    public List<ObjectId> usersNewsOids = new ArrayList();
     
     public int checkLogin(String username, String password)
             throws InputException, MongoException {
@@ -148,16 +150,17 @@ public class UserQueriesMock implements UserQueries {
             throws InputException, MongoException {
         
     }
-    /**
-     * Gets the ids of a news stories related to a user.
-     * @param username username of user
-     * @return List of object ids for the contests
-     * @throws InputException
-     */
+    
+    @Override
     public List<ObjectId> getStoryIdsUser(String username) 
             throws InputException {
-        return null;
+        if(username == null) {
+            throw new InputException("db or username input is null.");
+        }//FJERN PRINTLN
+        System.out.println("HEI" + JSON.serialize(usersNewsOids));
+        return usersNewsOids;
     }
+    
     public Iterator<DBObject> getAllAssignmentsUserSorted(String username, 
             int skip) throws InputException {
         return null;

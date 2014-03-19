@@ -56,7 +56,7 @@ public class IdeaQueriesMock implements IdeaQueries {
             return new ArrayList<>();
         }
         else if(skip + 6 >= ideas.size()) {
-            return ideas.subList(skip, ideas.size() - 1);
+            return ideas.subList(skip, ideas.size());
         }
         return ideas.subList(skip, skip + 6);
     }
