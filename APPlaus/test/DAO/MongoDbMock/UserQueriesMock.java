@@ -21,6 +21,7 @@ public class UserQueriesMock implements UserQueries {
     public List<BasicDBObject> users = new ArrayList();
     public List<DBObject> usersDBObj = new ArrayList();
     public List<ObjectId> usersNewsOids = new ArrayList();
+    public List<BasicDBObject> userGoals = new ArrayList();
     
     public int checkLogin(String username, String password)
             throws InputException, MongoException {
@@ -134,18 +135,60 @@ public class UserQueriesMock implements UserQueries {
             throws InputException, MongoException {
         return null;
     }
+    
+    @Override
     public int getWeekGoal(String username, int week)
             throws InputException, MongoException {
-        return 0;
+        if(username == null) {
+            throw new InputException("Some of the input is null");
+        }
+        if(week != 0 && week != -1) {
+            throw new IllegalArgumentException("This does not happen, and will"
+                    + " not be added in this mock object for simplicity.");
+        }
+        
+        int goal = -1;
+        int timesSet = 0;
+        for(int i = 0; i < userGoals.size(); i++) {
+            BasicDBObject goalUser = userGoals.get(i);
+            if(goalUser.getString("username").equals(username) && 
+                    goalUser.getInt("week") == week) {
+                goal =  goalUser.getInt("goal");
+                timesSet ++;
+            }
+        }
+        
+        if(timesSet == 1) {
+            if(goal > 0) {
+                return goal;//ok
+            }
+            else {
+                return -3;//goal is 0 or less
+            }
+        }
+        else if(timesSet == 0) {
+            return -1;//no goal set
+        }
+        else {
+            return -2;//multiple instances
+        }
     }
+
     public Iterator<DBObject> getAssignmentsUser(String username,
             Date from, Date to) throws InputException {
         return null;
     }
+    
+    @Override
     public void setGoal(String username, int points)
             throws InputException, MongoException {
-        
+        if(points <= 0 || username == null) {
+            throw new InputException("points variable must be an"
+                    + "integer more than 0.");
+        }
+        //goal set if no exception
     }
+
     public void deleteContest(String contestId)
             throws InputException, MongoException {
         
