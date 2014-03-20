@@ -180,6 +180,7 @@ public class ContestManagerImpl implements ContestManager {
      * @param username username of the admin who created the contest
      * @return true if insert is okay, false if not
      */
+    @Override
     public ObjectId createContest(String title, String desc, String prize
             , Date dateEnd, int points, String username) {
         try {
@@ -205,6 +206,7 @@ public class ContestManagerImpl implements ContestManager {
      * @return true on successful update, false if not(none updated ot database
      * error)
      */
+    @Override
     public boolean editContest(String contestId, String title, String desc, String prize
             , Date dateEnd, int points) {
         try {
