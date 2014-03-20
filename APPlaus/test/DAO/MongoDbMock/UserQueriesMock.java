@@ -126,14 +126,24 @@ public class UserQueriesMock implements UserQueries {
 
     public void participate(String username, String contestId)
             throws InputException, MongoException {
-        
+        if(username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
     }
     public void dontParticipate(String username, String contestId)
             throws InputException, MongoException {
-        
+        if(username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
     }
     public BasicDBList userActiveContList(String username)
             throws InputException, MongoException {
+        if(username == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
+        
+        
         return null;
     }
     
