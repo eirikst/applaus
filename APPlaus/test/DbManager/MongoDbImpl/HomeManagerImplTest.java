@@ -323,7 +323,7 @@ public class HomeManagerImplTest {
     public void testSetGoalInvalidInput() {
         System.out.println("setGoal");
         String username = "username1";
-        int points = 30;
+        int points = -2;
         
         //init mock
         NewsQueriesMock newsQMock = new NewsQueriesMock();
@@ -338,7 +338,7 @@ public class HomeManagerImplTest {
         //result
         boolean result = instance.setGoal(null, points);
         assertEquals(expResult, result);
-        result = instance.setGoal(username, -2);
+        result = instance.setGoal(username, points);
         assertEquals(expResult, result);
     }
     

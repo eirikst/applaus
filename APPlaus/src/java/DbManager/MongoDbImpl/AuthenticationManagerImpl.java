@@ -11,7 +11,6 @@ import Tools.*;
 import APPlausException.InputException;
 import DbManager.AuthenticationManager;
 import java.util.logging.Level;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,18 +29,14 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
      * Checks the database if the user(and only one instance) exists.
      * @param username username of user to log in
      * @param password of user to log in
-     * @param request http request
      * @return the role(int) on success, -1 on no match. -2 if multiple users 
      * with same username. -3 if bad input, -4 if
      * database error
      */
-    public int login(String username, String password,
-            HttpServletRequest request) {
+    @Override
+    public int login(String username, String password) {
         try {
             int role = userQ.checkLogin(username, password);
-            if(role > 0) {
-                setSession(request, username, role);
-            }
             return role;
             }
         catch(InputException e) {
@@ -141,26 +136,4 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         }
         return getAdminList();
     }    
-    
-    /**
-     * Takes a HttpServletRequest, username and role and sets the request 
-     * session attributes username and role to the given values.
-     * @param request HttpServletRequest to add session to
-     * @param username session username
-     * @param role session role id
-     * @throws InputException if invalid input
-     * @throws MongoException if database error
-     */
-    private void setSession(HttpServletRequest request, String username,
-            int role) {
-        try {
-            HttpSession session = request.getSession();
-            session.setAttribute("username", username);
-            session.setAttribute("role", role);
-        }
-        catch(IllegalStateException e) {
-            LOGGER.log(Level.INFO, "Trying to set attributes on invalidated"
-                    + " session", e);
-        }
-    }
 }
