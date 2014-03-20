@@ -6,7 +6,6 @@ import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import Tools.*;
 import APPlausException.InputException;
 import DbManager.AuthenticationManager;

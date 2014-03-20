@@ -113,15 +113,11 @@ public class APPlausServlet extends HttpServlet {
                 } 
 
                 //returning role id if okay, -1 if bad details
-                out.println(JSON.serialize(new int[]{role}));
+                out.println(role);
 
                 if(role == 1 || role == 2 || role == 3) {
+                    setCookie(response, role);
                     setSession(request, username, role);
-                    Cookie cookie = new Cookie("role", "" + role);
-                    cookie.setMaxAge(24*60*60);
-                    response.addCookie(cookie); 
-
-                    request.getSession().setMaxInactiveInterval(604800);
                 }
                 response.setStatus(200);//success
                 return;
@@ -944,11 +940,23 @@ public class APPlausServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
             session.setAttribute("role", role);
+            session.setMaxInactiveInterval(604800);
         }
         catch(IllegalStateException e) {
             LOGGER.log(Level.INFO, "Trying to set attributes on invalidated"
                     + " session", e);
         }
+    }
+    
+    /**
+     * Sets a cookie with the role id of the user
+     * @param response HttpServletResponse to set cookie on
+     * @param role role id of user
+     */
+    private void setCookie(HttpServletResponse response, int role) {
+        Cookie cookie = new Cookie("role", "" + role);
+        cookie.setMaxAge(24*60*60);
+        response.addCookie(cookie);
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
