@@ -99,7 +99,7 @@ public class NewsQueriesImpl implements NewsQueries {
         toInsert.put("writer", writer);
         toInsert.put("for", who);
         Date now = new Date();
-        toInsert.put("date", formatDate(now, TO_MONGO));
+        toInsert.put("date", now);
 
         collection.insert(toInsert);
         DBObject retObj = new BasicDBObject();

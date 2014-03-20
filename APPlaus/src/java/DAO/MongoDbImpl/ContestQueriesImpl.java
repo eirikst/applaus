@@ -13,6 +13,11 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import java.net.UnknownHostException;
+import java.util.Calendar;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MILLISECOND;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
 import java.util.Date;
 import java.util.List;
 import java.util.GregorianCalendar;
@@ -129,7 +134,7 @@ public class ContestQueriesImpl implements ContestQueries {
         DBCollection collection = db.getCollection("contest");
         BasicDBObject query = new BasicDBObject();
         query.put("_id", id);
-        query.put("date_end", new BasicDBObject("$gte", formatDate(getToday(), TO_MONGO)));
+        query.put("date_end", new BasicDBObject("$gte",getToday()));
         
         //remove if objectid and date query matches
         WriteResult w = collection.remove(query);
@@ -177,12 +182,21 @@ public class ContestQueriesImpl implements ContestQueries {
             throw new InputException("Date cannot be before today");
         }
         
+        //assure that its this day as late as possible
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEnd);
+        cal.set(HOUR_OF_DAY, 23);
+        cal.set(MINUTE, 59);
+        cal.set(SECOND, 59);
+        cal.set(MILLISECOND, 999);
+        dateEnd = cal.getTime();
+        
         DBCollection collection = db.getCollection("contest");
         DBObject toInsert = new BasicDBObject();
         toInsert.put("title", title);
         toInsert.put("desc", desc);
         toInsert.put("prize", prize);
-        toInsert.put("date_created", formatDate(new Date(), TO_MONGO));
+        toInsert.put("date_created", new Date());
         toInsert.put("date_end", dateEnd);
         toInsert.put("points", points);
         toInsert.put("username", username);
@@ -222,6 +236,16 @@ public class ContestQueriesImpl implements ContestQueries {
         if(dateEnd.before(DateTools.getToday())) {
             throw new InputException("Date cannot be before today.");
         }
+        
+        //assure that its this day as late as possible
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEnd);
+        cal.set(HOUR_OF_DAY, 23);
+        cal.set(MINUTE, 59);
+        cal.set(SECOND, 59);
+        cal.set(MILLISECOND, 999);
+        dateEnd = cal.getTime();
+
         
         ObjectId objId;
         try {

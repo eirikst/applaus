@@ -8,6 +8,11 @@ import DbManager.AssignmentManager;
 import com.google.common.collect.Lists;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
+import java.util.Calendar;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MILLISECOND;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +70,17 @@ public class AssignmentManagerImpl implements AssignmentManager {
     
     @Override
     public int registerAssignment(String username, String id, Date dateDone, String comment) {
+        if(dateDone != null) {
+            //assure that time is 00:00:00 for consistency
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateDone);
+            cal.set(HOUR_OF_DAY, 0);
+            cal.set(MINUTE, 0);
+            cal.set(SECOND, 0);
+            cal.set(MILLISECOND, 0);
+            dateDone = cal.getTime();
+        }
+        
         Date now = new Date();
         Date lastMonday = DateTools.getMonday(-1);
         if(dateDone.after(now) || dateDone.before(lastMonday)) {

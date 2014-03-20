@@ -1,8 +1,5 @@
 package Tools;
 
-import com.mongodb.DBObject;
-import java.util.List;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -67,6 +64,12 @@ public class DateTools {
     
     
     //-1 for mongo to java, 1 for java to mongo
+    /**
+     * @deprecated 
+     * @param date
+     * @param hour
+     * @return 
+     */
     public static Date formatDate(Date date, int hour) {
         if (date == null) {
             throw new IllegalArgumentException("date cannot be null.");

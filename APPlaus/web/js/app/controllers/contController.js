@@ -103,8 +103,18 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
 
     //Create contest
     $scope.createContest = function(contest) {
-        console.log(contest.date_end.$date);
         contest.dateSec = (new Date(contest.date_end.$date)).getTime();//long format
+        
+        formDate = function(date) {
+            date -= 3600000;
+            return date;
+        };
+        
+        contest.dateSec = formDate(contest.dateSec);
+
+        
+        console.log(new Date(contest.dateSec));
+        
         ContestService.createContest(contest)
                 .success(function(data, status, headers, config) {
                     contest._id = data;//obj id returned
@@ -122,6 +132,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     //Edit contest
     $scope.editContest = function(contest) {
         contest.dateSec = (new Date(contest.date_end.$date)).getTime();//long format
+        console.log(contest);
         ContestService.editContest(contest)
                 .success(function(data, status, headers, config) {
                     $scope.activeMsg = "Konkurranse er endret!";
