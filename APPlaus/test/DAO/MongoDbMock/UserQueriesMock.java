@@ -232,11 +232,18 @@ public class UserQueriesMock implements UserQueries {
         return usersNewsOids;
     }
     
+    @Override
     public Iterator<DBObject> getAllAssignmentsUserSorted(String username, 
             int skip) throws InputException {
-        return null;
+        if(username == null || skip < 0) {
+            throw new InputException("username null or skip < 0");
+        }
+        //does not need sorting, because that happens in the database system, 
+        //and does not need to be tested here
+        return assignments.iterator();
     }
-    public boolean deleteAssignment(String objId) throws InputException, MongoException {
+
+public boolean deleteAssignment(String objId) throws InputException, MongoException {
         return false;
     }
     public boolean editAssignment(String contestId, String comment, Date date_done)
