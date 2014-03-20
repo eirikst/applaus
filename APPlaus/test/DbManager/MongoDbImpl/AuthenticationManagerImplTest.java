@@ -42,8 +42,8 @@ public class AuthenticationManagerImplTest {
     }
 
     /**
-     * Test of login method, of class AuthenticationManagerImpl.
-     * IKKE FERDIG. whattodo med session null
+     * Test of login method, of class AuthenticationManagerImpl. Testing a 
+     * successful scenario, where username and password match.
      */
     @Test
     public void testLoginSuccess() {
@@ -55,8 +55,6 @@ public class AuthenticationManagerImplTest {
         
         String username = "username1";
         String password = "password1";
-        HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock( HttpSession.class);
         
         //class to test init
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
@@ -65,7 +63,88 @@ public class AuthenticationManagerImplTest {
         int expResult = 1;
         
         //result
-        int result = instance.login(username, password, mockedRequest);
+        int result = instance.login(username, password);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of login method, of class AuthenticationManagerImpl. Testing the 
+     * scenario where there is not match(either not registered or username and 
+     * password not matching
+     */
+    @Test
+    public void testLoginUserNotInSystem() {
+        System.out.println("login");
+        
+        //init mock
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setUserList(userQMock.users);
+        
+        String username = "username150";
+        String password = "password1";
+        
+        //class to test init
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        
+        //exp
+        int expResult = -1;
+        
+        //result
+        int result = instance.login(username, password);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of login method, of class AuthenticationManagerImpl. Testing the 
+     * scenario where there are multiple instances of the user.
+     */
+    @Test
+    public void testLoginNoMatch() {
+        System.out.println("login");
+        
+        //init mock
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setUserList(userQMock.users);
+        
+        String username = "username2";
+        String password = "password2";
+        
+        //class to test init
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        
+        //exp
+        int expResult = -2;
+        
+        //result
+        int result = instance.login(username, password);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of login method, of class AuthenticationManagerImpl. Testing the 
+     * scenario where some of the input is null
+     */
+    @Test
+    public void testLoginNullInput() {
+        System.out.println("login");
+        
+        //init mock
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setUserList(userQMock.users);
+        
+        String username = "username2";
+        String password = "password2";
+        
+        //class to test init
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        
+        //exp
+        int expResult = -3;
+        
+        //result
+        int result = instance.login(null, password);
+        assertEquals(expResult, result);
+        result = instance.login(username, null);
         assertEquals(expResult, result);
     }
 

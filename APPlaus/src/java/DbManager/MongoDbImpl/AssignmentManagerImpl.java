@@ -39,10 +39,6 @@ public class AssignmentManagerImpl implements AssignmentManager {
             List<DBObject> assignments = assignQ.getAssignments();
             return JSON.serialize(assignments);
         }
-        catch(InputException e) {
-            LOGGER.log(Level.INFO, "Exception while getting assignments.", e);
-            return null;
-        }
         catch(MongoException e) {
             LOGGER.log(Level.WARNING, "Exception while getting assignments.", e);
             return null;

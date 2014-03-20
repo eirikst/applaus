@@ -34,11 +34,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     }
     
     @Override
-    public List<DBObject> getAssignments() throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("Variable db is null.");
-        }
-        
+    public List<DBObject> getAssignments() throws MongoException {        
         DBObject sort = new BasicDBObject();
         sort.put("title", 1);
         
@@ -53,15 +49,10 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
      * Gets all the assignments in the system
      * @return iterator of DBObject objects with the information about the
      * assignments
-     * @throws InputException if db is null
      * @throws MongoException if database error
      */
     @Override
-    public Iterator<DBObject> getAssignmentsIt() throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("Variable db is null.");
-        }
-        
+    public Iterator<DBObject> getAssignmentsIt() throws MongoException {
         DBCollection coll = db.getCollection("assignment");
         try(DBCursor cursor = coll.find()) {
             return cursor.iterator();
@@ -71,7 +62,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     @Override
     public void registerAssignment(String username, String id, Date 
             dateDone, String comment) throws InputException, MongoException {
-        if(db == null || username == null || id == null || dateDone == null
+        if(username == null || id == null || dateDone == null
                 || comment == null) {
             throw new InputException("One or several input objects is null.");
         }
@@ -93,7 +84,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     @Override
     public DBObject createAssignment(String title, String desc,
             int points) throws InputException, MongoException {
-        if(db == null || title == null || desc == null) {
+        if(title == null || desc == null) {
             throw new InputException("One or several input objects is null.");
         }
         if(points < 0) {

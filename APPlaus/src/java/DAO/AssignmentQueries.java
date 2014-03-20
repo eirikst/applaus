@@ -14,9 +14,8 @@ import java.util.Date;
 
 public interface AssignmentQueries {
     public List<DBObject> getAssignments()
-            throws InputException, MongoException;
-    public Iterator<DBObject> getAssignmentsIt()
-            throws InputException, MongoException;
+            throws MongoException;
+    public Iterator<DBObject> getAssignmentsIt() throws MongoException;
     public void registerAssignment(String username, String id, Date date,
             String comment) throws InputException, MongoException;
     public DBObject createAssignment(String title, String desc,

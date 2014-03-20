@@ -1,5 +1,6 @@
 package Servlets;
 
+import APPlausException.InputException;
 import DAO.MongoDbImpl.AssignmentQueriesImpl;
 import DAO.MongoDbImpl.ContestQueriesImpl;
 import DAO.MongoDbImpl.IdeaQueriesImpl;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import org.bson.types.ObjectId;
 
 /**
@@ -104,7 +106,7 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
                 
-                int role = authMan.login(username, password, request);
+                int role = authMan.login(username, password);
                 if(role == -2 || role == -3 || role == -4) {
                     response.sendError(500);//internal error
                     return;
@@ -114,6 +116,7 @@ public class APPlausServlet extends HttpServlet {
                 out.println(JSON.serialize(new int[]{role}));
 
                 if(role == 1 || role == 2 || role == 3) {
+                    setSession(request, username, role);
                     Cookie cookie = new Cookie("role", "" + role);
                     cookie.setMaxAge(24*60*60);
                     response.addCookie(cookie); 
@@ -923,6 +926,29 @@ public class APPlausServlet extends HttpServlet {
      */
     private boolean isSuperAdmin(int role) {
         return (role == 1);
+    }
+    
+    
+    /**
+     * Takes a HttpServletRequest, username and role and sets the request 
+     * session attributes username and role to the given values.
+     * @param request HttpServletRequest to add session to
+     * @param username session username
+     * @param role session role id
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
+     */
+    private void setSession(HttpServletRequest request, String username,
+            int role) {
+        try {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", username);
+            session.setAttribute("role", role);
+        }
+        catch(IllegalStateException e) {
+            LOGGER.log(Level.INFO, "Trying to set attributes on invalidated"
+                    + " session", e);
+        }
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
