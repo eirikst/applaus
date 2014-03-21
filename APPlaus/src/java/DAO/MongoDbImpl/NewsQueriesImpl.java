@@ -1,7 +1,6 @@
 package DAO.MongoDbImpl;
 
 import DAO.NewsQueries;
-import static Tools.DateTools.*;
 import APPlausException.InputException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;

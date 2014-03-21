@@ -41,7 +41,6 @@ public class ContestQueriesImpl implements ContestQueries {
     
     public static ContestQueriesImpl getInstance() throws UnknownHostException {
         if(INSTANCE == null) {
-            System.out.println("Null :)");
             INSTANCE = new ContestQueriesImpl();
         }
         return INSTANCE;
@@ -49,15 +48,10 @@ public class ContestQueriesImpl implements ContestQueries {
     /**
      * Gets the active contests from the database sorted on closest end date
      * @return list of contest DBObject
-     * @throws InputException if any input is null
      * @throws MongoException if database error
      */
     @Override
-    public List<DBObject> getActiveContests()
-            throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("Variable db is null.");
-        }
+    public List<DBObject> getActiveContests() throws MongoException {
         
         //tomorrows date is needed or else mongo will not show today's contests
         GregorianCalendar calendar = new GregorianCalendar();
@@ -87,9 +81,6 @@ public class ContestQueriesImpl implements ContestQueries {
     @Override
     public List<DBObject> getInactiveContests(int skip)
             throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("Variable db is null.");
-        }
         if(skip < 0) {
             throw new InputException("Variable skip can not be less than 0.");
         }
@@ -120,8 +111,8 @@ public class ContestQueriesImpl implements ContestQueries {
      */
     @Override
     public boolean deleteContest(String objId) throws InputException, MongoException {
-        if(db == null || objId == null) {
-            throw new InputException("db or objId is null.");
+        if(objId == null) {
+            throw new InputException("objId is null.");
         }
         ObjectId id;
         try {
@@ -170,7 +161,7 @@ public class ContestQueriesImpl implements ContestQueries {
     public ObjectId createContest(String title, String desc, String prize,
              Date dateEnd, int points, String username)
             throws InputException, MongoException {
-        if(db == null || title == null || desc == null || prize == null || 
+        if(title == null || desc == null || prize == null || 
                 dateEnd == null || username == null) {
             throw new InputException("Input null caused an"
                     + " exception.");
@@ -226,7 +217,7 @@ public class ContestQueriesImpl implements ContestQueries {
     public boolean editContest(String contestId, String title, String desc, 
             String prize, Date dateEnd, int points)
             throws InputException, MongoException {
-        if(db == null || contestId == null || title == null || desc == null || prize == null || 
+        if(contestId == null || title == null || desc == null || prize == null || 
                 dateEnd == null) {
             throw new InputException("Input null caused an exception.");
         }

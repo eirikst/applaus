@@ -137,7 +137,7 @@ public class HomeManagerImpl implements HomeManager {
         }
     }
     
-    
+    @Override
     public boolean setGoal(String username, int points) {
         try {
             userQ.setGoal(username, points);
@@ -161,6 +161,7 @@ public class HomeManagerImpl implements HomeManager {
      * @param skip number of stories to skip
      * @return JSON serialized string if okay, null if not okay
      */
+    @Override
     public String getNews(String username, int skip) {
         try {
             List<ObjectId> oids = userQ.getStoryIdsUser(username);
@@ -184,10 +185,12 @@ public class HomeManagerImpl implements HomeManager {
      * @param writer story writer's username
      * @return true if ok, false if not okay
      */
+    @Override
     public String addNewsStoryForAll(String title, String text, 
             String writer) {
         try {
-            DBObject addedInfo = newsQ.addNewsStory(title, text, writer, NewsQueries.FOR_ALL);
+            DBObject addedInfo = newsQ.addNewsStory(title, text, writer,
+                    NewsQueries.FOR_ALL);
             return JSON.serialize(addedInfo);//0 means news 
             //available for all users
         }

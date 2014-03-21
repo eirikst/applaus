@@ -62,7 +62,7 @@ public interface ContestManager {
      * @param username username of the admin who created the contest
      * @return true if insert is okay, false if not
      */
-    public ObjectId createContest(String title, String desc, String prize
+    public String createContest(String title, String desc, String prize
             , Date dateEnd, int points, String username);    
     /**
      * @param contestId String rep of contest object id

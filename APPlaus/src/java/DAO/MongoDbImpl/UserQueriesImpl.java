@@ -639,6 +639,7 @@ public class UserQueriesImpl implements UserQueries{
     }
     
     
+    @Override
     public boolean deleteAssignment(String objId) throws InputException, MongoException {
         //checking input
         if(objId == null) {

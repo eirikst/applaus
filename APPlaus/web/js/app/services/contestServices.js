@@ -6,7 +6,7 @@ services.service('ContestService', function($http) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=getActiveContests&skip=",
+            data: "action=getActiveContests",
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

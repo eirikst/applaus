@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
-import org.bson.types.ObjectId;
 
 /**
  *
@@ -332,10 +331,10 @@ public class APPlausServlet extends HttpServlet {
                     Date dateEnd = new Date(dateEndLong);
                     int points = Integer.parseInt(pointsStr);
 
-                    ObjectId oid = contMan.createContest(title, desc, prize,
+                    String returnStr = contMan.createContest(title, desc, prize,
                             dateEnd, points, username);
-                    if(oid != null) {
-                        out.print(JSON.serialize(oid));
+                    if(returnStr != null) {
+                        out.print(returnStr);
                         response.setStatus(200);//success
                         return;
                     }

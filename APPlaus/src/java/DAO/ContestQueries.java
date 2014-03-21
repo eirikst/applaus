@@ -12,8 +12,7 @@ import org.bson.types.ObjectId;
  * @author eirikstadheim
  */
 public interface ContestQueries{
-    public List<DBObject> getActiveContests()
-            throws InputException, MongoException;
+    public List<DBObject> getActiveContests() throws MongoException;
     public List<DBObject> getInactiveContests(int skip)
             throws InputException, MongoException;
     public boolean deleteContest(String objId)
