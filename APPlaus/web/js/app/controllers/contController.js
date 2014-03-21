@@ -104,17 +104,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     //Create contest
     $scope.createContest = function(contest) {
         contest.dateSec = (new Date(contest.date_end.$date)).getTime();//long format
-        
-        formDate = function(date) {
-            date -= 3600000;
-            return date;
-        };
-        
-        contest.dateSec = formDate(contest.dateSec);
 
-        
-        console.log(new Date(contest.dateSec));
-        
         ContestService.createContest(contest)
                 .success(function(data, status, headers, config) {
                     contest._id = data;//obj id returned
