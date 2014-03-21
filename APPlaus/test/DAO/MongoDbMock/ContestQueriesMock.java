@@ -136,7 +136,7 @@ public class ContestQueriesMock implements ContestQueries {
             String desc, String prize, Date dateEnd, int points)
             throws InputException, MongoException {
         
-        if(title == null || desc == null || prize == null || dateEnd == null) {
+        if(contestId == null || title == null || desc == null || prize == null || dateEnd == null) {
             throw new InputException("Bad input(null values)");
         }
         if(points < 0) {

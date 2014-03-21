@@ -141,10 +141,14 @@ public class UserQueriesMock implements UserQueries {
         if(username == null) {
             throw new InputException("Some of the input is null");
         }
+        BasicDBList list = new BasicDBList();
+        BasicDBObject obj = new BasicDBObject();
+        obj.put("username", username);
+        obj.put("contests", 1);
+        obj.put("_id", 0);
+        list.add(obj);
         
-        
-        
-        return null;
+        return list;
     }
     
     @Override

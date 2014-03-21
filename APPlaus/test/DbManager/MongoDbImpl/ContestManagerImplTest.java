@@ -159,10 +159,16 @@ public class ContestManagerImplTest {
     @Test
     public void testUserActiveContList() {
         System.out.println("userActiveContList");
-        String username = "username";
         
+        List<DBObject> contests = new ArrayList<>();
         BasicDBList activeContests = new BasicDBList();
         
+        String username = "username";
+        DBObject obj = new BasicDBObject();
+        obj.put("username", username);
+        obj.put("contests", 1);
+        obj.put("_id", 0);
+        activeContests.add(obj);
         
         //init mock and test class
         ContestQueriesMock contQMock = new ContestQueriesMock();
