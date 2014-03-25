@@ -15,6 +15,10 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import java.util.ArrayList;
 import java.util.Calendar;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MILLISECOND;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
 import java.util.Date;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -240,10 +244,14 @@ public class AssignmentManagerImplTest {
     public void testRegisterAssignmentDateFuture() {
         System.out.println("registerAssignment");
         
-        //adding one minute from now
+        //adding tomorrow
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 1);
-        
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        cal.set(HOUR_OF_DAY, 0);
+        cal.set(MINUTE, 0);
+        cal.set(SECOND, 0);
+        cal.set(MILLISECOND, 0);
+
         String username = dummy;
         String id = dummy;
         Date dateDone = cal.getTime();

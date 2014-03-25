@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
-import org.bson.types.ObjectId;
 
 /**
  *
@@ -332,10 +331,10 @@ public class APPlausServlet extends HttpServlet {
                     Date dateEnd = new Date(dateEndLong);
                     int points = Integer.parseInt(pointsStr);
 
-                    ObjectId oid = contMan.createContest(title, desc, prize,
+                    String returnStr = contMan.createContest(title, desc, prize,
                             dateEnd, points, username);
-                    if(oid != null) {
-                        out.print(JSON.serialize(oid));
+                    if(returnStr != null) {
+                        out.print(returnStr);
                         response.setStatus(200);//success
                         return;
                     }
@@ -350,7 +349,7 @@ public class APPlausServlet extends HttpServlet {
                     e.printStackTrace(pw);
                     LOGGER.info("Could not parse points or date to integer or "
                             + "long. " + e);
-                    response.sendError(400);//error
+                    response.sendError(400);//bad request
                     return;
                 }
             }   
@@ -381,10 +380,10 @@ public class APPlausServlet extends HttpServlet {
             //edit contest
             else if(action.equals("editContest")) {
                 if(!isAdmin(roleId)) {
-                    response.sendError(401);//internal error
+                    response.sendError(401);//no access
                     return;
                 }
-                String id = request.getParameter("id");
+                String id = request.getParameter("contestId");
                 String title = request.getParameter("title");
                 String desc = request.getParameter("desc");
                 String prize = request.getParameter("prize");
@@ -419,7 +418,7 @@ public class APPlausServlet extends HttpServlet {
                     e.printStackTrace(pw);
                     LOGGER.info("Could not parse points or date to integer or "
                             + "long. " + e);
-                    response.sendError(400);//error
+                    response.sendError(400);//bad request
                     return;
                 }
             }

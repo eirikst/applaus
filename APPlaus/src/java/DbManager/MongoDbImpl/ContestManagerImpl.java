@@ -31,15 +31,11 @@ public class ContestManagerImpl implements ContestManager {
      * Calls ContestQueriesImpl.getActiveContests(). JSON serializes list and returns.
      * @return json array of contest objects or null if input or db error
      */
+    @Override
     public String getActiveContests() {
         try {
             List<DBObject> contests = contQ.getActiveContests();
             return JSON.serialize(contests);
-        }
-        catch(InputException e) {
-            LOGGER.log(Level.INFO, "Exception while getting active contests."
-                    , e);
-            return null;
         }
         catch(MongoException e) {
             LOGGER.log(Level.WARNING, "Exception while getting active contests."
@@ -54,6 +50,7 @@ public class ContestManagerImpl implements ContestManager {
      * @return json serialized array of the seven(or less) documents. null on 
      * fail.
      */
+    @Override
     public String getInactiveContests(int skip) {
         try {
             List<DBObject> contests = contQ.getInactiveContests(skip);
@@ -78,6 +75,7 @@ public class ContestManagerImpl implements ContestManager {
      * @param contestId id of contest
      * @return 1 if okay, -1 if invalid input, -2 if database error
      */
+    @Override
     public int participate(String username, String contestId) {
         try {
             userQ.participate(username, contestId);
@@ -100,6 +98,7 @@ public class ContestManagerImpl implements ContestManager {
      * @param contestId id of contest
      * @return 1 if okay, -1 if invalid input, -2 if database error
      */
+    @Override
     public int dontParticipate(String username, String contestId){
         try {
             userQ.dontParticipate(username, contestId);
@@ -123,6 +122,7 @@ public class ContestManagerImpl implements ContestManager {
      * @param username of given user
      * @return JSON serialized array of contests or null on fail.
      */
+    @Override
     public String userActiveContList(String username){
         try {
             return JSON.serialize(userQ.userActiveContList(username));
@@ -146,6 +146,7 @@ public class ContestManagerImpl implements ContestManager {
      * @return 1 if one instance was deleted, 0 if none was deleted. -1 if 
      * input error, -2 if database error.
      */
+    @Override
     public int deleteContest(String objId) {
         try {
             boolean okDelete = contQ.deleteContest(objId);
@@ -180,10 +181,12 @@ public class ContestManagerImpl implements ContestManager {
      * @param username username of the admin who created the contest
      * @return true if insert is okay, false if not
      */
-    public ObjectId createContest(String title, String desc, String prize
+    @Override
+    public String createContest(String title, String desc, String prize
             , Date dateEnd, int points, String username) {
         try {
-            return contQ.createContest(title, desc, prize, dateEnd, points, username);
+            return JSON.serialize(contQ.createContest(title, desc, prize,
+                    dateEnd, points, username));
         }
         catch(InputException e) {
             LOGGER.log(Level.INFO, "Exception while creating contest.", e);
@@ -205,6 +208,7 @@ public class ContestManagerImpl implements ContestManager {
      * @return true on successful update, false if not(none updated ot database
      * error)
      */
+    @Override
     public boolean editContest(String contestId, String title, String desc, String prize
             , Date dateEnd, int points) {
         try {

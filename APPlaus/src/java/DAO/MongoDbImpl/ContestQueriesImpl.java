@@ -13,6 +13,11 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import java.net.UnknownHostException;
+import java.util.Calendar;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MILLISECOND;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
 import java.util.Date;
 import java.util.List;
 import java.util.GregorianCalendar;
@@ -36,7 +41,6 @@ public class ContestQueriesImpl implements ContestQueries {
     
     public static ContestQueriesImpl getInstance() throws UnknownHostException {
         if(INSTANCE == null) {
-            System.out.println("Null :)");
             INSTANCE = new ContestQueriesImpl();
         }
         return INSTANCE;
@@ -44,15 +48,10 @@ public class ContestQueriesImpl implements ContestQueries {
     /**
      * Gets the active contests from the database sorted on closest end date
      * @return list of contest DBObject
-     * @throws InputException if any input is null
      * @throws MongoException if database error
      */
     @Override
-    public List<DBObject> getActiveContests()
-            throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("Variable db is null.");
-        }
+    public List<DBObject> getActiveContests() throws MongoException {
         
         //tomorrows date is needed or else mongo will not show today's contests
         GregorianCalendar calendar = new GregorianCalendar();
@@ -82,9 +81,6 @@ public class ContestQueriesImpl implements ContestQueries {
     @Override
     public List<DBObject> getInactiveContests(int skip)
             throws InputException, MongoException {
-        if(db == null) {
-            throw new InputException("Variable db is null.");
-        }
         if(skip < 0) {
             throw new InputException("Variable skip can not be less than 0.");
         }
@@ -115,8 +111,8 @@ public class ContestQueriesImpl implements ContestQueries {
      */
     @Override
     public boolean deleteContest(String objId) throws InputException, MongoException {
-        if(db == null || objId == null) {
-            throw new InputException("db or objId is null.");
+        if(objId == null) {
+            throw new InputException("objId is null.");
         }
         ObjectId id;
         try {
@@ -129,7 +125,7 @@ public class ContestQueriesImpl implements ContestQueries {
         DBCollection collection = db.getCollection("contest");
         BasicDBObject query = new BasicDBObject();
         query.put("_id", id);
-        query.put("date_end", new BasicDBObject("$gte", formatDate(getToday(), TO_MONGO)));
+        query.put("date_end", new BasicDBObject("$gte",getToday()));
         
         //remove if objectid and date query matches
         WriteResult w = collection.remove(query);
@@ -165,7 +161,7 @@ public class ContestQueriesImpl implements ContestQueries {
     public ObjectId createContest(String title, String desc, String prize,
              Date dateEnd, int points, String username)
             throws InputException, MongoException {
-        if(db == null || title == null || desc == null || prize == null || 
+        if(title == null || desc == null || prize == null || 
                 dateEnd == null || username == null) {
             throw new InputException("Input null caused an"
                     + " exception.");
@@ -177,12 +173,21 @@ public class ContestQueriesImpl implements ContestQueries {
             throw new InputException("Date cannot be before today");
         }
         
+        //assure that its this day as late as possible
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEnd);
+        cal.set(HOUR_OF_DAY, 23);
+        cal.set(MINUTE, 59);
+        cal.set(SECOND, 59);
+        cal.set(MILLISECOND, 999);
+        dateEnd = cal.getTime();
+        
         DBCollection collection = db.getCollection("contest");
         DBObject toInsert = new BasicDBObject();
         toInsert.put("title", title);
         toInsert.put("desc", desc);
         toInsert.put("prize", prize);
-        toInsert.put("date_created", formatDate(new Date(), TO_MONGO));
+        toInsert.put("date_created", new Date());
         toInsert.put("date_end", dateEnd);
         toInsert.put("points", points);
         toInsert.put("username", username);
@@ -212,7 +217,7 @@ public class ContestQueriesImpl implements ContestQueries {
     public boolean editContest(String contestId, String title, String desc, 
             String prize, Date dateEnd, int points)
             throws InputException, MongoException {
-        if(db == null || contestId == null || title == null || desc == null || prize == null || 
+        if(contestId == null || title == null || desc == null || prize == null || 
                 dateEnd == null) {
             throw new InputException("Input null caused an exception.");
         }
@@ -222,6 +227,16 @@ public class ContestQueriesImpl implements ContestQueries {
         if(dateEnd.before(DateTools.getToday())) {
             throw new InputException("Date cannot be before today.");
         }
+        
+        //assure that its this day as late as possible
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateEnd);
+        cal.set(HOUR_OF_DAY, 23);
+        cal.set(MINUTE, 59);
+        cal.set(SECOND, 59);
+        cal.set(MILLISECOND, 999);
+        dateEnd = cal.getTime();
+
         
         ObjectId objId;
         try {

@@ -1,7 +1,6 @@
 package DAO.MongoDbImpl;
 
 import DAO.NewsQueries;
-import static Tools.DateTools.*;
 import APPlausException.InputException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -99,7 +98,7 @@ public class NewsQueriesImpl implements NewsQueries {
         toInsert.put("writer", writer);
         toInsert.put("for", who);
         Date now = new Date();
-        toInsert.put("date", formatDate(now, TO_MONGO));
+        toInsert.put("date", now);
 
         collection.insert(toInsert);
         DBObject retObj = new BasicDBObject();

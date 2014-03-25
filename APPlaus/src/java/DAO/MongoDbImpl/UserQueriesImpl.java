@@ -13,8 +13,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 import DbManager.MongoDbImpl.AuthenticationManagerImpl;
 import Tools.DateTools;
-import static Tools.DateTools.TO_MONGO;
-import static Tools.DateTools.formatDate;
 import static Tools.DateTools.getToday;
 import APPlausException.InputException;
 import com.mongodb.AggregationOutput;
@@ -219,8 +217,7 @@ public class UserQueriesImpl implements UserQueries{
 	query.put("username", username);
         
         BasicDBObject matchEl = new BasicDBObject();
-        matchEl.put("date_end", DateTools.formatDate(DateTools.getMonday(week),
-                DateTools.TO_MONGO));//2 = monday
+        matchEl.put("date_end", DateTools.getMonday(week));//2 = monday
         
         BasicDBObject up = new BasicDBObject();
         up.put("$elemMatch", matchEl);
@@ -296,8 +293,8 @@ public class UserQueriesImpl implements UserQueries{
         
         BasicDBObject group = new BasicDBObject("$group", toGroup);
         BasicDBObject date = new BasicDBObject();
-        date.put("$gte", DateTools.formatDate(from, DateTools.TO_MONGO));
-        date.put("$lt", DateTools.formatDate(to, DateTools.TO_MONGO));
+        date.put("$gte", from);
+        date.put("$lt", to);
         
         BasicDBObject dateDone = new BasicDBObject("date_done", date);
 
@@ -328,7 +325,7 @@ public class UserQueriesImpl implements UserQueries{
             throw new InputException("points variable must be an"
                     + "integer more than 0.");
         }
-        Date end = DateTools.formatDate(DateTools.getMonday(0), DateTools.TO_MONGO);
+        Date end = DateTools.getMonday(0);
         DBCollection collection = db.getCollection("user");
         
         BasicDBObject query = new BasicDBObject();
@@ -565,7 +562,7 @@ public class UserQueriesImpl implements UserQueries{
         
         
         BasicDBObject dateLte = new BasicDBObject();
-        dateLte.put("assignments.date_done", new BasicDBObject("$lte", DateTools.formatDate(new Date(), DateTools.TO_MONGO)));
+        dateLte.put("assignments.date_done", new BasicDBObject("$lte", new Date()));
         
         BasicDBObject matchDate = new BasicDBObject();
         matchDate.put("$match", dateLte);
@@ -642,6 +639,7 @@ public class UserQueriesImpl implements UserQueries{
     }
     
     
+    @Override
     public boolean deleteAssignment(String objId) throws InputException, MongoException {
         //checking input
         if(objId == null) {
@@ -658,7 +656,7 @@ public class UserQueriesImpl implements UserQueries{
         DBCollection collection = db.getCollection("assignment");
         BasicDBObject query = new BasicDBObject();
         query.put("_id", id);
-        query.put("date_end", new BasicDBObject("$gte", formatDate(getToday(), TO_MONGO)));
+        query.put("date_end", new BasicDBObject("$gte", getToday()));
         
         //remove if objectid and date query matches
         WriteResult w;
