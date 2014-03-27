@@ -12,6 +12,7 @@ import com.mongodb.MongoException;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Iterator;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -66,12 +67,20 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
                 || comment == null) {
             throw new InputException("One or several input objects is null.");
         }
+        ObjectId oid;
+        try {
+            oid = new ObjectId(id);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("id is not a valid ObjectId.");
+        }
         
         DBCollection coll = db.getCollection("user");
         DBObject query = new BasicDBObject();
         query.put("username", username);
         DBObject field = new BasicDBObject();
-        field.put("id", id);
+        field.put("assignId", oid);
+        field.put("thisId", new ObjectId());
         field.put("date_done", dateDone);
         field.put("comment", comment);
         

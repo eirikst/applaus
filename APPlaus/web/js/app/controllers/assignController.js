@@ -75,7 +75,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
     mergeUserAssign = function(skip) {
         for (var i = skip; i < $scope.allAssignments.length; i++) {
             for (var a = 0; a < $scope.selectedOptions.length; a++) {
-                if ($scope.allAssignments[i].id == $scope.selectedOptions[a]._id.$oid) {
+                if ($scope.allAssignments[i].assignId.$oid == $scope.selectedOptions[a]._id.$oid) {
                     $scope.allAssignments[i].title = $scope.selectedOptions[a].title;
                     $scope.allAssignments[i].points = $scope.selectedOptions[a].points;
                 }
