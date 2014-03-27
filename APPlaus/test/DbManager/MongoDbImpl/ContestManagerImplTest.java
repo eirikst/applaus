@@ -222,7 +222,7 @@ public class ContestManagerImplTest {
         ObjectId expResult = new ObjectId("000000000000000000000000");
         
         //result
-        ObjectId result = instance.createContest(title, desc, prize, dateEnd, points, username);
+        String result = instance.createContest(title, desc, prize, dateEnd, points, username);
         assertEquals(expResult, result);
     }
 

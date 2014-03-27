@@ -23,7 +23,8 @@ import org.bson.types.ObjectId;
 public class ContestQueriesMock implements ContestQueries {
     public List<DBObject> contests = new ArrayList<>();
     
-    public List<DBObject> getActiveContests() throws InputException, MongoException {
+    @Override
+    public List<DBObject> getActiveContests() throws MongoException {
         
         DBObject toAdd = new BasicDBObject();
         toAdd.put("contestId", "000000000000000000000000");
