@@ -288,7 +288,7 @@ public class UserQueriesImpl implements UserQueries{
                 
         BasicDBObject toGroup = new BasicDBObject();
         
-        toGroup.put("_id", "$assignments.id");
+        toGroup.put("_id", "$assignments.assignId");
         toGroup.put("date_done", first);
         
         BasicDBObject group = new BasicDBObject("$group", toGroup);
