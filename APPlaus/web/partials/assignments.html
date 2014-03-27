@@ -97,7 +97,7 @@
                     <div class="innerDrop" ng-show="dropArchive">
                         <form name="editAssignForm">
                             <p>Poeng:  {{assignment.points}}     </p>
-                            <p>oid: {{assignment._id.$oid}}</p>
+                            <p>oid: {{assignment.thisId.$oid}}</p>
                             
                             <span ng-show="!editable">
                                 <p>Dato: {{assignment.date_done.$date| date:('dd.MM.yyyy')}} </p>
@@ -137,8 +137,11 @@
                     </div>
                 </div>
             </div>       
-        
+            <div>
+                <p>
+                    <a type="button" class="form-control" ng-click="getAllAssignments(skip)">Last flere</a>
+                </p>
+            </div>
         </div>
-        
     </div>
 </div>
