@@ -40,14 +40,57 @@
         </div>
         <div class="innerDrop" ng-show="dropBank">
             <p>
+                By {{idea.username| truncate:25}}, {{idea.date.$date| date:('dd.MM.yyyy HH:mm')}}
+            </p>
+            <p>
                 {{idea.text}}
             </p>
-            <p>
-                Skrevet av {{idea.username}}
-            </p>
-            <p>
-                Lagt til: {{idea.date.$date| date:('dd.MM.yyyy')}}
-            </p>
+            <div>
+                <span ng-show="idea.likes == undefined || idea.likes.length == 0"><a class="glyphicon glyphicon-thumbs-up"></a> Be the first to like this idea!</span>
+                <span ng-show="idea.likes != undefined && idea.likes.length == 1"><a class="glyphicon glyphicon-thumbs-up"></a> {{idea.likes[0]}} likes this</span>
+                <span ng-show="idea.likes != undefined && idea.likes.length == 2"><a class="glyphicon glyphicon-thumbs-up"></a> {{idea.likes[0]}} and {{idea.likes[1]}} likes this</span>
+                                <div class="dropdown">
+                <span ng-show="idea.likes != undefined && idea.likes.length > 2"><a class="glyphicon glyphicon-thumbs-up"></a> {{idea.likes[0]}} and 
+                    <a data-toggle="dropdown">
+                        {{idea.likes.length - 1}} 
+                        
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="like in idea.likes | arrWithoutFirst">
+                            {{like | truncate:25}}
+                        </li>
+                    </ul>
+                others likes this
+                </span>
+                </div>
+            </div>
+
+            <hr>
+            <strong>
+                <span ng-show="idea.comments.length > 0">Comments</span>
+                <span ng-show="idea.comments == undefined || idea.comments.length == 0">No comments</span>
+                <a class="glyphicon glyphicon-plus glyphicon-marginleft5px" ng-click="commentable=true" ng-show="!commentable"></a>
+                <a class="glyphicon glyphicon-minus glyphicon-marginleft5px" ng-click="commentable=false" ng-show="commentable"></a>
+            </strong>
+            <div ng-show="commentable">
+                <form name="commentForm">
+                    <p>
+                        <textarea name="comment" class="form-control"  ng-model="commentText" placeholder="Comment" ng-class="{red:commentForm.comment.$error.required && commentForm.comment.$dirty, green:!commentForm.comment.$error.required && commentForm.comment.$dirty}" required="true"></textarea>
+                    </p>
+                    <p>
+                        <button class="form-control" ng-click="addComment(idea, commentText);" ng-disabled="commentForm.$invalid">Add</button>
+                    </p>
+                </form>
+            </div>
+            <div ng-repeat="comment in idea.comments | reverseArr">
+                <hr>
+                <p>
+                    By {{comment.writer | truncate:25}} {{comment.time.$date| date:('dd.MM.yyyy HH:mm')}}
+                </p>
+                <p>
+                    {{comment.text}}
+                </p>
+            </div>
         </div>
     </div>
     <br>

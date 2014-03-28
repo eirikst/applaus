@@ -52,4 +52,28 @@ public class IdeaManagerImpl implements IdeaManager {
             return null;
         }
     }
+    
+    
+    /**
+     * Calls IdeaQueries to add the comment to the idea
+     * @param oid oid of contest to comment
+     * @param writer writer of comment
+     * @param text comment text
+     * @return JSON serialized String of the comment object
+     */
+    @Override
+    public String addComment(String oid, String writer, String text) {
+        try {
+            DBObject ideas = ideaQ.addComment(oid, writer, text);
+            return JSON.serialize(ideas);
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while adding a comment.", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while adding a comment.", e);
+            return null;
+        }
+    }
 }
