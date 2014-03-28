@@ -1,11 +1,11 @@
 var filters = angular.module('employeeApp.filters');
 
 /**
- * Truncate Filter
- * @Param text
- * @Param length, default is 10
- * @Param end, default is "..."
- * @return string
+ * Filtering strings that should not be longer than length characters. Adds
+ *  ... in the end if more than length characters.
+ * @Param text string in question 
+ * @Param length, default 10
+ * @return filtered string
  */
 filters.filter('truncate', function () {
     return function (text, length) {
@@ -24,20 +24,30 @@ filters.filter('truncate', function () {
     };
 });
 
+/**
+ * Reversing array
+ * @param array an array
+ * @return copy of the input array reversed
+ */
 filters.filter('reverseArr', function() {
-  return function(items) {
-    if (!angular.isArray(items)) {
+  return function(array) {
+    if (!angular.isArray(array)) {
         return false;
     }
-    return items.slice().reverse();
+    return array.slice().reverse();
   };
 });
 
+/**
+ * Array without first element
+ * @param array an array
+ * @return new array copied from the old without its first element
+ */
 filters.filter('arrWithoutFirst', function() {
-  return function(items) {
-    if (!angular.isArray(items)) {
+  return function(array) {
+    if (!angular.isArray(array)) {
         return false;
     }
-    return items.slice(1);
+    return array.slice(1);
   };
 });

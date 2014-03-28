@@ -52,10 +52,11 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaServi
     $scope.deleteIdea = function(idea) {
         IdeaService.deleteIdea(idea)
                 .success(function(data, status, headers, config) {
-                    
-                    $scope.createMsg = "Ide slettet";
-                    console.log("deleteIdea success");
-
+            for(var i = 0; i < $scope.bank.length; i++) {
+                if(idea._id.$oid === $scope.bank[i]._id.$oid) {
+                    $scope.bank.splice(i, 1);
+                }
+            }
             console.log("deleteIdea success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteIdea");
