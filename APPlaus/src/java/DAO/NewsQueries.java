@@ -38,4 +38,7 @@ public interface NewsQueries {
      */
     public DBObject addNewsStory(String title, String text, String writer, int who)
             throws InputException, MongoException;
+    
+    public boolean deleteNews(String objId)
+            throws InputException, MongoException;
 }

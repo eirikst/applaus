@@ -60,4 +60,27 @@ public class IdeaQueriesMock implements IdeaQueries {
         }
         return ideas.subList(skip, skip + 6);
     }
+    
+    
+    public boolean deleteIdea(String objId)
+            throws InputException, MongoException {
+         
+        DBObject obj = new BasicDBObject();
+        obj.put("title", "title");
+        obj.put("text", "text");
+        obj.put("username", "username");
+        Date date = new Date(1000000);
+        obj.put("date", date);
+        obj.put("ideaId", "000000000000000000000000");
+        ideas.add(obj);
+        
+        for(int i = 0; i < ideas.size(); i++) {
+            if (objId.equals(ideas.get(i).get("ideaId"))) {
+                ideas.remove(i);
+                return true;
+            }
+            
+        }
+        return false;
+    }
 }

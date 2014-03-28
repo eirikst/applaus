@@ -65,4 +65,24 @@ public class NewsQueriesMock implements NewsQueries {
         retObj.put("_id", new ObjectId("000000000000000000000000"));
         return retObj;
     }
+    
+    
+    public boolean deleteNews(String objId)
+            throws InputException, MongoException {
+         
+        DBObject retObj = new BasicDBObject();
+        retObj.put("date", new Date(1000000));
+        retObj.put("writer", "writer");
+        retObj.put("newsId", "000000000000000000000000");
+        news.add(retObj);
+        
+        for(int i = 0; i < news.size(); i++) {
+            if (objId.equals(news.get(i).get("newsId"))) {
+                news.remove(i);
+                return true;
+            }
+            
+        }
+        return false;
+    }
 }

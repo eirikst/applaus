@@ -560,7 +560,27 @@ public class HomeManagerImplTest {
             news.add(obj);
         }
     }
+
     
+    @Test
+    public void testDeleteNewsSuccess() {
+        System.out.println("deleteNews");
+        String objId = "000000000000000000000000";
+        
+        //init mock and test class
+        NewsQueriesMock newsQMock = new NewsQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        AssignQueriesMock assignQMock = new AssignQueriesMock();
+        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
+                newsQMock);
+        
+        //exp
+        int expResult = 1;
+        
+        //result
+        int result = instance.deleteNews(objId);
+        assertEquals(expResult, result);
+    }
     
     /**
      * Helper method, to set a list of DBObjects of assignments

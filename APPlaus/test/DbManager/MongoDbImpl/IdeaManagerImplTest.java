@@ -214,4 +214,21 @@ public class IdeaManagerImplTest {
             ideas.add(obj);
         }
     }
+    
+    @Test
+    public void testDeleteIdeaSuccess() {
+        System.out.println("deleteIdea");
+        String objId = "000000000000000000000000";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);
+        
+        //exp
+        int expResult = 1;
+        
+        //result
+        int result = instance.deleteIdea(objId);
+        assertEquals(expResult, result);
+    }
 }

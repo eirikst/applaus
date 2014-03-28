@@ -40,4 +40,6 @@ public interface HomeManager {
      */
     public String addNewsStoryForAll(String title, String text, 
             String writer);
+    
+    public int deleteNews(String objId);
 }

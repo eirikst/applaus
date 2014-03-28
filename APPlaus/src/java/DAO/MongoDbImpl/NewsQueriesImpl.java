@@ -8,10 +8,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
+import static com.sun.xml.ws.spi.db.BindingContextFactory.LOGGER;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import org.bson.types.ObjectId;
 
 /**
@@ -106,5 +109,40 @@ public class NewsQueriesImpl implements NewsQueries {
         retObj.put("writer", writer);
         retObj.put("_id", toInsert.get("_id"));
         return retObj;
+    }
+    
+    public boolean deleteNews(String objId) throws InputException, MongoException {
+        if(objId == null) {
+            throw new InputException("objId is null.");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(objId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("objId not on the right format.", e);
+        }
+
+        DBCollection collection = db.getCollection("news_story");
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", id);
+        
+        //remove if objectid and date query matches
+        WriteResult w = collection.remove(query);
+        int status = w.getN();
+        
+        System.out.println("Status: " + status);
+        
+        if(status == 0) {
+            return false;
+        }
+        else if(status == 1) {
+            return true;
+        }
+        else {
+            LOGGER.log(Level.WARNING, "N field returned was not 0 or 1 on remove by"
+                    + " objectId.");
+            return true;
+        }
     }
 }

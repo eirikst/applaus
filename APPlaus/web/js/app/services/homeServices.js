@@ -44,6 +44,16 @@ services.service('HomeService', function($http) {
         return promise;
     };
     
+    this.deleteNews =  function(article) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=deleteNews&newsId=" + article._id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
     this.setGoal = function(goal) {
         var promise = $http({
               url: 'APPlausServlet',

@@ -91,6 +91,21 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         });
     };
 
+    $scope.deleteNews = function(article) {
+        HomeService.deleteNews(article)
+                .success(function(data, status, headers, config) {
+                    
+                    $scope.createMsg = "Nyhet slettet";
+                    console.log("deleteNews success");
+
+            console.log("deleteNews success");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=deleteNews");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+    
+
     //idea related
 
     //adds ideas

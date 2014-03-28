@@ -203,4 +203,27 @@ public class HomeManagerImpl implements HomeManager {
             return null;
         }
     }
+    
+    public int deleteNews(String objId){
+        try {
+            boolean okDelete = newsQ.deleteNews(objId);
+            if(okDelete) {
+                //newsQ.deleteNews(objId);
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to delete "
+                    + "idea.", e);
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to delete "
+                    + "idea.", e);
+            return -2;
+        }
+    }
 }
