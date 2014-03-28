@@ -68,8 +68,39 @@ public class IdeaQueriesImpl implements IdeaQueries {
         
         try(DBCursor cursor = coll.find().sort
         (new BasicDBObject( "date" , -1 )).skip(skip).limit(7)) {
-            List<DBObject> ideas = cursor.toArray();
+            List<DBObject> ideas  = cursor.toArray();
             return ideas;
+        }
+    }
+    
+    public boolean deleteIdea(String objId) throws InputException, MongoException {
+        if(objId == null) {
+            throw new InputException("objId is null.");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(objId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("objId not on the right format.", e);
+        }
+
+        DBCollection collection = db.getCollection("idea");
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", id);
+        
+        //remove if objectid and date query matches
+        WriteResult w = collection.remove(query);
+        int status = w.getN();
+        
+        if(status == 0) {
+            return false;
+        }
+        else if(status == 1) {
+            return true;
+        }
+        else {
+            return true;
         }
     }
     

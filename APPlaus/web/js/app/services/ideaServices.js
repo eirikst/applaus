@@ -24,6 +24,17 @@ services.service('IdeaService', function($http) {
         return promise;
     };
     
+    this.deleteIdea =  function(idea) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=deleteIdea&ideaId=" + idea._id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
+    
     //http call to add a comment to an idea
     this.addComment = function(id, comment) {
         var promise = $http({

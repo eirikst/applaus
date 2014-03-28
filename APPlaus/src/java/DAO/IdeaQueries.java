@@ -15,4 +15,6 @@ public interface IdeaQueries {
             throws InputException, MongoException;
     public List<DBObject> getIdeas(int skip) throws InputException, MongoException;
     public DBObject addComment(String oid, String writer, String text) throws InputException;
+    public boolean deleteIdea(String objId)
+            throws InputException, MongoException;
 }

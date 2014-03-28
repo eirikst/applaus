@@ -48,6 +48,21 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaServi
                 });
     };
     
+    //Delete contest
+    $scope.deleteIdea = function(idea) {
+        IdeaService.deleteIdea(idea)
+                .success(function(data, status, headers, config) {
+                    
+                    $scope.createMsg = "Ide slettet";
+                    console.log("deleteIdea success");
+
+            console.log("deleteIdea success");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=deleteIdea");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+    
     
     //init
     $scope.skip = 0;

@@ -856,6 +856,46 @@ public class APPlausServlet extends HttpServlet {
                 }
             }           
 
+            
+            //delete idea
+            else if(action.equals("deleteIdea")) {
+                String ideaId = request.getParameter("ideaId");
+                if(ideaId == null) {
+                    LOGGER.info("ideaId post variable null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                int deleted = ideaMan.deleteIdea(ideaId);
+                if(deleted == 1) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+
+   
+   
+           else if(action.equals("deleteNews")) {
+               String newsId = request.getParameter("newsId");
+               if(newsId == null) {
+                   LOGGER.info("contestId post variable null.");
+                   response.sendError(400);//bad request
+                   return;
+               }
+               int deleted = homeMan.deleteNews(newsId);
+               if(deleted == 1) {
+                   response.setStatus(200);//success
+                   return;
+               }
+               else {
+                   response.sendError(500);//internal error
+                   return;
+               }
+           }
+            
             // get news stories
             else if(action.equals("getNews")) {
                 if(!isUser(roleId)) {

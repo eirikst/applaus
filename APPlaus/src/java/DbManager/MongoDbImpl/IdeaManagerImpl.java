@@ -53,6 +53,29 @@ public class IdeaManagerImpl implements IdeaManager {
         }
     }
     
+    public int deleteIdea(String objId){
+        try {
+            boolean okDelete = ideaQ.deleteIdea(objId);
+            if(okDelete) {
+                ideaQ.deleteIdea(objId);
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to delete "
+                    + "idea.", e);
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.INFO, "Exception while trying to delete "
+                    + "idea.", e);
+            return -2;
+        }
+    }
+    
     
     /**
      * Calls IdeaQueries to add the comment to the idea
