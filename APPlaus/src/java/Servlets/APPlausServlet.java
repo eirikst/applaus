@@ -115,7 +115,7 @@ public class APPlausServlet extends HttpServlet {
                 out.println(role);
 
                 if(role == 1 || role == 2 || role == 3) {
-                    setCookie(response, role);
+                    setCookie(response, role, username);
                     setSession(request, username, role);
                 }
                 response.setStatus(200);//success
@@ -829,6 +829,33 @@ public class APPlausServlet extends HttpServlet {
                 }
             }   
 
+            // add idea
+            else if(action.equals("addIdeaComment")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String ideaId = request.getParameter("ideaId");
+                String text = request.getParameter("text");
+                if(ideaId == null || text == null) {
+                    LOGGER.log(Level.INFO, "One of the post variables are null"
+                            + ".");
+                    response.sendError(400);//bad request
+                    return;
+                }
+
+                String responseStr = ideaMan.addComment(ideaId, username, text);
+                if(responseStr != null) {
+                    out.println(responseStr);
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }           
+
             // get news stories
             else if(action.equals("getNews")) {
                 if(!isUser(roleId)) {
@@ -952,10 +979,14 @@ public class APPlausServlet extends HttpServlet {
      * @param response HttpServletResponse to set cookie on
      * @param role role id of user
      */
-    private void setCookie(HttpServletResponse response, int role) {
-        Cookie cookie = new Cookie("role", "" + role);
-        cookie.setMaxAge(24*60*60);
-        response.addCookie(cookie);
+    private void setCookie(HttpServletResponse response, int role, String username) {
+        Cookie cookieRole = new Cookie("role", "" + role);
+        cookieRole.setMaxAge(24*60*60);
+        response.addCookie(cookieRole);
+        
+        Cookie cookieUsr = new Cookie("username", "" + username);
+        cookieUsr.setMaxAge(24*60*60);
+        response.addCookie(cookieUsr);
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

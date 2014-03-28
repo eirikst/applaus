@@ -23,4 +23,15 @@ services.service('IdeaService', function($http) {
         });
         return promise;
     };
+    
+    //http call to add a comment to an idea
+    this.addComment = function(id, comment) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=addIdeaComment&ideaId=" + id + "&text=" + comment,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
 });

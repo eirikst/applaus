@@ -1,12 +1,14 @@
 angular.module('employeeApp.services', []);
 angular.module('employeeApp.controllers', []);
 angular.module('employeeApp.directives', []);
+angular.module('employeeApp.filters', []);
 
 
 var employeeApp = angular.module('employeeApp', 
 ['employeeApp.services',
 'employeeApp.controllers',
 'employeeApp.directives',
+'employeeApp.filters',
 'ngRoute',
 'ngTouch',
 'ngAnimate',

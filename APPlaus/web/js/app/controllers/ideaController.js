@@ -35,6 +35,18 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, IdeaServi
                     $scope.createErrMsg = "En feil oppsto. Vennligst prøv igjen";
                 });
     };
+
+    //add idea to server
+    $scope.addComment = function(idea, comment) {
+        IdeaService.addComment(idea._id.$oid, comment)
+                .success(function(data, status, headers, config) {
+                    console.log("Success on http action=addIdeaComment");
+                    idea.comments.push(data);
+                })
+                .error(function(data, status, headers, config) {
+                    console.log("Failed http action=addIdeaComment");
+                });
+    };
     
     
     //init

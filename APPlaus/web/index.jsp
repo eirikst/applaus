@@ -40,7 +40,7 @@
         <title>APPlaus</title>
     </head>
 
-    <body background="img/bw.jpg">
+    <body style="background-color:#ff3333">
 
         <!--static navbar-->
         <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
@@ -103,6 +103,7 @@
         <script src="js/app/services/adminServices.js"></script>
         <script src="js/app/services/ideaServices.js"></script>
         <script src="js/app/directives/directives.js"></script>
+        <script src="js/app/filters/filters.js"></script>
         <!--end angular scripts-->
     </body>
 </html>

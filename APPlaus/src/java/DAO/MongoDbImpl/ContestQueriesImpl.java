@@ -125,6 +125,7 @@ public class ContestQueriesImpl implements ContestQueries {
         DBCollection collection = db.getCollection("contest");
         BasicDBObject query = new BasicDBObject();
         query.put("_id", id);
+        query.put("username", "ryan");
         query.put("date_end", new BasicDBObject("$gte",getToday()));
         
         //remove if objectid and date query matches
