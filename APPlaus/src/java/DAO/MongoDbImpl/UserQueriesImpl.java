@@ -358,16 +358,23 @@ public class UserQueriesImpl implements UserQueries{
     
     @Override
     public int registerUser(String username, String password, 
-            String firstname, String lastname, String email)
+            String firstname, String lastname, String email, String sectionId)
             throws InputException, MongoException {
-        if(username == null || password == null ||
-                firstname == null || lastname == null || email == null) {
+        if(username == null || password == null || firstname == null || 
+                lastname == null || email == null || sectionId == null) {
             throw new InputException("Some of the input is null");
         }
         if(username.trim().isEmpty() || password.trim().isEmpty() || 
                 firstname.trim().isEmpty() || lastname.trim().isEmpty() || 
-                email.trim().isEmpty()) {
+                email.trim().isEmpty() || sectionId.trim().isEmpty()) {
             return -4;
+        }
+        ObjectId sectionObjId;
+        try {
+            sectionObjId = new ObjectId(sectionId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("sessionId not on Object ID format.");
         }
         
         if (userExist(username)){
@@ -375,6 +382,9 @@ public class UserQueriesImpl implements UserQueries{
         }
         if(emailExist(email)) {
             return -2;
+        }
+        if(!sectionExist(sectionObjId)) {
+            return -3;
         }
         else {
             DBCollection coll = db.getCollection("user");
@@ -384,6 +394,7 @@ public class UserQueriesImpl implements UserQueries{
             query.put("password", password);
             query.put("firstname", firstname);
             query.put("lastname", lastname);
+            query.put("section", sectionObjId);
             query.put("role_id", 3);
          
             coll.insert(query);
@@ -473,6 +484,27 @@ public class UserQueriesImpl implements UserQueries{
         DBCollection collection = db.getCollection("user");
         DBObject query = new BasicDBObject();
         query.put("email", email);
+
+        try(DBCursor cursor = collection.find(query)) {
+            return cursor.hasNext();
+        }
+    }
+    
+    /**
+     * Checks if an an object id is registered as an id of a section
+     * @param sectionId id of the section
+     * @return true if section exists, false if not
+     * @throws InputException if invalid input
+     */
+     private boolean sectionExist(ObjectId sectionId)
+             throws InputException, MongoException {
+        if(sectionId == null) {
+            throw new InputException("Some input is invalid.");
+        }
+
+        DBCollection collection = db.getCollection("section");
+        DBObject query = new BasicDBObject();
+        query.put("_id", sectionId);
 
         try(DBCursor cursor = collection.find(query)) {
             return cursor.hasNext();

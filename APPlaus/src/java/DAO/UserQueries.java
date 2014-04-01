@@ -2,7 +2,6 @@ package DAO;
 
 import APPlausException.InputException;
 import com.mongodb.BasicDBList;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import java.util.Date;
@@ -18,7 +17,7 @@ public interface UserQueries {
     public int checkLogin(String username, String password)
             throws InputException, MongoException;
     public int registerUser(String username, String password,
-            String firstname, String lastname, String email)
+            String firstname, String lastname, String email, String sectionId)
             throws InputException, MongoException;
     public int newPassword(String email, String password)
             throws InputException, MongoException;

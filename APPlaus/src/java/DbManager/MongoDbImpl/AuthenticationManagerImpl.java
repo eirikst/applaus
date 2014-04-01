@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import Tools.*;
 import APPlausException.InputException;
+import DAO.SectionQueries;
 import DbManager.AuthenticationManager;
 import java.util.logging.Level;
 
@@ -19,9 +20,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     private final static Logger LOGGER = Logger.getLogger
         (AuthenticationManagerImpl.class.getName());
     private final UserQueries userQ;
+    private final SectionQueries sectionQ;
     
-    public AuthenticationManagerImpl(UserQueries userQ) {
+    public AuthenticationManagerImpl(UserQueries userQ, SectionQueries sectionQ) {
         this.userQ = userQ;
+        this.sectionQ = sectionQ;
     }
     
     /**
@@ -48,27 +51,30 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         }
     }
     
+    @Override
     public int registerUser(String username, String password, 
-            String pwdRepeat, String firstname, String lastname, String email) {
+            String pwdRepeat, String firstname, String lastname, String email, 
+            String sectionId) {
         if(password == null || pwdRepeat == null) {
-            return -5;  //null value input(bad input, just like inputexcpetion
+            return -5;  //null value input(bad input, just like inputexception
                         //below, samme error)
         }
         if (password.equals(pwdRepeat)){
             try {
-                return userQ.registerUser(username, password, firstname, lastname, email);
+                return userQ.registerUser(username, password, firstname, 
+                        lastname, email, sectionId);
             }
             catch(InputException e) {
                 LOGGER.log(Level.INFO, "Exception while registering user.", e);
-                return -5;
+                return -6;
             }
             catch(MongoException e) {
                 LOGGER.log(Level.WARNING, "Exception while registering user.", e);
-                return -6;
+                return -7;
             }
             
         }else { 
-            return -3;
+            return -8;
         }
     }
     
@@ -135,4 +141,15 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         }
         return getAdminList();
     }    
+
+    @Override
+    public String getSections() {
+        try {
+            return JSON.serialize(sectionQ.getSections());
+        }
+        catch(MongoException e ) {
+            LOGGER.log(Level.WARNING, "Exception while getting sections.", e);
+            return null;
+        }
+    }
 }

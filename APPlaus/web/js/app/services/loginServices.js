@@ -19,8 +19,10 @@ services.service('LoginService', function($http) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=registerUser&usr=" + user.usr + "&pwd=" + user.pwd + "&pwdRepeat=" +  user.pwdRepeat
-                                       + "&fname=" + user.fname + "&lname=" +  user.lname + "&email=" +  user.email,
+            data: "action=registerUser&usr=" + user.usr + "&pwd=" + user.pwd + 
+                    "&pwdRepeat=" +  user.pwdRepeat + "&fname=" + user.fname + 
+                    "&lname=" +  user.lname + "&email=" +  user.email + 
+                    "&sectionId=" + user.id,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
@@ -32,6 +34,17 @@ services.service('LoginService', function($http) {
             url: 'APPlausServlet',
             method: "POST",
             data: "action=newPassword&email=" + email,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
+    //http call to get sections
+    this.getSections = function() {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=getSections",
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

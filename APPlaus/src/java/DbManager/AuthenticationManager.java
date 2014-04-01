@@ -15,7 +15,8 @@ public interface AuthenticationManager {
      */
     public int login(String username, String password);
     public int registerUser(String username, String password, 
-            String pwdRepeat, String firstname, String lastname, String email);
+            String pwdRepeat, String firstname, String lastname, String email, 
+            String sectionId);
     public String getAdminList();
     /**
      * First calls Password.generateNew() to get generate a new password
@@ -26,4 +27,5 @@ public interface AuthenticationManager {
      */
     public int newPassword(String email);
     public String setRole(String username, int role);
+    public String getSections();
 }

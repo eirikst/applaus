@@ -24,7 +24,12 @@
         </p>
 
         <p>
-            <button class="form-control" ng-click="registerUser(user)" ng-disabled="registerUserForm.$invalid">Registrer</button>
+            <select class="form-control" 
+                     ng-options="selSection.name for selSection in sections" ng-model="selSection">
+            </select>
+        </p>
+        <p>
+            <button class="form-control" ng-click="registerUser(user, selSection._id.$oid)" ng-disabled="registerUserForm.$invalid">Registrer</button>
         </p>
     </form>
     <span class="greenMsg">

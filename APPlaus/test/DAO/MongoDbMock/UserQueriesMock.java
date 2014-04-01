@@ -52,7 +52,7 @@ public class UserQueriesMock implements UserQueries {
     
     @Override
     public int registerUser(String username, String password,
-            String firstname, String lastname, String email)
+            String firstname, String lastname, String email, String sectionId)
             throws InputException, MongoException {
         if(username == null || password == null ||
                 firstname == null || lastname == null || email == null) {
@@ -60,9 +60,17 @@ public class UserQueriesMock implements UserQueries {
         }
         if(username.trim().isEmpty() || password.trim().isEmpty() || 
                 firstname.trim().isEmpty() || lastname.trim().isEmpty() || 
-                email.trim().isEmpty()) {
+                email.trim().isEmpty() || sectionId.trim().isEmpty()) {
             return -4;
         }
+        ObjectId sectionObjId;
+        try {
+            sectionObjId = new ObjectId(sectionId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("sectionId not on object id format");
+        }
+        
         if(userExist(username)) {
             return -1;
         }

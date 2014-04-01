@@ -6,6 +6,7 @@ import DAO.MongoDbImpl.ContestQueriesImpl;
 import DAO.MongoDbImpl.IdeaQueriesImpl;
 import DAO.MongoDbImpl.MongoConnection;
 import DAO.MongoDbImpl.NewsQueriesImpl;
+import DAO.MongoDbImpl.SectionQueriesImpl;
 import DAO.MongoDbImpl.UserQueriesImpl;
 import DbManager.AssignmentManager;
 import DbManager.AuthenticationManager;
@@ -56,6 +57,7 @@ public class APPlausServlet extends HttpServlet {
                     AssignmentQueriesImpl.getInstance(), 
             NewsQueriesImpl.getInstance());
             authMan = new AuthenticationManagerImpl(UserQueriesImpl.
+                    getInstance(), SectionQueriesImpl.
                     getInstance());
             assignMan = new AssignmentManagerImpl(AssignmentQueriesImpl.
                     getInstance(), UserQueriesImpl.getInstance());
@@ -156,16 +158,18 @@ public class APPlausServlet extends HttpServlet {
                 String firstname = request.getParameter("fname");
                 String lastname = request.getParameter("lname");
                 String email = request.getParameter("email");
+                String sectionId = request.getParameter("sectionId");
                 
                 if(username == null && password == null && pwdRepeat == null ||
-                        firstname == null || lastname == null || email == null) 
+                        firstname == null || lastname == null || email == null 
+                        || sectionId == null) 
                 {
                     response.sendError(400);//bad request
                     return;
                 }
                 
                 int res = authMan.registerUser(username, password, pwdRepeat, 
-                        firstname, lastname, email);
+                        firstname, lastname, email, sectionId);
                 if(res == 1 || res == -1 || res == -2 || res == -3) {
                     out.println(res);
                     response.setStatus(200);//success
@@ -173,6 +177,21 @@ public class APPlausServlet extends HttpServlet {
                 }
                 else {
                     response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
+            
+            // get sections
+            else if(action.equals("getSections")) {
+                String retString = authMan.getSections();
+                if(retString == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.print(retString);
+                    response.setStatus(200);
                     return;
                 }
             }

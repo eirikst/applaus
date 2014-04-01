@@ -1,19 +1,17 @@
 package DbManager.MongoDbImpl;
 
+import DAO.MongoDbMock.SectionQueriesMock;
 import DAO.MongoDbMock.UserQueriesMock;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.mockito.Mockito;
 
 /**
  *
@@ -50,6 +48,7 @@ public class AuthenticationManagerImplTest {
         System.out.println("login");
         
         //init mock
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         
@@ -57,7 +56,8 @@ public class AuthenticationManagerImplTest {
         String password = "password1";
         
         //class to test init
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = 1;
@@ -77,6 +77,7 @@ public class AuthenticationManagerImplTest {
         System.out.println("login");
         
         //init mock
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         
@@ -84,7 +85,8 @@ public class AuthenticationManagerImplTest {
         String password = "password1";
         
         //class to test init
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -1;
@@ -103,6 +105,7 @@ public class AuthenticationManagerImplTest {
         System.out.println("login");
         
         //init mock
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         
@@ -110,7 +113,8 @@ public class AuthenticationManagerImplTest {
         String password = "password2";
         
         //class to test init
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -2;
@@ -129,6 +133,7 @@ public class AuthenticationManagerImplTest {
         System.out.println("login");
         
         //init mock
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         
@@ -136,7 +141,8 @@ public class AuthenticationManagerImplTest {
         String password = "password2";
         
         //class to test init
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -3;
@@ -163,17 +169,21 @@ public class AuthenticationManagerImplTest {
         String firstname = dummy;
         String lastname = dummy;
         String email = dummy;
+        String sectionId = "000000000000000000000000";
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = 1;
         
         //result
-        int result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, email);
+        int result = instance.registerUser(username, password, pwdRepeat, 
+                firstname, lastname, email, sectionId);
         assertEquals(expResult, result);
     }
 
@@ -183,7 +193,7 @@ public class AuthenticationManagerImplTest {
      * us the returned value -5.
      */
     @Test
-    public void testRegisterUserNullInput() {
+    public void testRegisterUserBadInput() {
         System.out.println("registerUser");
         
         //init dummy strings
@@ -193,28 +203,35 @@ public class AuthenticationManagerImplTest {
         String firstname = dummy;
         String lastname = dummy;
         String email = dummy;
+        String sectionId = "000000000000000000000000";
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
-        int expResult = -5;
+        int expResult = -6;
         
         //result
-        int result = instance.registerUser(null, password, pwdRepeat, firstname, lastname, email);
+        int result = instance.registerUser(null, password, pwdRepeat, firstname,
+                lastname, email, sectionId);
         assertEquals("Null input value, should return -5.", expResult, result);
-        result = instance.registerUser(username, null, pwdRepeat, firstname, lastname, email);
+        result = instance.registerUser(username, password, pwdRepeat, null, 
+                lastname, email, sectionId);
         assertEquals("Null input value, should return -5.", expResult, result);
-        result = instance.registerUser(username, password, null, firstname, lastname, email);
+        result = instance.registerUser(username, password, pwdRepeat, firstname,
+                null, email, sectionId);
         assertEquals("Null input value, should return -5.", expResult, result);
-        result = instance.registerUser(username, password, pwdRepeat, null, lastname, email);
+        result = instance.registerUser(username, password, pwdRepeat, firstname,
+                lastname, null, sectionId);
         assertEquals("Null input value, should return -5.", expResult, result);
-        result = instance.registerUser(username, password, pwdRepeat, firstname, null, email);
-        assertEquals("Null input value, should return -5.", expResult, result);
-        result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, null);
-        assertEquals("Null input value, should return -5.", expResult, result);
+        result = instance.registerUser(username, password, pwdRepeat, firstname,
+                lastname, email, "wrong format");
+        assertEquals("Section id on wrong format, should return -5.", expResult,
+                result);
     }
 
     /**
@@ -231,17 +248,21 @@ public class AuthenticationManagerImplTest {
         String firstname = dummy;
         String lastname = dummy;
         String email = dummy;
-        
+        String sectionId = "000000000000000000000000";
+
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -1;
         
         //result
-        int result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, email);
+        int result = instance.registerUser(username, password, pwdRepeat, 
+                firstname, lastname, email, sectionId);
         assertEquals("Username exists, should return -1.", expResult, result);
     }
 
@@ -259,17 +280,21 @@ public class AuthenticationManagerImplTest {
         String firstname = dummy;
         String lastname = dummy;
         String email = "example1@example.com";
+        String sectionId = "000000000000000000000000";
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -2;
         
         //result
-        int result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, email);
+        int result = instance.registerUser(username, password, pwdRepeat, 
+                firstname, lastname, email, sectionId);
         assertEquals("Email exists, should return -2.", expResult, result);
     }
 
@@ -287,23 +312,33 @@ public class AuthenticationManagerImplTest {
         String firstname = dummy;
         String lastname = dummy;
         String email = dummy;
-        
+        String sectionId = "000000000000000000000000";
+
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -4;
         
         //result
-        int result = instance.registerUser("", password, pwdRepeat, firstname, lastname, email);
+        int result = instance.registerUser("", password, pwdRepeat, firstname, 
+                lastname, email, sectionId);
         assertEquals("Empty string, should return -4.", expResult, result);
-        result = instance.registerUser(username, password, pwdRepeat, "", lastname, email);
+        result = instance.registerUser(username, password, pwdRepeat, "", 
+                lastname, email, sectionId);
         assertEquals("Empty string, should return -4.", expResult, result);
-        result = instance.registerUser(username, password, pwdRepeat, firstname, "", email);
+        result = instance.registerUser(username, password, pwdRepeat, firstname,
+                "", email, sectionId);
         assertEquals("Empty string, should return -4.", expResult, result);
-        result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, "");
+        result = instance.registerUser(username, password, pwdRepeat, firstname,
+                lastname, "", sectionId);
+        assertEquals("Empty string, should return -4.", expResult, result);
+        result = instance.registerUser(username, password, pwdRepeat, firstname,
+                lastname, email, "");
         assertEquals("Empty string, should return -4.", expResult, result);
     }
     
@@ -321,17 +356,21 @@ public class AuthenticationManagerImplTest {
         String firstname = dummy;
         String lastname = dummy;
         String email = dummy;
-        
+        String sectionId = "000000000000000000000000";
+
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl(userQMock);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
         
         //exp
-        int expResult = -3;
+        int expResult = -8;
         
         //result
-        int result = instance.registerUser("", password, pwdRepeat, firstname, lastname, email);
+        int result = instance.registerUser("", password, pwdRepeat, firstname, 
+                lastname, email, sectionId);
         assertEquals("Not matching pwd, should return -3.", expResult, result);
     }
 
@@ -344,10 +383,11 @@ public class AuthenticationManagerImplTest {
         System.out.println("getAdminList");
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserListDBObject(userQMock.usersDBObj);
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         String expResult = JSON.serialize(userQMock.usersDBObj);
@@ -366,9 +406,10 @@ public class AuthenticationManagerImplTest {
         System.out.println("getAdminList");
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         String expResult = JSON.serialize(userQMock.usersDBObj);
@@ -389,10 +430,11 @@ public class AuthenticationManagerImplTest {
         String email = "example1@example.com";
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = 1;
@@ -413,10 +455,11 @@ public class AuthenticationManagerImplTest {
         String email = "example151@example.com";
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = 0;
@@ -437,10 +480,11 @@ public class AuthenticationManagerImplTest {
         String email = null;
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserList(userQMock.users);
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         int expResult = -1;
@@ -461,10 +505,11 @@ public class AuthenticationManagerImplTest {
         int role = 3;
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserListDBObject(userQMock.usersDBObj);
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         String expResult = JSON.serialize(userQMock.getUserInfo());
@@ -485,10 +530,11 @@ public class AuthenticationManagerImplTest {
         int role = 3;
         
         //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         setUserListDBObject(userQMock.usersDBObj);
         AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock);
+        (userQMock, sectionQMock);
         
         //exp
         String expResult = null;

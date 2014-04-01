@@ -30,9 +30,12 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
            
     
     
-    $scope.registerUser = function(user) {
+    $scope.registerUser = function(user, id) {
+        console.log(id);
+        user.id = id;
         LoginService.registerUser(user)
         .success(function(data, status, headers, config) {
+            console.log(data);
             if(data == 1) {
                 $scope.msg = "Ny bruker er registrert. Du blir sendt videre til logg inn-siden.";
                 console.log("Register successful");
@@ -46,9 +49,11 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
             } else if (data == -2) {
                 $scope.errMsg = "Epost er allerede i bruk. Vennligst fyll inn et nytt epost.";
                 console.log("Email exists");
-            } else if (data == -3) {
+            } else if (data == -8) {
                 $scope.errMsg = "Passord stemmer ikke overens.";
                 console.log("Invalid password");
+            } else {
+                $scope.errMsg = "An error occured. Please try again.";
             }
         }).error(function(data, status, headers, config) {
             $scope.errMsg = "En uforutsett feil oppsto. Vennligst prøv igjen.";
@@ -71,5 +76,23 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
             console.log("Failed http action=newPassword");
         });
     };
+    
+    getSections = function() {
+        LoginService.getSections()
+        .success(function(data, status, headers, config) {
+            $scope.sections = data;
+            $scope.selSection = $scope.sections[0];
+            console.log("getSections success");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=getSections");
+        });
+    }
+    
+    
+    //init
+    $scope.sections = new Array();
+    
+    
+    getSections();
     
 });
