@@ -149,3 +149,44 @@ lefty {
 .navbar-content-login {
     margin:15px;
 }
+
+.commentCount {
+    font-size: 1.2em;
+    color:red;
+}
+
+.dropHeading a {
+    text-decoration:none;
+}
+
+.dropHeadingCentral {
+    width:75%;
+    text-align: left;
+}
+
+.dropHeadingCentral:hover {
+    text-decoration: underline;
+}
+
+.dropHeadingTableTop {
+    margin-left: auto;
+    margin-right: auto;
+    padding-top:10px;
+    padding-bottom: 10px;
+}
+
+.dropHeadingTable {
+    width:95%;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+.dropChevronGlyph {
+    width:5%;
+    text-align: left;
+}
+
+.dropCommentGlyph {
+    width:20%;
+    text-align: right;
+}

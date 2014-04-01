@@ -829,7 +829,7 @@ public class APPlausServlet extends HttpServlet {
                 }
             }   
 
-            // add idea
+            // add comment on idea
             else if(action.equals("addIdeaComment")) {
                 if(!isUser(roleId)) {
                     response.sendError(401);//internal error
@@ -865,7 +865,7 @@ public class APPlausServlet extends HttpServlet {
                     response.sendError(400);//bad request
                     return;
                 }
-                int deleted = ideaMan.deleteIdea(ideaId);
+                int deleted = ideaMan.deleteIdea(ideaId, username);
                 if(deleted == 1) {
                     response.setStatus(200);//success
                     return;
@@ -875,8 +875,89 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
             }
-
-   
+            
+            //like/not like idea
+            else if(action.equals("likeIdea")) {
+                String ideaId = request.getParameter("ideaId");
+                String like = request.getParameter("like");
+                if(ideaId == null || like == null) {
+                    LOGGER.info("ideaId and/or like post variable null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                boolean likeBool;
+                if(like.equals("1")) {
+                    likeBool = true;
+                }
+                else if(like.equals("0")) {
+                    likeBool = false;
+                }
+                else {
+                    LOGGER.info("like post variable not 0 or 1.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                
+                if(ideaMan.likeIdea(ideaId, username, likeBool)) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
+            //like/not like comment
+            else if(action.equals("likeComment")) {
+                String commentId = request.getParameter("commentId");
+                String like = request.getParameter("like");
+                if(commentId == null || like == null) {
+                    LOGGER.info("commentId and/or like post variable null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                boolean likeBool;
+                if(like.equals("1")) {
+                    likeBool = true;
+                }
+                else if(like.equals("0")) {
+                    likeBool = false;
+                }
+                else {
+                    LOGGER.info("like post variable not 0 or 1.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                
+                if(ideaMan.likeComment(commentId, username, likeBool)) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
+            //delete comment
+            else if(action.equals("deleteComment")) {
+                String commentId = request.getParameter("commentId");
+                String ideaId = request.getParameter("ideaId");
+                if(commentId == null || ideaId == null) {
+                    LOGGER.info("commentId and/or ideaId post variable null.");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                if(ideaMan.deleteComment(ideaId, commentId, username)) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
    
            else if(action.equals("deleteNews")) {
                String newsId = request.getParameter("newsId");

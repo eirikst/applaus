@@ -14,10 +14,10 @@
                 <th>Admin</th>
             </tr>
         </thead>
-        <tbody ng-repeat="admin in (adminList| filter:filt | orderBy: 'firstname':true)">
+        <tbody ng-repeat="admin in (adminList| filter:filt | orderBy: 'admin.firstname':true)">
             <tr>
-                <td>{{admin.firstname}} {{admin.lastname}}</td>
-                <td>{{admin.username}}</td>
+                <td>{{admin.firstname | truncate:12}} {{admin.lastname | truncate:12}}</td>
+                <td>{{admin.username | truncate:25}}</td>
                 <td><input  ng-checked="admin.role_id == 1 || admin.role_id == 2" ng-disabled="admin.role_id == 1" ng-click="setRole(admin.username, admin.role_id)" type="checkbox"/></td>
             </tr>
         </tbody>

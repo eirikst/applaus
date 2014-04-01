@@ -28,7 +28,7 @@
 
     </head>
 
-    <body background="img/bw.jpg">
+    <body style="background-color:#ff3333">
 
         <!--static navbar-->
         <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation">

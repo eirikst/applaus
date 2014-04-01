@@ -1,7 +1,6 @@
 package DAO;
 
 import APPlausException.InputException;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import java.util.List;
@@ -15,6 +14,9 @@ public interface IdeaQueries {
             throws InputException, MongoException;
     public List<DBObject> getIdeas(int skip) throws InputException, MongoException;
     public DBObject addComment(String oid, String writer, String text) throws InputException;
-    public boolean deleteIdea(String objId)
+    public boolean deleteIdea(String objId, String username)
             throws InputException, MongoException;
+    public void likeIdea(String ideaId, String username, boolean like) throws InputException;
+    public void likeComment(String commentId, String username, boolean like) throws InputException;
+    public void deleteComment(String ideaId, String commentId, String username) throws InputException;
 }

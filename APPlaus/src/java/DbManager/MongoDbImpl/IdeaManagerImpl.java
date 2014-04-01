@@ -53,11 +53,22 @@ public class IdeaManagerImpl implements IdeaManager {
         }
     }
     
-    public int deleteIdea(String objId){
+    /**
+     * Calls the deleteIdea of IdeaQueries to delete an idea. Returns 1 if okay,
+     *  0 if nothing is updated. -1 on bad input(Exception in IdeaQueries) and 
+     * -2 of trouble with the database(MongoException in IdeaQueries)
+     * @param objId if of idea
+     * @param username username of who wrote the idea
+     * @return returns 1 if okay, 0 if nothing is updated. -1 on bad 
+     * input(Exception in IdeaQueries) and -2 of trouble with the 
+     * database(MongoException in IdeaQueries)
+     */
+    @Override
+    public int deleteIdea(String objId, String username){
         try {
-            boolean okDelete = ideaQ.deleteIdea(objId);
+            boolean okDelete = ideaQ.deleteIdea(objId, username);
             if(okDelete) {
-                ideaQ.deleteIdea(objId);
+                ideaQ.deleteIdea(objId, username);
                 return 1;
             }
             else {
@@ -97,6 +108,77 @@ public class IdeaManagerImpl implements IdeaManager {
         catch(MongoException e) {
             LOGGER.log(Level.WARNING, "Exception while adding a comment.", e);
             return null;
+        }
+    }
+    
+    /**
+     * Registers that a user likes or wants not to like an idea.
+     * @param ideaId id of idea in question
+     * @param username username of the user who likes/does not want to like
+     * @param like true if like, false, if doesn't like anymore
+     * @return true if okay insert, false if db error or error in input
+     */
+    @Override
+    public boolean likeIdea(String ideaId, String username, boolean like) {
+        try {
+            ideaQ.likeIdea(ideaId, username, like);
+            return true;
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while like/dislike on idea.", e);
+            return false;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while like/dislike on idea.", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Registers that a user likes or wants not to like a comment.
+     * @param commentId id of comment in question
+     * @param username username of the user who likes/does not want to like
+     * @param like true if like, false, if doesn't like anymore
+     * @return true if okay insert, false if db error or error in input
+     */
+    @Override
+    public boolean likeComment(String commentId, String username, boolean like) {
+        try {
+            ideaQ.likeComment(commentId, username, like);
+            return true;
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while like/dislike on comment.", e);
+            return false;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while like/dislike on comment.", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Calls the IdeaQueries implementation's deleteComment method, to delete a 
+     * comment
+     * @param ideaId id of idea
+     * @param commentId id of comment
+     * @param username username of user who posted the comment
+     * @return true if no errors(database, wrong input)
+     */
+    @Override
+    public boolean deleteComment(String ideaId, String commentId, 
+            String username) {
+        try {
+            ideaQ.deleteComment(ideaId, commentId, username);
+            return true;
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while deleting comment.", e);
+            return false;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while deleting comment.", e);
+            return false;
         }
     }
 }

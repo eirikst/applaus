@@ -32,47 +32,76 @@
     </div>
 
     <div class="drop" ng-init="dropBank = false" ng-repeat="idea in bank track by $index">
-        <div class="dropHeading">
+        
+        <div ng-click="dropBank = !dropBank" class="dropHeadingTableTop">
+            <table class="dropHeadingTable">
+                <tr>
+                    <td class="dropChevronGlyph"><span class="glyphicon" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></span></td>
+                    <td class="dropHeadingCentral">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}} </td>
+                    <td  class="dropCommentGlyph"><span ng-show="idea.comments!=undefined">{{idea.comments.length}} </span><span ng-show="idea.comments==undefined">0 </span><span class="glyphicon glyphicon-comment"></span></td>
+                </tr>
+            </table>
+        </div>
+        
+        
+        
+        <!--<div class="dropHeading">
             <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></a>
-            <a class="text-center" ng-click="dropBank = !dropBank">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}}
+            <a class="text-center" ng-click="dropBank = !dropBank">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}} <span ng-show="idea.comments!=undefined">{{idea.comments.length}} </span><span ng-show="idea.comments==undefined">0 </span><span class="glyphicon glyphicon-comment"></span>
                 <span class="clickableDiv"></span>
             </a>
-        </div>
+        </div>-->
         <div class="innerDrop" ng-show="dropBank">
             <p>
                 By {{idea.username| truncate:25}}, {{idea.date.$date| date:('dd.MM.yyyy HH:mm')}}
+                <span ng-show="idea.username == usernameCookie">
+                <span type="button" class="glyphicon glyphicon-remove glyphicon-hovergray" ng-show="!toDelete" ng-click="toDelete = !toDelete"></span>
+                </span>
+
             </p>
             <p>
                 {{idea.text}}
             </p>
-            <div ng-init="toDelete = false">
-                <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Slett</a>
-                <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
+            <div ng-init="toDelete = false" ng-show="idea.username == usernameCookie">
+                <a type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
                 <div class="alert alert-info" ng-show="toDelete">
                     <a  ng-click="deleteIdea(idea);dropBank=false" class="alert-link">Bekreft</a>
                     at du ønsker å slette ideen
                 </div>
             </div>
 
-            <div>
-                <span ng-show="idea.likes == undefined || idea.likes.length == 0"><a class="glyphicon glyphicon-thumbs-up"></a> Be the first to like this idea!</span>
-                <span ng-show="idea.likes != undefined && idea.likes.length == 1"><a class="glyphicon glyphicon-thumbs-up"></a> {{idea.likes[0]}} likes this</span>
-                <span ng-show="idea.likes != undefined && idea.likes.length == 2"><a class="glyphicon glyphicon-thumbs-up"></a> {{idea.likes[0]}} and {{idea.likes[1]}} likes this</span>
-                                <div class="dropdown">
-                <span ng-show="idea.likes != undefined && idea.likes.length > 2"><a class="glyphicon glyphicon-thumbs-up"></a> {{idea.likes[0]}} and 
-                    <a data-toggle="dropdown">
-                        {{idea.likes.length - 1}} 
-                        
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li ng-repeat="like in idea.likes | arrWithoutFirst">
-                            {{like | truncate:25}}
-                        </li>
-                    </ul>
-                others likes this
-                </span>
+
+                <!--if i like and don't like-->
+                <div ng-show="idea.likes == undefined || idea.likes.length == 0">
+                    <span ng-show="!isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeIdea(idea, 1)">Like</a></span>
+                    <span ng-show="isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeIdea(idea, 0)">Unlike</a></span>
                 </div>
-            </div>
+                <div ng-show="idea.likes != undefined && idea.likes.length == 1">
+                    <span ng-show="!isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeIdea(idea, 1)">Like</a> {{idea.likes[0]}} likes this</span>
+                    <span ng-show="isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeIdea(idea, 0)">Unlike</a> {{idea.likes[0]}} likes this</span>
+                </div>
+                <div ng-show="idea.likes != undefined && idea.likes.length == 2">
+                    <span ng-show="!isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeIdea(idea, 1)">Like</a> {{idea.likes[0]}} and {{idea.likes[1]}} likes this</span>
+                    <span ng-show="isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeIdea(idea, 0)">Unlike</a> {{idea.likes[0]}} and {{idea.likes[1]}} likes this</span>
+                </div>
+                <div ng-show='idea.likes != undefined && idea.likes.length > 2'>
+                    <span ng-show="!isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeIdea(idea, 1)">Like</a></span>
+                    <span ng-show="isInArray(idea.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeIdea(idea, 0)">Unlike</a></span>
+
+                    <span class="dropdown">
+                        {{idea.likes[0]}} and 
+                        <a data-toggle="dropdown">
+                            {{idea.likes.length - 1}} 
+
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-likes">
+                            <li ng-repeat="like in idea.likes | arrWithoutFirst">
+                                {{like | truncate:25}}
+                            </li>
+                        </ul>
+                    others likes this
+                    </span>
+                </div>
 
             <hr>
             <strong>
@@ -95,10 +124,53 @@
                 <hr>
                 <p>
                     By {{comment.writer | truncate:25}} {{comment.time.$date| date:('dd.MM.yyyy HH:mm')}}
+                <span ng-show="comment.writer == usernameCookie">
+                    <a type="button" class="glyphicon glyphicon-remove" ng-show="!delComment" ng-click="delComment = !delComment"></a>
+                </span>
                 </p>
                 <p>
                     {{comment.text}}
                 </p>
+                <div ng-init="delComment = false" ng-show="comment.writer == usernameCookie">
+                    <a type="button" ng-show="delComment" ng-click="delComment = !delComment">Cancel</a>
+                    <div class="alert alert-info" ng-show="delComment">
+                        <a  ng-click="deleteComment(idea, comment);" class="alert-link">Confirm</a>
+                        that you want to delete the comment
+                    </div>
+                </div>
+
+
+                <!--if i like and don't like-->
+                <div ng-show="comment.likes == undefined || comment.likes.length == 0">
+                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a></span>
+                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a></span>
+                </div>
+                <div ng-show="comment.likes != undefined && comment.likes.length == 1">
+                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a> {{comment.likes[0]}} likes this</span>
+                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a> {{comment.likes[0]}} likes this</span>
+                </div>
+                <div ng-show="comment.likes != undefined && comment.likes.length == 2">
+                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a> {{comment.likes[0]}} and {{comment.likes[1]}} likes this</span>
+                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a> {{comment.likes[0]}} and {{comment.likes[1]}} likes this</span>
+                </div>
+                <div ng-show='comment.likes != undefined && comment.likes.length > 2'>
+                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a></span>
+                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a></span>
+
+                    <div class="dropdown">
+                        {{comment.likes[0]}} and 
+                        <a data-toggle="dropdown">
+                            {{comment.likes.length - 1}} 
+
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="like in comment.likes | arrWithoutFirst">
+                                {{like | truncate:25}}
+                            </li>
+                        </ul>
+                    others likes this
+                    </div>
+                </div>
             </div>
         </div>
     </div>

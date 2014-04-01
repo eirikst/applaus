@@ -45,4 +45,40 @@ services.service('IdeaService', function($http) {
         });
         return promise;
     };
+    
+    //http call to like an idea
+    this.likeIdea = function(idea, like) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=likeIdea&ideaId=" + idea._id.$oid + "&like=" + like,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
+    //http call to like a comment
+    this.likeComment = function(comment, like) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=likeComment&commentId=" + comment.comment_id.$oid + 
+                    "&like=" + like,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
+    //http call to delete a comment
+    this.deleteComment = function(idea, comment) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=deleteComment&ideaId=" + idea._id.$oid + "&commentId="
+                    + comment.comment_id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
 });

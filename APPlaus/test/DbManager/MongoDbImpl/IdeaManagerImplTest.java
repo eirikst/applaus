@@ -228,7 +228,264 @@ public class IdeaManagerImplTest {
         int expResult = 1;
         
         //result
-        int result = instance.deleteIdea(objId);
+        int result = instance.deleteIdea(objId, "username");
         assertEquals(expResult, result);
+    }
+    
+    /**
+     * Testing on successful add, should return JSON object
+     */
+    @Test
+    public void testAddCommentSuccess() {
+        System.out.println("addComment");
+        String ideaId = "000000000000000000000000";
+        String text = "text1";
+        String username = "username1";
+        
+        DBObject retObj = new BasicDBObject();
+        retObj.put("_id", new ObjectId(ideaId));
+        retObj.put("writer", username);
+        retObj.put("text", text);
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);
+        
+        //exp
+        String expResult = JSON.serialize(retObj);
+        
+        //result
+        String result = instance.addComment(ideaId, username, text);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Testing on unsuccessful add(null input), null should be returned.
+     */
+    @Test
+    public void testAddCommentNullInput() {
+        System.out.println("addComment");
+        String ideaId = "000000000000000000000000";
+        String text = "text1";
+        String username = "username1";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);
+        
+        //exp
+        String expResult = null;
+        
+        //result
+        String result = instance.addComment(null, username, text);
+        assertEquals(expResult, result);
+        result = instance.addComment(ideaId, null, text);
+        assertEquals(expResult, result);
+        result = instance.addComment(ideaId, username, null);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Testing on unsuccessful add(wrong format of object id), null should be 
+     * returned.
+     */
+    @Test
+    public void testAddCommentWrongOID() {
+        System.out.println("addComment");
+        String ideaId = "wrong oid";
+        String text = "text1";
+        String username = "username1";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);
+        
+        //exp
+        String expResult = null;
+        
+        //result
+        String result = instance.addComment(ideaId, username, text);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Testing on successful like, should return true.
+     */
+    @Test
+    public void likeIdeaSuccess() {
+        System.out.println("likeIdea");
+        String ideaId = "000000000000000000000000";
+        String username = "username1";
+        boolean like = true;
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.likeIdea(ideaId, username, like);
+        assertTrue(result);
+    }
+    
+    /**
+     * Testing on null input, whould return false.
+     */
+    @Test
+    public void likeIdeaNullInput() {
+        System.out.println("likeIdea");
+        String ideaId = "000000000000000000000000";
+        String username = "username1";
+        boolean like = true;
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.likeIdea(null, username, like);
+        assertFalse(result);
+        result = instance.likeIdea(ideaId, null, like);
+        assertFalse(result);
+    }
+    
+    /**
+     * Testing on wrong object id, should return false.
+     */
+    @Test
+    public void likeIdeaWrongOID() {
+        System.out.println("likeIdea");
+        String ideaId = "wrong oid";
+        String username = "username1";
+        boolean like = true;
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.likeIdea(ideaId, username, like);
+        assertFalse(result);
+    }
+    
+    /**
+     * Testing on successful like, should return true.
+     */
+    @Test
+    public void likeCommentSuccess() {
+        System.out.println("likeComment");
+        String ideaId = "000000000000000000000000";
+        String username = "username1";
+        boolean like = true;
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.likeComment(ideaId, username, like);
+        assertTrue(result);
+    }
+    
+    /**
+     * Testing on null input, whould return false.
+     */
+    @Test
+    public void likeCommentNullInput() {
+        System.out.println("likeComment");
+        String ideaId = "000000000000000000000000";
+        String username = "username1";
+        boolean like = true;
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.likeComment(null, username, like);
+        assertFalse(result);
+        result = instance.likeComment(ideaId, null, like);
+        assertFalse(result);
+    }
+    
+    /**
+     * Testing on wrong object id, should return false.
+     */
+    @Test
+    public void likeCommentWrongOID() {
+        System.out.println("likeComment");
+        String ideaId = "wrong oid";
+        String username = "username1";
+        boolean like = true;
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.likeComment(ideaId, username, like);
+        assertFalse(result);
+    }
+    
+    /**
+     * Testing on successful delete, should return true.
+     */
+    @Test
+    public void deleteCommentSuccess() {
+        System.out.println("deleteComment");
+        String ideaId = "000000000000000000000000";
+        String commentId = "000000000000000000000000";
+        String username = "username";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.deleteComment(ideaId, commentId, username);
+        assertTrue(result);
+    }
+    
+    /**
+     * Testing on null input, whould return false.
+     */
+    @Test
+    public void deleteCommentNullInput() {
+        System.out.println("deleteComment");
+        String ideaId = "000000000000000000000000";
+        String commentId = "000000000000000000000000";
+        String username = "username";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.deleteComment(null, commentId, username);
+        assertFalse(result);
+        result = instance.deleteComment(ideaId, null, username);
+        assertFalse(result);
+        result = instance.deleteComment(ideaId, commentId, null);
+        assertFalse(result);
+    }
+    
+    /**
+     * Testing on wrong object id, should return false.
+     */
+    @Test
+    public void deleteCommentWrongOID() {
+        System.out.println("deleteComment");
+        String ideaId = "000000000000000000000000";
+        String commentId = "000000000000000000000000";
+        String username = "username";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        boolean result = instance.deleteComment("wrong format", commentId, username);
+        assertFalse(result);
+        result = instance.deleteComment(ideaId, "wrong format", username);
+        assertFalse(result);
     }
 }

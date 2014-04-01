@@ -24,7 +24,6 @@ public class IdeaQueriesImpl implements IdeaQueries {
     
     private IdeaQueriesImpl() throws UnknownHostException {
         db = MongoConnection.getInstance().getDB();
-        System.out.println(db.getCollection("contest").find());
     }
     
     public static IdeaQueriesImpl getInstance() throws UnknownHostException {
@@ -73,9 +72,19 @@ public class IdeaQueriesImpl implements IdeaQueries {
         }
     }
     
-    public boolean deleteIdea(String objId) throws InputException, MongoException {
-        if(objId == null) {
-            throw new InputException("objId is null.");
+    /**
+     * Deletes an idea given the correct username og the idea.
+     * @param objId id of idea
+     * @param username username of the user who wrote the idea
+     * @throws InputException if any input is null, or objId is not convertible 
+     * to an ObjectId object
+     * @throws MongoException if any database error occurs
+     * @return false if no idea is deleted, true if
+     */
+    @Override
+    public boolean deleteIdea(String objId, String username) throws InputException, MongoException {
+        if(objId == null || username == null) {
+            throw new InputException("objId or username is null.");
         }
         ObjectId id;
         try {
@@ -95,9 +104,6 @@ public class IdeaQueriesImpl implements IdeaQueries {
         
         if(status == 0) {
             return false;
-        }
-        else if(status == 1) {
-            return true;
         }
         else {
             return true;
@@ -155,5 +161,131 @@ public class IdeaQueriesImpl implements IdeaQueries {
             return null;//error, 0 or more updated(more not possible on same
                         //object id)
         }
+    }
+    
+    /**
+     * Registers that a user likes or wants not to like an idea.
+     * @param ideaId id of idea in question
+     * @param username username of the user who likes/does not want to like
+     * @param like true if like, false, if doesn't like anymore
+     * @throws InputException if any input is not on the correct form(null)
+     */
+    @Override
+    public void likeIdea(String ideaId, String username, boolean like) 
+            throws InputException {
+        if(ideaId == null || username == null) {
+            throw new InputException("ideaId and/or username parameters are null.");
+        }
+        ObjectId objId;
+        try {
+            objId = new ObjectId(ideaId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("String ideaId cannot be converted to an "
+                    + "ObjectId object.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject query = new BasicDBObject();
+        query.put("_id", objId);
+        
+        if(like) {
+            DBObject addLike = new BasicDBObject();
+            addLike.put("$addToSet", new BasicDBObject("likes", username));
+
+            collection.update(query, addLike);
+        }
+        else {
+            DBObject pullLike = new BasicDBObject();
+            pullLike.put("$pull", new BasicDBObject("likes", username));
+
+            collection.update(query, pullLike);
+        }
+    }
+    
+    /**
+     * Registers that a user likes or wants not to like a comment.
+     * @param commentId id of comment in question
+     * @param username username of the user who likes/does not want to like
+     * @param like true if like, false, if doesn't like anymore
+     * @throws InputException if any input is not on the correct form(null)
+     */
+    @Override
+    public void likeComment(String commentId, String username, boolean like) throws InputException {
+        if(commentId == null || username == null) {
+            throw new InputException("commentId and/or username parameters are null.");
+        }
+        ObjectId objId;
+        try {
+            objId = new ObjectId(commentId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("String commentId cannot be converted to an "
+                    + "ObjectId object.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject query = new BasicDBObject();
+        query.put("comments.comment_id", objId);
+        
+        if(like) {
+            DBObject addLike = new BasicDBObject();
+            addLike.put("$addToSet", new BasicDBObject("comments.$.likes", username));
+            
+            collection.update(query, addLike);
+        }
+        else {
+            DBObject pullLike = new BasicDBObject();
+            pullLike.put("$pull", new BasicDBObject("comments.$.likes", username));
+
+            collection.update(query, pullLike);
+        }
+    }
+    
+    
+    /**
+     * Deletes a comment with the specified commentId from an idea with the 
+     * specified ideaId published by a user with username username.
+     * @param ideaId id of idea
+     * @param commentId id of comment
+     * @param username username who published the idea
+     * @throws InputException if any input is null or ideaId/commentId does not 
+     * match expected object id format.
+     */
+    @Override
+    public void deleteComment(String ideaId, String commentId, String username) 
+            throws InputException {
+        if(ideaId == null || commentId == null || username == null) {
+            throw new InputException("commentId and/or username parameters are null.");
+        }
+        ObjectId objIdIdea;
+        ObjectId objIdComment;
+        try {
+            objIdIdea = new ObjectId(ideaId);
+            objIdComment = new ObjectId(commentId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("String ideaId and/or commentId cannot be converted to an "
+                    + "ObjectId object.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject query = new BasicDBObject();
+        query.put("_id", objIdIdea);
+        query.put("username", username);
+        
+        DBObject comment = new BasicDBObject("comment_id", objIdComment);
+        
+        DBObject comments = new BasicDBObject();
+        comments.put("$pull", new BasicDBObject("comments", comment));
+
+        System.out.println(query);
+        System.out.println(comment);
+        System.out.println(comments);
+        
+        collection.update(query, comments);
     }
 }

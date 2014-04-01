@@ -36,5 +36,18 @@
 }
 
 .glyphicon-marginleft5px {
-    margin-left: 5px;
+    margin: 5px;
+}
+
+.glyphicon-thumbs-up-checked {
+    color:gray;
+}
+
+.glyphicon-hovergray:hover {
+    color:gray;
+}
+
+.dropdown-menu-likes {
+    background-color:red;
+    margin-left:5px;
 }

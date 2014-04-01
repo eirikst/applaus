@@ -83,4 +83,82 @@ public class IdeaQueriesMock implements IdeaQueries {
         }
         return false;
     }
+
+    @Override
+    public DBObject addComment(String oid, String writer, String text) throws InputException {
+        if(oid == null || writer == null || text == null) {
+            throw new InputException("Some input is null");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(oid);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("oid not on format of Object ID.");
+        }
+        
+        DBObject ret = new BasicDBObject();
+        ret.put("_id", id);
+        ret.put("writer", writer);
+        ret.put("text", text);
+        return ret;
+    }
+
+    @Override
+    public boolean deleteIdea(String objId, String username) throws InputException, MongoException {
+        if(objId == null || username == null) {
+            throw new InputException("Some input is null");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(objId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("objId not on format of Object ID.");
+        }
+        return true;
+    }
+
+    @Override
+    public void likeIdea(String ideaId, String username, boolean like) throws InputException {
+        if(ideaId == null || username == null) {
+            throw new InputException("Some input is null");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(ideaId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("ideaId not on format of Object ID.");
+        }
+    }
+
+    @Override
+    public void likeComment(String commentId, String username, boolean like) throws InputException {
+        if(commentId == null || username == null) {
+            throw new InputException("Some input is null");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(commentId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("commentId not on format of Object ID.");
+        }
+    }
+
+    @Override
+    public void deleteComment(String ideaId, String commentId, String username) throws InputException {
+        if(ideaId == null || commentId == null || username == null) {
+            throw new InputException("Some input is null");
+        }
+        ObjectId id;
+        try {
+            id = new ObjectId(commentId);
+            id = new ObjectId(ideaId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("ideaId or commentId not on format of Object ID.");
+        }
+    }
 }
