@@ -23,4 +23,6 @@ public interface ContestQueries{
     public boolean editContest(String contestId, String title,
             String desc, String prize, Date dateEnd, int points)
             throws InputException, MongoException;
+    public boolean declareWinner (String contestId, String username) 
+            throws InputException, MongoException;
 }

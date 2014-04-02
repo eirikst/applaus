@@ -224,4 +224,18 @@ public class ContestManagerImpl implements ContestManager {
             return false;
         }
     }
+    
+    public boolean declareWinner(String contestId, String username){
+        try {
+            return contQ.declareWinner(contestId, username);
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while declaring winner.", e);
+            return false;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while declaring winner.", e);
+            return false;
+        }
+    }
 }

@@ -55,4 +55,5 @@ public interface UserQueries {
     public boolean deleteAssignment(String objId) throws InputException, MongoException;
     public boolean editAssignment(String contestId, String comment, Date date_done)
             throws InputException, MongoException;
+    public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException;
 }

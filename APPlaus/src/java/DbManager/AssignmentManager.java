@@ -29,4 +29,6 @@ public interface AssignmentManager {
     public String getAllAssignmentsUserSorted(String username, int skip);    
     
     public boolean editAssignment(String contestId, String comment, Date date_done);    
-    public int deleteAssignment(String objId);}
+    public int deleteAssignment(String objId);
+    public String listParticipants(String contestId);
+}
