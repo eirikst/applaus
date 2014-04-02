@@ -10,9 +10,13 @@
             <input ng-model="user.pwd" name="pwd" class="form-control" type="password" placeholder="Passord" required="true" ng-class="{red:registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty, green:!registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty}">
         </p>
         <p>
-            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="Password" placeholder="Gjenta passord" required="true" ng-class="{red:registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty}">
+            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="Password" placeholder="Gjenta passord" required="true" ng-class="{red:(registerUserForm.pwdRepeat.$error.required || user.pwd !== user.pwdRepeat) && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty && user.pwd === user.pwdRepeat}">
         </p>
-
+        <p ng-show="user.pwd !== user.pwdRepeat && registerUserForm.pwdRepeat.$dirty">
+            <span class="redMsg">
+                Please provide matching passwords.
+            </span>
+        </p>
         <p>
             <input ng-model="user.fname" name="fname" class="form-control" type="text" placeholder="Fornavn" required="true" ng-class="{red:registerUserForm.fname.$error.required && registerUserForm.fname.$dirty, green:!registerUserForm.fname.$error.required && registerUserForm.fname.$dirty}">
         </p>

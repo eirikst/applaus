@@ -31,34 +31,39 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
     
     
     $scope.registerUser = function(user, id) {
-        console.log(id);
-        user.id = id;
-        LoginService.registerUser(user)
-        .success(function(data, status, headers, config) {
-            console.log(data);
-            if(data == 1) {
-                $scope.msg = "Ny bruker er registrert. Du blir sendt videre til logg inn-siden.";
-                console.log("Register successful");
-                $timeout(function(){//redirect after timeout
-                    $location.path('login');
-                }, 3000);
-            }
-            else if (data == -1) {
-                $scope.errMsg = "Brukernavnet er allerede i bruk. Vennligst fyll inn et nytt brukernavn.";
-                console.log("Username exists");
-            } else if (data == -2) {
-                $scope.errMsg = "Epost er allerede i bruk. Vennligst fyll inn et nytt epost.";
-                console.log("Email exists");
-            } else if (data == -8) {
-                $scope.errMsg = "Passord stemmer ikke overens.";
-                console.log("Invalid password");
-            } else {
-                $scope.errMsg = "An error occured. Please try again.";
-            }
-        }).error(function(data, status, headers, config) {
-            $scope.errMsg = "En uforutsett feil oppsto. Vennligst prøv igjen.";
-            console.log("Failed http action=registerUser");
-        });
+        if(user.pwd != user.pwdRepeat) {
+            console.log("Passwords not matching.");
+            $scope.errMsg = "Passwords are not matching.";
+        }
+        else {
+            user.id = id;
+            LoginService.registerUser(user)
+            .success(function(data, status, headers, config) {
+                console.log(data);
+                if(data == 1) {
+                    $scope.msg = "Ny bruker er registrert. Du blir sendt videre til logg inn-siden.";
+                    console.log("Register successful");
+                    $timeout(function(){//redirect after timeout
+                        $location.path('login');
+                    }, 3000);
+                }
+                else if (data == -1) {
+                    $scope.errMsg = "Brukernavnet er allerede i bruk. Vennligst fyll inn et nytt brukernavn.";
+                    console.log("Username exists");
+                } else if (data == -2) {
+                    $scope.errMsg = "Epost er allerede i bruk. Vennligst fyll inn et nytt epost.";
+                    console.log("Email exists");
+                } else if (data == -8) {
+                    $scope.errMsg = "Passord stemmer ikke overens.";
+                    console.log("Invalid password");
+                } else {
+                    $scope.errMsg = "An error occured. Please try again.";
+                }
+            }).error(function(data, status, headers, config) {
+                $scope.errMsg = "En uforutsett feil oppsto. Vennligst prøv igjen.";
+                console.log("Failed http action=registerUser");
+            });
+        }
     };
     
     $scope.newPassword = function(email) {

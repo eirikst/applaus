@@ -1,6 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
-controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies, HomeService, IdeaService, AssignService) {
+controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies, HomeService, IdeaService, AssignService, DeviceService) {
     //carousel!
     /*$scope.slideInterval = 5000;
      var slides = $scope.slides = [];
@@ -174,16 +174,14 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     $scope.getPoints();
     $scope.getNews(skip);
     $scope.roleCookie = $cookies.role;//role cookie
-
-
-
-
-
+    $scope.isMobile = DeviceService.isMobile();
 
     ////////////////////////////////////////////////////////////////////////////
 
     //BOORT?
     $scope.changeView = function(view) {
-        $location.path(view); // path not hash
+        if(navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
+            $location.path(view); // path not hash
+        }
     };
 });

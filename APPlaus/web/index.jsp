@@ -25,7 +25,7 @@
         <link rel="stylesheet" href="css/custom.css"/>
         <!--end css-->
 
-        <!--lib js scripts-->
+        <!--lib js scripts-->        
         <script src="js/libs/jquery.js"></script>
         <script src="js/libs/angular.js"></script>
         <script src="js/libs/angular-route.js"></script>
@@ -97,6 +97,7 @@
         <script src="js/app/controllers/contController.js"></script>       
         <script src="js/app/controllers/adminController.js"></script>       
         <script src="js/app/controllers/ideaController.js"></script>       
+        <script src="js/app/services/services.js"></script>
         <script src="js/app/services/homeServices.js"></script>
         <script src="js/app/services/assignmentServices.js"></script>
         <script src="js/app/services/contestServices.js"></script>

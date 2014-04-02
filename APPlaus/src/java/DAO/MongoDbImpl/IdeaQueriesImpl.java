@@ -28,7 +28,6 @@ public class IdeaQueriesImpl implements IdeaQueries {
     
     public static IdeaQueriesImpl getInstance() throws UnknownHostException {
         if(INSTANCE == null) {
-            System.out.println("Null :)");
             INSTANCE = new IdeaQueriesImpl();
         }
         return INSTANCE;
@@ -149,10 +148,7 @@ public class IdeaQueriesImpl implements IdeaQueries {
         
         DBObject addComment = new BasicDBObject();
         addComment.put("$addToSet", commentsArray);
-        
-        System.out.println(query);
-        System.out.println(addComment);
-        
+                
         WriteResult res = collection.update(query, addComment);
         if(res.getN() == 1) {
             return comment;
@@ -281,11 +277,40 @@ public class IdeaQueriesImpl implements IdeaQueries {
         
         DBObject comments = new BasicDBObject();
         comments.put("$pull", new BasicDBObject("comments", comment));
-
-        System.out.println(query);
-        System.out.println(comment);
-        System.out.println(comments);
         
         collection.update(query, comments);
+    }
+
+    /**
+     * Method getting the number of ideas a user has between from date and now.
+     * @param username username of the user
+     * @param from from date
+     * @param to to date, if null, today is used
+     * @return number of ideas
+     * @throws InputException if any of the input(except to) is null
+     */
+    @Override
+    public int getNumberOfIdeas(String username, Date from, Date to) throws InputException {
+        if(username == null || from == null) {
+            throw new InputException("username or from parameters are null.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject date = new BasicDBObject();
+        date.put("$gte", from);//from from date
+        if(to == null) {
+            date.put("$lte", new Date());//till date today
+        }
+        else {
+            date.put("$lte", to);//till date to
+        }
+        
+        DBObject query = new BasicDBObject();
+        query.put("username", username);
+        query.put("date", date);
+        
+        int noOfIdeas = collection.find(query).count();
+        return noOfIdeas;
     }
 }

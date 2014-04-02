@@ -3,6 +3,7 @@ package DAO;
 import APPlausException.InputException;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,4 +20,5 @@ public interface IdeaQueries {
     public void likeIdea(String ideaId, String username, boolean like) throws InputException;
     public void likeComment(String commentId, String username, boolean like) throws InputException;
     public void deleteComment(String ideaId, String commentId, String username) throws InputException;
+    public int getNumberOfIdeas(String username, Date from, Date to) throws InputException;
 }
