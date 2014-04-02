@@ -272,4 +272,42 @@ public class ContestQueriesImpl implements ContestQueries {
             return false;
         }
     }
+    
+    
+    public boolean declareWinner (String contestId, String username) 
+            throws InputException, MongoException {
+        if(contestId == null || username == null) {
+            throw new InputException("Input null caused an exception.");
+        }
+        
+        ObjectId objId;
+        try {
+            objId = new ObjectId(contestId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("objId not on the right format.", e);
+        }
+        
+        DBCollection collection = db.getCollection("contest");
+        DBObject query = new BasicDBObject("_id", objId);
+        DBObject toUpdate = new BasicDBObject();
+        toUpdate.put("winner", username);
+        
+        //set to not overwrite date_created
+        DBObject set = new BasicDBObject("$set", toUpdate);
+        
+        WriteResult w = collection.update(query, set);
+
+        if(w.getN() == 1) {
+            return true;
+        }
+        else if(w.getN() > 1) {
+            LOGGER.warning("Several documents got updated when updating contest"
+                    );
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

@@ -76,4 +76,5 @@ public interface ContestManager {
      */
     public boolean editContest(String contestId, String title, String desc, String prize
             , Date dateEnd, int points);
+    public boolean declareWinner(String contestId, String username);
 }

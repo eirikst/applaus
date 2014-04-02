@@ -468,6 +468,54 @@ public class APPlausServlet extends HttpServlet {
                 }
             }
             
+            // returns a list of participants of a selected contest
+            else if(action.equals("listParticipants")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String contestId = request.getParameter("contestId");
+                if(contestId == null) {
+                    LOGGER.log(Level.INFO, "contestId parameter is null.");
+                    response.setStatus(400);//bad request
+                    return;
+                }
+                String toReturn = assignMan.listParticipants(contestId);
+                if(toReturn != null) {
+                    out.println(toReturn);
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
+            // declare a winner of a contest
+            else if(action.equals("declareWinner")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String contestId = request.getParameter("contestId");
+                String winner = request.getParameter("username");
+                if(contestId == null) {
+                    LOGGER.log(Level.INFO, "contestId parameter is null.");
+                    response.setStatus(400);//bad request
+                    return;
+                }
+                boolean toReturn = contMan.declareWinner(contestId, winner);
+                if(toReturn) {
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
             
             ////////////////////////////////////////////////////////////////////
             
@@ -788,7 +836,7 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
             }
-
+            
             // add idea
             else if(action.equals("addIdea")) {
                 if(!isUser(roleId)) {

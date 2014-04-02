@@ -149,4 +149,17 @@ public class AssignmentManagerImpl implements AssignmentManager {
             return -2;
         }
     }
+    
+    
+    public String listParticipants(String contestId) {
+        try {
+            Iterator<DBObject> participants = userQ.listParticipants(contestId);
+            return JSON.serialize(Lists.newArrayList(participants));
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while creating an assignment."
+                    , e);
+            return null;
+        }
+    }
 }

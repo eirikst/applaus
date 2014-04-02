@@ -86,4 +86,24 @@ services.service('ContestService', function($http) {
         });
         return promise;
     };
+    
+    this.participantList =  function(contest) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=listParticipants&contestId=" + contest._id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
+    this.declareWinner =  function(contest) {
+        var promise = $http({
+            url: 'APPlausServlet',
+            method: "POST",
+            data: "action=declareWinner&contestId=" + contest._id.$oid,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
 });

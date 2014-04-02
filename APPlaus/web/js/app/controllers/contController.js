@@ -133,6 +133,28 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         });
     };
     
+    $scope.participantList = function(contest) {
+        ContestService.participantList(contest)
+                .success(function(data, status, headers, config) {
+            $scope.participantList.push(contest._id.$oid);
+            console.log("participantList success");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=participantList");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+    
+    $scope.declareWinner = function(contest) {
+        ContestService.declareWinner(contest)
+                .success(function(data, status, headers, config) {
+                    
+            console.log("declareWinner success");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=declareWinner");
+            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+        });
+    };
+    
     //checks if contestId matches any in participating array
     $scope.isParticipating = function(contestId) {
         for(var i = 0; i < $scope.partCont.length; i++) {
@@ -141,7 +163,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             }
         }
     };
-    
+   
     //support method to the view
     //copies a contest and return the copy
     $scope.copyContest = function(contest) {
@@ -171,7 +193,6 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     
     //gets cookie
     $scope.roleCookie = $cookies.role;//role cookie
-    
     
     
     

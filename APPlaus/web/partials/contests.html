@@ -108,6 +108,16 @@
                                                 contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
                                     </p>
                                 </form>
+                                
+                                <!--Participants list -->
+                                <div ng-show="(roleCookie == 1 || roleCookie == 2)">
+                                    <div ng-repeat="participant in participantList">
+                                        <form>
+                                            <input type="radio" name="participant" value="{{participant.username}}">{{participant.firstname}} {{participant.lastname}}
+                                        </form>
+                                    </div>
+                                </div>
+                                
 
                                 <!--admin features-->
                                 <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 || roleCookie == 2)" ng-click="editable = !editable;
@@ -168,6 +178,16 @@
                                 <p>
                                     Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
                                 </p>
+                                
+                                <!--Participants list -->
+                                <div ng-show="(roleCookie == 1 || roleCookie == 2)">
+                                    <p> Participants: </p>
+                                    <div ng-repeat="participant in participantList">
+                                        <p>
+                                            {{participant.firstname}} {{participant.lastname}}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <br>

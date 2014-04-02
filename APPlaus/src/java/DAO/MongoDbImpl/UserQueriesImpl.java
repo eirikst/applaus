@@ -684,11 +684,13 @@ public class UserQueriesImpl implements UserQueries{
         catch(IllegalArgumentException e) {
             throw new InputException("objId not on the right format.", e);
         }
+        
+        BasicDBObject query = new BasicDBObject();
+        //query.put("username", username);
 
         DBCollection collection = db.getCollection("assignment");
-        BasicDBObject query = new BasicDBObject();
-        query.put("_id", id);
-        query.put("date_end", new BasicDBObject("$gte", getToday()));
+        BasicDBObject input = new BasicDBObject();
+        input.put("_id", id);
         
         //remove if objectid and date query matches
         WriteResult w;
@@ -711,5 +713,19 @@ public class UserQueriesImpl implements UserQueries{
                     + " objectId.");
             return true;
         }
+    }
+    
+    
+    public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException {
+        if(contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+        
+        DBCollection userColl = db.getCollection("user");
+        String json = "{contests: {$in:['" + contestId + "']}}";
+        DBObject query = (DBObject) JSON.parse(json);
+        Iterable<DBObject> it = userColl.find(query);
+        
+        return it.iterator();
     }
 }
