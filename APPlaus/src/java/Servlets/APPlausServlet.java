@@ -55,7 +55,7 @@ public class APPlausServlet extends HttpServlet {
         try {
             homeMan = new HomeManagerImpl(UserQueriesImpl.getInstance(), 
                     AssignmentQueriesImpl.getInstance(), 
-            NewsQueriesImpl.getInstance());
+                    NewsQueriesImpl.getInstance(), IdeaQueriesImpl.getInstance());
             authMan = new AuthenticationManagerImpl(UserQueriesImpl.
                     getInstance(), SectionQueriesImpl.
                     getInstance());
