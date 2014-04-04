@@ -21,4 +21,5 @@ public interface IdeaQueries {
     public void likeComment(String commentId, String username, boolean like) throws InputException;
     public void deleteComment(String ideaId, String commentId, String username) throws InputException;
     public int getNumberOfIdeas(String username, Date from, Date to) throws InputException;
+    public int getNumberOfIdeaLikes(String username, Date from, Date to) throws InputException;
 }
