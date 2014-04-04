@@ -145,7 +145,9 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, $cookies,
 
     //BOORT?
     $scope.changeView = function(view) {
-        $location.path(view); // path not hash
+        if(navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
+            $location.path(view); // path not hash
+        }
     };
 
 });

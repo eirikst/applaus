@@ -137,6 +137,7 @@
                                         </ul>
                                     </li>
                                 </div>
+ 
                                 <span class="redMsg">
                                     {{activeErrMsg}}
                                 </span>
@@ -187,6 +188,16 @@
                                         </ul>
                                     </li>
                                 </div>
+                                                                
+                                 <!--Participants list -->
+                                 <div ng-show="username == contest.username">
+                                     <div ng-repeat="participant in contest.participants">
+                                         <form>
+                                             <input ng-click="declareWinner(contest, participant)" type="radio" name="participant">{{participant}}
+                                         </form>
+                                     </div>
+                                 </div>
+
                             </div>
                         </div>
                         <br>

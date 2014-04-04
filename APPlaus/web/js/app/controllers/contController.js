@@ -134,8 +134,8 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         });
     };
     
-    $scope.declareWinner = function(contest) {
-        ContestService.declareWinner(contest)
+    $scope.declareWinner = function(contest, username) {
+        ContestService.declareWinner(contest, username)
                 .success(function(data, status, headers, config) {
                     
             console.log("declareWinner success");
@@ -195,7 +195,9 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     
     // burde bort? sjekk dette
     $scope.changeView = function(view) {
-        $location.path(view);
+        if(navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
+            $location.path(view); // path not hash
+        }
     };
 
     

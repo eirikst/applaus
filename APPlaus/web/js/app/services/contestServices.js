@@ -97,11 +97,12 @@ services.service('ContestService', function($http) {
         return promise;
     };
     
-    this.declareWinner =  function(contest) {
+    this.declareWinner =  function(contest, username) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=declareWinner&contestId=" + contest._id.$oid,
+            data: "action=declareWinner&contestId=" + contest._id.$oid + 
+                    "&username=" + username,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

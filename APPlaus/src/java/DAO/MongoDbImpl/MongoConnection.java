@@ -25,7 +25,7 @@ public class MongoConnection {
         if(INSTANCE == null) {
             CLIENT = new MongoClient("localhost" , 27017);
             INSTANCE = new MongoConnection();
-            INSTANCE.db = CLIENT.getDB("applaus");
+            INSTANCE.db = CLIENT.getDB("applausDemo");
         }
         return INSTANCE;
     }
