@@ -734,7 +734,7 @@ public class APPlausServlet extends HttpServlet {
             //delete assignment
             else if(action.equals("deleteAssignment")) {
                 int deleted = assignMan.deleteAssignment(request
-                        .getParameter("assignId"));
+                        .getParameter("assignId"), username);
                 if(deleted == 1) {
                     response.setStatus(200);
                 }
@@ -752,7 +752,7 @@ public class APPlausServlet extends HttpServlet {
                             getParameter("date_done"));
                     Date date_done = new Date(dateDoneLong);
                     
-                    boolean edit = assignMan.editAssignment(assignId, comment, date_done);
+                    boolean edit = assignMan.editAssignment(assignId, comment, date_done, username);
                     if(!edit) {
                         response.sendError(500);//error
                     }

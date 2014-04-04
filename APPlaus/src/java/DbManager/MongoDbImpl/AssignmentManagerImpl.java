@@ -124,9 +124,9 @@ public class AssignmentManagerImpl implements AssignmentManager {
     
     
     @Override
-    public boolean editAssignment(String contestId, String comment, Date date_done) {
+    public boolean editAssignment(String contestId, String comment, Date date_done, String username) {
         try {
-            return userQ.editAssignment(contestId, comment, date_done);
+            return userQ.editAssignment(contestId, comment, date_done, username);
         }
         catch(InputException | MongoException e) {
             LOGGER.warning(e.toString());
@@ -135,9 +135,9 @@ public class AssignmentManagerImpl implements AssignmentManager {
     }
     
     @Override
-    public int deleteAssignment(String objId) {
+    public int deleteAssignment(String objId, String username) {
         try {
-            boolean okDelete = userQ.deleteAssignment(objId);
+            boolean okDelete = userQ.deleteAssignment(objId, username);
             return 0;
         }
         catch(InputException e) {

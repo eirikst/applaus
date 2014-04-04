@@ -48,7 +48,7 @@ services.service('AssignService', function($http) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=editAssignment&assignId=" + assignment._id.$oid + "&comment=" + 
+            data: "action=editAssignment&assignId=" + assignment.thisId.$oid + "&comment=" + 
                     assignment.comment + "&date_done=" + assignment.dateSec,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -59,7 +59,7 @@ services.service('AssignService', function($http) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=deleteAssignment&assignId=" + assignment._id.$oid,
+            data: "action=deleteAssignment&assignId=" + assignment.thisId.$oid,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
