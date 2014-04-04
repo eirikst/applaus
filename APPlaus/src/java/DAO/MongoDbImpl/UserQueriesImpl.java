@@ -625,13 +625,10 @@ public class UserQueriesImpl implements UserQueries{
     }
     
     @Override
-    public boolean editAssignment(String assignId, String comment, Date date_done)
+    public boolean editAssignment(String assignId, String comment, Date date_done, String username)
             throws InputException, MongoException {
         if(assignId == null || comment == null || date_done == null) {
             throw new InputException("Input null caused an exception.");
-        }
-        if(date_done.before(DateTools.getToday())) {
-            throw new InputException("Date cannot be before today.");
         }
         ObjectId objId;
         try {
@@ -641,18 +638,33 @@ public class UserQueriesImpl implements UserQueries{
             throw new InputException("objId not on the right format.", e);
         }
         
-        DBCollection collection = db.getCollection("assignment");
-        DBObject query = new BasicDBObject("_id", objId);
-        DBObject toUpdate = new BasicDBObject();
-        toUpdate.put("comment", comment);
-        toUpdate.put("date_done", date_done);
+        DBCollection collection = db.getCollection("user");
+        
+        DBObject query = new BasicDBObject();
+
+          query.put("username", username);
+          query.put("assignments.thisId", objId);
+
+          DBObject valuesToSet = new BasicDBObject();
+          valuesToSet.put("assignments.$.comment", comment);
+          valuesToSet.put("assignments.$.date_done", date_done);
+
+          DBObject set = new BasicDBObject();
+          set.put("$set", valuesToSet);
+        /*
+        String json = "{ username : \""+ username +"\", \"assignments.thisId\":" + objId + " }";
+        DBObject query = (DBObject) JSON.parse(json);
         
         //set to not overwrite date_created
-        DBObject set = new BasicDBObject("$set", toUpdate);
+        json = "{$set: { \"assignments.$.comment\" : \"" +comment+ "\", \"assignments.$.date_done\" : \"" + date_done +"\"}}";
+        DBObject set = (DBObject) JSON.parse(json);
+        */
+        
         
         WriteResult w;
         try {
             w = collection.update(query, set);
+            System.out.println("w: " + w.getN());
         }
         catch(MongoException e) {
             throw new MongoException("Exception on edit assignment in mongodb.", e);
@@ -672,7 +684,7 @@ public class UserQueriesImpl implements UserQueries{
     
     
     @Override
-    public boolean deleteAssignment(String objId) throws InputException, MongoException {
+    public boolean deleteAssignment(String objId, String username) throws InputException, MongoException {
         //checking input
         if(objId == null) {
             throw new InputException("db or objId is null.");
@@ -684,23 +696,31 @@ public class UserQueriesImpl implements UserQueries{
         catch(IllegalArgumentException e) {
             throw new InputException("objId not on the right format.", e);
         }
-        
-        BasicDBObject query = new BasicDBObject();
-        //query.put("username", username);
 
-        DBCollection collection = db.getCollection("assignment");
-        BasicDBObject input = new BasicDBObject();
-        input.put("_id", id);
+        DBCollection collection = db.getCollection("user");
+        
+        DBObject query = new BasicDBObject();
+        query.put("username", username);
+
+        DBObject idToPull = new BasicDBObject("thisId", id);
+
+        DBObject assignToPull = new BasicDBObject("assignments", idToPull);
+        
+        DBObject pull = new BasicDBObject();
+        pull.put("$pull", assignToPull);
+        
         
         //remove if objectid and date query matches
         WriteResult w;
         try {
-            w = collection.remove(query);
+            w = collection.update(query, pull);
+            System.out.println("w: " + w.getN());
         }
         catch(MongoException e) {
             throw new MongoException("Exception on remove from mongodb.", e);
         }
         int status = w.getN();
+        System.out.println("Status: " + status);
         
         if(status == 0) {
             return false;//nothing removed, wrong oid or inactive comp

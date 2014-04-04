@@ -112,17 +112,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
         AssignService.deleteAssignment(assignment)
                 .success(function(data, status, headers, config) {
                 
-                $scope.getAllAssignments;
                 
-                /**
-                for(var i = 0; i < $scope.activeCont.length; i++) {
-                    if(contest._id.$oid === $scope.activeCont[i]._id.$oid) {
-                        $scope.activeCont.splice(i, 1);
-                        //removes given assignment
-                        console.log("deleteAssignment success");
-                    }
-                }
-                **/
                 
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteAssignment");
