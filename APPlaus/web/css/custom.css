@@ -120,10 +120,6 @@ lefty {
     color: mediumblue;
 }
 
-.header {
-    
-}
-
 .content {
     position:absolute;
     top:55px;
@@ -160,8 +156,9 @@ lefty {
 }
 
 .dropHeadingCentral {
-    width:75%;
+    width:72%;
     text-align: left;
+    font-size:1.2em;
 }
 
 .dropHeadingCentral:hover {
@@ -182,11 +179,29 @@ lefty {
 }
 
 .dropChevronGlyph {
-    width:5%;
+    width:8%;
     text-align: left;
 }
 
 .dropCommentGlyph {
     width:20%;
     text-align: right;
+}
+
+.headerLeft70 {
+    width:90;
+    text-align:left;
+}
+
+.headerRight30 {
+    width:10%;
+    text-align:right;
+}
+
+.header {
+    width:98%;
+    margin-left:5px;;
+    margin-right: auto;
+    margin-top:auto;
+    margin-bottom:5px;;
 }

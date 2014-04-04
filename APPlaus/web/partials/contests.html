@@ -107,17 +107,7 @@
                                                 clearMsg();
                                                 contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
                                     </p>
-                                </form>
-                                
-                                <!--Participants list -->
-                                <div ng-show="(roleCookie == 1 || roleCookie == 2)">
-                                    <div ng-repeat="participant in participantList">
-                                        <form>
-                                            <input type="radio" name="participant" value="{{participant.username}}">{{participant.firstname}} {{participant.lastname}}
-                                        </form>
-                                    </div>
-                                </div>
-                                
+                                </form>                                
 
                                 <!--admin features-->
                                 <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 || roleCookie == 2)" ng-click="editable = !editable;
@@ -134,10 +124,19 @@
                                 </div>
                                 <!--end admin feature-->
 
-                                <a class="stdLink" ng-show="isParticipating(contest._id.$oid)" ng-click="dontParticipate(contest);
+                                <a class="stdLink" ng-show="isParticipating(contest)" ng-click="dontParticipate(contest);
                                         clearMsg();">Meld av</a>
-                                <a class="stdLink" ng-show="!isParticipating(contest._id.$oid)" ng-click="participate(contest);
+                                <a class="stdLink" ng-show="!isParticipating(contest)" ng-click="participate(contest);
                                         clearMsg();">Delta</a>
+                                <!--participants-->
+                                <div>
+                                    <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
+                                    <li ng-repeat="participant in contest.participants" ng-show="showParticipants">
+                                        <ul>
+                                            {{participant}}
+                                        </ul>
+                                    </li>
+                                </div>
                                 <span class="redMsg">
                                     {{activeErrMsg}}
                                 </span>
@@ -179,14 +178,14 @@
                                     Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
                                 </p>
                                 
-                                <!--Participants list -->
-                                <div ng-show="(roleCookie == 1 || roleCookie == 2)">
-                                    <p> Participants: </p>
-                                    <div ng-repeat="participant in participantList">
-                                        <p>
-                                            {{participant.firstname}} {{participant.lastname}}
-                                        </p>
-                                    </div>
+                                <!--participants-->
+                                <div>
+                                    <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
+                                    <li ng-repeat="participant in contest.participants" ng-show="showParticipants">
+                                        <ul>
+                                            {{participant}}
+                                        </ul>
+                                    </li>
                                 </div>
                             </div>
                         </div>

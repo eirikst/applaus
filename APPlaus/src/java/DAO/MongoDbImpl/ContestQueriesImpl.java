@@ -4,6 +4,7 @@ import APPlausException.InputException;
 import DAO.ContestQueries;
 import Tools.DateTools;
 import static Tools.DateTools.*;
+import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -21,6 +22,7 @@ import static java.util.Calendar.SECOND;
 import java.util.Date;
 import java.util.List;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import org.bson.types.ObjectId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +38,6 @@ public class ContestQueriesImpl implements ContestQueries {
     
     private ContestQueriesImpl() throws UnknownHostException {
         db = MongoConnection.getInstance().getDB();
-        System.out.println(db.getCollection("contest").find());
     }
     
     public static ContestQueriesImpl getInstance() throws UnknownHostException {
@@ -309,5 +310,117 @@ public class ContestQueriesImpl implements ContestQueries {
         else {
             return false;
         }
+    }
+    
+    /**
+     * Registers that a user with username is participating in contest with 
+     * given id.
+     * @param username username of participant
+     * @param contestId id of contest
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
+     */
+    @Override
+    public void participate(String username, String contestId) throws
+            InputException, MongoException {
+        if(username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+        ObjectId contestObjId;
+        try {
+            contestObjId = new ObjectId(contestId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("contestId not on object id format.");
+        }
+        
+        
+        DBCollection collection = db.getCollection("contest");
+        BasicDBObject query = new BasicDBObject();
+	query.put("date_end", new BasicDBObject("$gte"
+                , new Date()));//after now
+        
+        query.put("_id", contestObjId);
+        
+        DBObject update = new BasicDBObject();
+        update.put("$addToSet", new BasicDBObject("participants", username));
+        
+        collection.update(query, update);
+    }
+    
+    /**
+     * Registers that given user doesn't participate in contest with id
+     * contestId
+     * @param username username of participant
+     * @param contestId id of contest
+     * @throws InputException if invalid input
+     * @throws MongoException if database error
+     */
+    @Override
+    public void dontParticipate(String username, String contestId) throws
+            InputException, MongoException {
+        if(username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+        ObjectId contestObjId;
+        try {
+            contestObjId = new ObjectId(contestId);
+        }
+        catch(IllegalArgumentException e) {
+            throw new InputException("contestId not on object id format.");
+        }
+        
+        
+        DBCollection collection = db.getCollection("contest");
+        BasicDBObject query = new BasicDBObject();
+	query.put("date_end", new BasicDBObject("$gte"
+                , new Date()));//after now
+        
+        query.put("_id", contestObjId);
+        
+        DBObject update = new BasicDBObject();
+        update.put("$pull", new BasicDBObject("participants", username));
+        
+        collection.update(query, update);
+    }
+
+    /**
+     * Gets the points a user has collected from participating in contests 
+     * between the dates from and to.
+     * @param username username of user
+     * @param from from date
+     * @param to to date
+     * @return number of points collected from contests between the dates
+     * @throws InputException if ant of the input is null
+     */
+    @Override
+    public int getContestPointsUser(String username, Date from, Date to) 
+            throws InputException {
+        if(username == null || from == null || to == null) {
+            throw new InputException("Some of the input is null");
+        }
+        DBCollection collection = db.getCollection("contest");
+        
+        DBObject match = new BasicDBObject();
+        match.put("participants", username);
+        
+        DBObject dateEnd = new BasicDBObject();
+        dateEnd.put("$gte", from);
+        dateEnd.put("$lte", to);
+        
+        match.put("date_end", dateEnd);
+        
+        DBObject group = new BasicDBObject();
+        group.put("_id", "null");
+        group.put("points", new BasicDBObject("$sum", "$points"));
+        
+        AggregationOutput output = collection.aggregate(new BasicDBObject
+        ("$match", match), new BasicDBObject("$group", group));
+        
+        Iterator i = output.results().iterator();
+        if(i.hasNext()) {
+            return ((BasicDBObject)i.next()).getInt("points");
+        }
+        return 0;
     }
 }

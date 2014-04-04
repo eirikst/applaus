@@ -11,7 +11,6 @@ import com.mongodb.DBObject;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bson.types.ObjectId;
 
 /**
  *
@@ -78,7 +77,7 @@ public class ContestManagerImpl implements ContestManager {
     @Override
     public int participate(String username, String contestId) {
         try {
-            userQ.participate(username, contestId);
+            contQ.participate(username, contestId);
             return 1;
         }
         catch(InputException e) {
@@ -101,7 +100,7 @@ public class ContestManagerImpl implements ContestManager {
     @Override
     public int dontParticipate(String username, String contestId){
         try {
-            userQ.dontParticipate(username, contestId);
+            contQ.dontParticipate(username, contestId);
             return 1;
         }
         catch(InputException e) {

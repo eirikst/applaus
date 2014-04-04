@@ -45,7 +45,8 @@
         <!--static navbar-->
         <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
             <div class="navbar-content-index text-center">
-
+                
+                <span class="text-center" style="margin:0 auto;">
                 <!--nav icons-->
                 <a href="#profile" ng-show="!isActive('/profile')"><img class="index-icon" src="img/Profile.png"></a>
                 <a href="#profile" ng-show="isActive('/profile')"><img class="index-icon" src="img/Profile_selected.png"></a>
@@ -58,7 +59,8 @@
                 <a href="#ideabank" ng-show="!isActive('/ideabank')"><img class="index-icon" src="img/Idea.png"></a>
                 <a href="#ideabank" ng-show="isActive('/ideabank')"><img class="index-icon" src="img/Idea_selected.png"></a>
                 <!--end nav icons-->
-
+                </span>
+                
                 <!--nav dropmenu-->
                 <ul class="nav pull-right">
                     <li class="dropdown">

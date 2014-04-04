@@ -38,19 +38,6 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         });
     };
 
-    //getting list of active contests user is participating in
-    $scope.getUsersActiveContests = function() {
-        ContestService.getUsersActiveContests()
-                .success(function(data, status, headers, config) {
-                    $scope.partCont = data;//sets assignment table with info from DB
-            console.log("getUsersActiveContests success");
-        })
-                .error(function(data, status, headers, config) {
-            $scope.errFetchMsg = "En feil skjedde under lesing av " + 
-     "konkurranser";
-            console.log("Failed http action=userActiveContList");
-        });
-    };
     
     //setting data
         
@@ -58,9 +45,12 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     $scope.participate = function(contest) {
         ContestService.participate(contest)
                 .success(function(data, status, headers, config) {
-            $scope.partCont.push(contest._id.$oid);
-    //adds contest id to participating contests
-            console.log("participate success");
+                    if(contest.participants === undefined) {
+                        contest.participants = new Array();
+                    }
+                    contest.participants.push($scope.username);
+                    //adds contest id to participating contests
+                    console.log("participate success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=participate");
             $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
@@ -71,9 +61,9 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     $scope.dontParticipate = function(contest) {
         ContestService.dontParticipate(contest)
                 .success(function(data, status, headers, config) {
-            for(var i = 0; i < $scope.partCont.length; i++) {
-                if(contest._id.$oid === $scope.partCont[i]) {
-                    $scope.partCont.splice(i, 1);
+            for(var i = 0; i < contest.participants.length; i++) {
+                if($scope.username === contest.participants[i]) {
+                    contest.participants.splice(i, 1);
             //removes contest id from participating contests
             console.log("dontParticipate success");
                 }
@@ -156,9 +146,12 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     };
     
     //checks if contestId matches any in participating array
-    $scope.isParticipating = function(contestId) {
-        for(var i = 0; i < $scope.partCont.length; i++) {
-            if(contestId === $scope.partCont[i]) {
+    $scope.isParticipating = function(contest) {
+        if(contest.participants === undefined) {
+            return;
+        }
+        for(var i = 0; i < contest.participants.length; i++) {
+            if($scope.username === contest.participants[i]) {
                 return true;
             }
         }
@@ -183,16 +176,15 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
     //init values
     $scope.activeCont = new Array();
     $scope.inactiveCont = new Array();
-    $scope.partCont = new Array();
     $scope.skipNext = 0;
     
     //calls to get data
     $scope.getActiveContests();
-    $scope.getUsersActiveContests();
     $scope.getInactiveContests($scope.skipNext);
     
     //gets cookie
     $scope.roleCookie = $cookies.role;//role cookie
+    $scope.username = $cookies.username;//role cookie
     
     
     

@@ -36,9 +36,13 @@
         <div ng-click="dropBank = !dropBank" class="dropHeadingTableTop">
             <table class="dropHeadingTable">
                 <tr>
-                    <td class="dropChevronGlyph"><span class="glyphicon" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></span></td>
+                    <td class="dropChevronGlyph">
+                        <span class="glyphicon" ng-class="{'glyphicon-chevron-down': dropBank, 'glyphicon-chevron-right': !dropBank}"></span>
+                    </td>
                     <td class="dropHeadingCentral">{{idea.date.$date| date:('dd.MM')}} - {{idea.title}} </td>
-                    <td  class="dropCommentGlyph"><span ng-show="idea.comments!=undefined">{{idea.comments.length}} </span><span ng-show="idea.comments==undefined">0 </span><span class="glyphicon glyphicon-comment"></span></td>
+                    <td  class="dropCommentGlyph"><span ng-show="idea.comments!=undefined">{{idea.comments.length}} </span>
+                        <span ng-show="idea.comments==undefined">0 </span><span class="glyphicon glyphicon-comment"></span>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -52,13 +56,21 @@
             </a>
         </div>-->
         <div class="innerDrop" ng-show="dropBank">
-            <p>
-                By {{idea.username| truncate:25}}, {{idea.date.$date| date:('dd.MM.yyyy HH:mm')}}
-                <span ng-show="idea.username == usernameCookie">
-                <span type="button" class="glyphicon glyphicon-remove glyphicon-hovergray" ng-show="!toDelete" ng-click="toDelete = !toDelete"></span>
-                </span>
+            <table class="header">
+                <tr>
+                    <td class="headerLeft70">
+                        <i>By {{idea.username| truncate:25}}, {{idea.date.$date| date:('dd.MM.yyyy HH:mm')}}
+                    </i>
+                    </td>
+                    <td class="headerRight30">
+                        <span ng-show="idea.username == usernameCookie">
+                            <span type="button" class="glyphicon glyphicon-remove-sign glyphicon-hovergray" ng-show="!toDelete" ng-click="toDelete = !toDelete"></span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+                
 
-            </p>
             <p>
                 {{idea.text}}
             </p>
@@ -104,71 +116,94 @@
                 </div>
 
             <hr>
-            <strong>
-                <span ng-show="idea.comments.length > 0">Comments</span>
-                <span ng-show="idea.comments == undefined || idea.comments.length == 0">No comments</span>
-                <a class="glyphicon glyphicon-plus glyphicon-marginleft5px" ng-click="commentable=true" ng-show="!commentable"></a>
-                <a class="glyphicon glyphicon-minus glyphicon-marginleft5px" ng-click="commentable=false" ng-show="commentable"></a>
-            </strong>
-            <div ng-show="commentable">
-                <form name="commentForm">
-                    <p>
-                        <textarea name="comment" class="form-control"  ng-model="commentText" placeholder="Comment" ng-class="{red:commentForm.comment.$error.required && commentForm.comment.$dirty, green:!commentForm.comment.$error.required && commentForm.comment.$dirty}" required="true"></textarea>
-                    </p>
-                    <p>
-                        <button class="form-control" ng-click="addComment(idea, commentText);" ng-disabled="commentForm.$invalid">Add</button>
-                    </p>
-                </form>
-            </div>
-            <div ng-repeat="comment in idea.comments | reverseArr">
-                <hr>
-                <p>
-                    By {{comment.writer | truncate:25}} {{comment.time.$date| date:('dd.MM.yyyy HH:mm')}}
-                <span ng-show="comment.writer == usernameCookie">
-                    <a type="button" class="glyphicon glyphicon-remove" ng-show="!delComment" ng-click="delComment = !delComment"></a>
-                </span>
-                </p>
-                <p>
-                    {{comment.text}}
-                </p>
-                <div ng-init="delComment = false" ng-show="comment.writer == usernameCookie">
-                    <a type="button" ng-show="delComment" ng-click="delComment = !delComment">Cancel</a>
-                    <div class="alert alert-info" ng-show="delComment">
-                        <a  ng-click="deleteComment(idea, comment);" class="alert-link">Confirm</a>
-                        that you want to delete the comment
+            <div ng-init="commentable=false">
+                <div>
+            <table class="header">
+                <tr>
+                    <td class="headerLeft70">
+                        <strong>
+                            <span ng-show="idea.comments.length > 0">Comments</span>
+                            <span ng-show="idea.comments === undefined || idea.comments.length === 0">No comments</span>
+                        </strong>
+                    </td>
+                    <td class="headerRight30">
+                        <span ng-show="idea.username == usernameCookie">
+                            <span class="glyphicon glyphicon-marginleft5px glyphicon-hovergray" ng-class="{'glyphicon-plus-sign':!commentable, 'glyphicon-minus-sign':commentable}" ng-click="commentable=!commentable"></span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+                </div>
+                <div>
+                    
+                    <div ng-show="commentable">
+                        <form name="commentForm">
+                            <p>
+                                <textarea name="comment" class="form-control"  ng-model="commentText" placeholder="Comment" ng-class="{red:commentForm.comment.$error.required && commentForm.comment.$dirty, green:!commentForm.comment.$error.required && commentForm.comment.$dirty}" required="true"></textarea>
+                            </p>
+                            <p>
+                                <button class="form-control" ng-click="addComment(idea, commentText);" ng-disabled="commentForm.$invalid">Add</button>
+                            </p>
+                        </form>
                     </div>
                 </div>
+                <div ng-repeat="comment in idea.comments | reverseArr">
+                    <hr>
+                    <table class="header">
+                        <tr>
+                            <td class="headerLeft70">
+                                <i>By {{comment.writer | truncate:25}} {{comment.time.$date| date:('dd.MM.yyyy HH:mm')}}</i>
+                            </td>
+                            <td class="headerRight30">
+                                <span ng-show="comment.writer == usernameCookie">
+                                    <span class="glyphicon glyphicon-remove-sign glyphicon-hovergray" ng-show="!delComment" ng-click="delComment = !delComment"></span>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                    <p>
+                        {{comment.text}}
+                    </p>
+                    <div ng-init="delComment = false" ng-show="comment.writer == usernameCookie">
+                        <a type="button" ng-show="delComment" ng-click="delComment = !delComment">Cancel</a>
+                        <div class="alert alert-info" ng-show="delComment">
+                            <a  ng-click="deleteComment(idea, comment);" class="alert-link">Confirm</a>
+                            that you want to delete the comment
+                        </div>
+                    </div>
 
 
-                <!--if i like and don't like-->
-                <div ng-show="comment.likes == undefined || comment.likes.length == 0">
-                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a></span>
-                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a></span>
-                </div>
-                <div ng-show="comment.likes != undefined && comment.likes.length == 1">
-                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a> {{comment.likes[0]}} likes this</span>
-                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a> {{comment.likes[0]}} likes this</span>
-                </div>
-                <div ng-show="comment.likes != undefined && comment.likes.length == 2">
-                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a> {{comment.likes[0]}} and {{comment.likes[1]}} likes this</span>
-                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a> {{comment.likes[0]}} and {{comment.likes[1]}} likes this</span>
-                </div>
-                <div ng-show='comment.likes != undefined && comment.likes.length > 2'>
-                    <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a></span>
-                    <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a></span>
+                    <!--if i like and don't like-->
+                    <div ng-show="comment.likes == undefined || comment.likes.length == 0">
+                        <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a></span>
+                        <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a></span>
+                    </div>
+                    <div ng-show="comment.likes != undefined && comment.likes.length == 1">
+                        <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a> {{comment.likes[0]}} likes this</span>
+                        <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a> {{comment.likes[0]}} likes this</span>
+                    </div>
+                    <div ng-show="comment.likes != undefined && comment.likes.length == 2">
+                        <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a> {{comment.likes[0]}} and {{comment.likes[1]}} likes this</span>
+                        <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a> {{comment.likes[0]}} and {{comment.likes[1]}} likes this</span>
+                    </div>
+                    <div ng-show='comment.likes != undefined && comment.likes.length > 2'>
+                        <span ng-show="!isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up" ng-click="likeComment(comment, 1)">Like</a></span>
+                        <span ng-show="isInArray(comment.likes, usernameCookie)"><a class="glyphicon glyphicon-thumbs-up glyphicon-thumbs-up-checked" ng-click="likeComment(comment, 0)">Unlike</a></span>
 
-                    <div class="dropdown">
-                        {{comment.likes[0]}} and 
-                        <a data-toggle="dropdown">
-                            {{comment.likes.length - 1}} 
+                        <div class="dropdown">
+                            {{comment.likes[0]}} and 
+                            <a data-toggle="dropdown">
+                                {{comment.likes.length - 1}} 
 
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li ng-repeat="like in comment.likes | arrWithoutFirst">
-                                {{like | truncate:25}}
-                            </li>
-                        </ul>
-                    others likes this
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="like in comment.likes | arrWithoutFirst">
+                                    {{like | truncate:25}}
+                                </li>
+                            </ul>
+                        others likes this
+                        </div>
                     </div>
                 </div>
             </div>

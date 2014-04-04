@@ -25,4 +25,10 @@ public interface ContestQueries{
             throws InputException, MongoException;
     public boolean declareWinner (String contestId, String username) 
             throws InputException, MongoException;
+    public void participate(String username, String contestId)
+            throws InputException, MongoException;
+    public void dontParticipate(String username, String contestId)
+            throws InputException, MongoException;
+    public int getContestPointsUser(String username, Date from, Date to) 
+            throws InputException;
 }

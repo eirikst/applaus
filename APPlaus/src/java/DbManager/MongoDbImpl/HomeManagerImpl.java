@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import Tools.DateTools;
 import java.util.Calendar;
 import APPlausException.InputException;
+import DAO.ContestQueries;
 import DAO.IdeaQueries;
 import DbManager.HomeManager;
 import com.mongodb.MongoException;
@@ -30,13 +31,15 @@ public class HomeManagerImpl implements HomeManager {
     private final AssignmentQueries assignQ;
     private final NewsQueries newsQ;
     private final IdeaQueries ideaQ;
+    private final ContestQueries contQ;
     
     public HomeManagerImpl(UserQueries userQ, AssignmentQueries assignQ, 
-            NewsQueries newsQ, IdeaQueries ideaQ) {
+            NewsQueries newsQ, IdeaQueries ideaQ, ContestQueries contQ) {
         this.userQ = userQ;
         this.assignQ = assignQ;
         this.newsQ = newsQ;
         this.ideaQ = ideaQ;
+        this.contQ = contQ;
     }
 
     //this first, then last
@@ -128,7 +131,8 @@ public class HomeManagerImpl implements HomeManager {
                     }
                 }
             }
-            
+            points += contQ.getContestPointsUser(username, from, to);
+            points += ideaQ.getNumberOfIdeaLikes(username, from, to) * 2;//NUMBER OF POINTS FOR LIKES
             int noOfIdeas = ideaQ.getNumberOfIdeas(username, from, to);
             points += noOfIdeas * 20;
             

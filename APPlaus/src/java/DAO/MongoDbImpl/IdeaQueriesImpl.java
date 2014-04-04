@@ -2,6 +2,7 @@ package DAO.MongoDbImpl;
 
 import DAO.IdeaQueries;
 import APPlausException.InputException;
+import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -11,6 +12,7 @@ import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import org.bson.types.ObjectId;
 
@@ -312,5 +314,39 @@ public class IdeaQueriesImpl implements IdeaQueries {
         
         int noOfIdeas = collection.find(query).count();
         return noOfIdeas;
+    }
+
+    @Override
+    public int getNumberOfIdeaLikes(String username, Date from, Date to) throws InputException {
+        if(username == null || from == null) {
+            throw new InputException("username or from parameters are null.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject match = new BasicDBObject();
+        match.put("username", username);
+        
+        DBObject dateEnd = new BasicDBObject();
+        dateEnd.put("$gte", from);
+        dateEnd.put("$lte", to);
+        
+        match.put("date", dateEnd);
+        
+        DBObject group = new BasicDBObject();
+        group.put("_id", "null");
+        group.put("num", new BasicDBObject("$sum", 1));
+        
+        AggregationOutput output = collection.aggregate(new BasicDBObject
+        ("$match", match), new BasicDBObject("$unwind", "$likes"), new 
+        BasicDBObject("$group", group));
+        
+        Iterator i = output.results().iterator();
+        int numOfLikes = 0;
+        if(i.hasNext()) {
+            numOfLikes = ((BasicDBObject)i.next()).getInt("num");
+            return numOfLikes;
+        }
+        return 0;
     }
 }
