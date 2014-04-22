@@ -38,7 +38,7 @@ services.service('AdminService', function($http) {
             method: "POST",
             data: "action=editAssignmentType&assignId=" + assignment._id.$oid + "&title=" + 
                     assignment.title + "&points=" + assignment.points + "&desc=" + 
-                    assignment.desc + "&active" + assignment.active,
+                    assignment.desc + "&active=" + assignment.active,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

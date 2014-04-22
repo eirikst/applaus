@@ -66,7 +66,7 @@ controllers.controller('AdminCtrl', function($scope, AdminService) {
         var copied = angular.copy(assignment);
         return copied;
     };
-
+    
     //init
     $scope.adminList = new Array();
     $scope.assignmentTypeList = new Array();

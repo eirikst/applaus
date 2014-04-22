@@ -68,7 +68,7 @@
                 <p>
                     <button data-ng-click="registerAssignment(selectedOption._id.$oid, assignment);
                         clearMsg();"
-                            ng-disabled="regForm.$invalid"
+                            ng-disabled="regForm.$invalid; selectedOption.active == false"
                             class="form-control">
                         Registrer
                     </button>

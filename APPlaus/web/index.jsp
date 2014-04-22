@@ -72,6 +72,7 @@
                                 </a>
                                 <ul class="dropdown-menu pull-right">
                                     <li><a type="button" href="#adminList" ng-show="roleCookie == 1">Admin features</a></li>
+                                    <li><a type="button" href="#assignmentTypeList" ng-show="roleCookie == 1">Assignment Type List</a></li>
                                     <li><a href="logout.jsp">Logout</a></li>
                                 </ul>
                             </li>

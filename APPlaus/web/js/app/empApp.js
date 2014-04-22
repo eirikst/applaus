@@ -41,6 +41,10 @@ employeeApp.config(['$routeProvider', function($routeProvider) {
     {templateUrl: 'partials/ideabank.html', controller: 'IdeaCtrl', depth:5}
             );
     $routeProvider
+            .when('/assignmentTypeList', 
+    {templateUrl: 'partials/assignmentTypeList.html', controller: 'AdminCtrl'}
+            );
+    $routeProvider
             .when('/stats', 
     {templateUrl: 'partials/stats.html', controller: 'StatisticsCtrl', depth:1}
             );

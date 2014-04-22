@@ -39,11 +39,8 @@
                     </span>
                 </td>
                 <td>
-                    <span ng-show="!editable">
-                        <input  ng-checked="type.active == true" type="checkbox" disabled/>
-                    </span>
-                    <span ng-show="editable">
-                        <input  ng-checked="type.active == true" type="checkbox"/>
+                    <span>
+                        <input ng-model="type.active" type="checkbox" ng-disabled="!editable"/>{{type.active}}
                     </span>
                 </td>
                 
