@@ -75,8 +75,14 @@ public class StatisticsManagerImpl implements StatisticsManager {
         sortLists(usernames, points);
         
         Map toRet = new HashMap();
-        toRet.put("usernames", usernames.subList(0, 5));
-        toRet.put("points", points.subList(0, 5));
+        if(usernames.size() < 5 || points.size() < 5) {
+            toRet.put("usernames", usernames);
+            toRet.put("points", points);
+        }
+        else {
+            toRet.put("usernames", usernames.subList(0, 5));
+            toRet.put("points", points.subList(0, 5));
+        }
         
         return JSON.serialize(toRet);
     }

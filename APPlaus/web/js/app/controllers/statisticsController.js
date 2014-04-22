@@ -13,7 +13,7 @@ controllers.controller('StatisticsCtrl', function($scope, $location, StatisticsS
                         $scope.topFiveMonth.push(new Object());
                         $scope.topFiveMonth[i].username = data.usernames[i];
                     }
-                    for(var i = 0; i < data.usernames.length < data.points
+                    for(var i = 0; i < data.usernames.length && i < data.points
                             .length; i++) {
                         $scope.topFiveMonth[i].points = data.points[i];
                     }
@@ -28,7 +28,8 @@ controllers.controller('StatisticsCtrl', function($scope, $location, StatisticsS
                         $scope.topFiveQuarter.push(new Object());
                         $scope.topFiveQuarter[i].username = data.usernames[i];
                     }
-                    for(var i = 0; i < data.points.length; i++) {
+                    for(var i = 0; i < data.usernames.length && i < data.points
+                            .length; i++) {
                         $scope.topFiveQuarter[i].points = data.points[i];
                     }
                         }).error(function(data, status, headers, config) {
@@ -42,7 +43,8 @@ controllers.controller('StatisticsCtrl', function($scope, $location, StatisticsS
                         $scope.topFiveHalfYear.push(new Object());
                         $scope.topFiveHalfYear[i].username = data.usernames[i];
                     }
-                    for(var i = 0; i < data.points.length; i++) {
+                    for(var i = 0; i < data.usernames.length && i < data.points
+                            .length; i++) {
                         $scope.topFiveHalfYear[i].points = data.points[i];
                     }
                         }).error(function(data, status, headers, config) {
