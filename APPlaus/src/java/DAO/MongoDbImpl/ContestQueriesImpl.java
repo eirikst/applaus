@@ -21,7 +21,6 @@ import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.SECOND;
 import java.util.Date;
 import java.util.List;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import org.bson.types.ObjectId;
 import java.util.logging.Level;
@@ -37,7 +36,7 @@ public class ContestQueriesImpl implements ContestQueries {
     private final DB db;
     
     private ContestQueriesImpl() throws UnknownHostException {
-        db = MongoConnection.getInstance().getDB();
+        db = MongoConnectionImpl.getInstance().getDB();
     }
     
     public static ContestQueriesImpl getInstance() throws UnknownHostException {
@@ -54,15 +53,12 @@ public class ContestQueriesImpl implements ContestQueries {
     @Override
     public List<DBObject> getActiveContests() throws MongoException {
         
-        //tomorrows date is needed or else mongo will not show today's contests
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DAY_OF_MONTH, -1);
-        Date tomorrow = calendar.getTime();
+        Date now = new Date();
         
         DBCollection coll = db.getCollection("contest");
         BasicDBObject query = new BasicDBObject();
 	query.put("date_end", BasicDBObjectBuilder.start("$gte"
-                , tomorrow).get());
+                , now).get());
         
         //sort with next date first
         try(DBCursor cursor = coll.find(query).sort
@@ -86,14 +82,11 @@ public class ContestQueriesImpl implements ContestQueries {
             throw new InputException("Variable skip can not be less than 0.");
         }
         
-        //tomorrows date is needed or else mongo will show today's contests
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DAY_OF_MONTH, -1);
-        Date tomorrow = calendar.getTime();
+        Date now = new Date();
         
         DBCollection coll = db.getCollection("contest");
         BasicDBObject query = new BasicDBObject();
-	query.put("date_end", BasicDBObjectBuilder.start("$lte", tomorrow).get());
+	query.put("date_end", BasicDBObjectBuilder.start("$lte", now).get());
         //sort with last finished contest first
         try(DBCursor cursor = coll.find(query).sort(new BasicDBObject
         ( "date_end" , -1 )).limit(7).skip(skip)) {

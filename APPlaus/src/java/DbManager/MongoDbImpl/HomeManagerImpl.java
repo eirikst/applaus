@@ -100,12 +100,18 @@ public class HomeManagerImpl implements HomeManager {
         else if(period == DateTools.MONTH) {
             from = DateTools.getFirstDateOfMonth();
         }
+        else if(period == DateTools.QUARTER) {
+            from = DateTools.getFirstDateOfQuarter();
+        }
+        else if(period == DateTools.HALF_YEAR) {
+            from = DateTools.getFirstDateOfHalfYear();
+        }
         else if(period == DateTools.YEAR) {
             from = DateTools.getFirstDateOfYear();
         }
         else {
             throw new IllegalArgumentException("period must be WEEK, LAST_WEEK,"
-                    + " MONTH or YEAR(7, -7, 30, 365).");
+                    + " MONTH; QUARTER, HALF_YEAR or YEAR(7, -7, 30, 90, 180, 365).");
         }
         try {
             Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(

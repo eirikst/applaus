@@ -17,7 +17,7 @@ public class SectionQueriesImpl implements SectionQueries {
     private final DB db;
     
     private SectionQueriesImpl() throws UnknownHostException {
-        db = MongoConnection.getInstance().getDB();
+        db = MongoConnectionImpl.getInstance().getDB();
     }
     
     public static SectionQueriesImpl getInstance() throws UnknownHostException {

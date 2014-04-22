@@ -23,7 +23,7 @@ public class AssignmentQueriesImpl implements AssignmentQueries {
     private final DB db;
     
     private AssignmentQueriesImpl() throws UnknownHostException {
-        db = MongoConnection.getInstance().getDB();
+        db = MongoConnectionImpl.getInstance().getDB();
         System.out.println(db.getCollection("contest").find());
     }
     

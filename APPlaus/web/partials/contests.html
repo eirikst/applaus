@@ -1,213 +1,207 @@
 <div ng-swipe-left="changeView('ideabank')" ng-swipe-right="changeView('home')">
-    <div>
-        <div class="container">
-            <span class="redMsg">
-                {{errFetchMsg}}
-            </span>
-            <div class="row">
+    <span class="redMsg">
+        {{errFetchMsg}}
+    </span>
 
-                <!--active cont-->
-                <div class="col-sm-6">
-                    <div class="container contStrct">
-                        <h2 class="h2-contest">Aktive konkurranser</h2>
-                        <div class="drop" ng-show="(roleCookie == 1 || roleCookie == 2)">
-                            <div class="dropHeading">
-                                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
-                                <a class="text-center" ng-click="dropCreate = !dropCreate">Ny konkurranse
-                                    <span class="clickableDiv"></span>
-                                </a>
-                            </div>
-                            <div class="innerDrop" ng-show="dropCreate">
-                                <form name="createContForm">
-                                    <p>
-                                        <input placeholder="Tittel" name="title" class="form-control" ng-class="{red:createContForm.title.$error.required && createContForm.title.$dirty, green:!createContForm.title.$error.required && createContForm.title.$dirty}" type="text" ng-model="newCont.title" required="true">
-                                    </p>
-                                    <p>
-                                        <textarea placeholder="Beskrivelse" name="desc" class="form-control"  ng-class="{red:createContForm.desc.$error.required && createContForm.desc.$dirty, green:!createContForm.desc.$error.required && createContForm.desc.$dirty}" ng-model="newCont.desc" required="true"></textarea>
-                                    </p>
-                                    <p>
-                                        <textarea placeholder="Premie" name="prize" class="form-control"  ng-class="{red:createContForm.prize.$error.required && createContForm.prize.$dirty, green:!createContForm.prize.$error.required && createContForm.prize.$dirty}" ng-model="newCont.prize" required="true"></textarea>
-                                    </p>
-                                    <p>
-                                        <input placeholder="Poeng" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}" type="number" ng-model="newCont.points" min="1" required="true">
-                                    </p>
-                                    <p>
-                                        <input placeholder="dd/mm/yyyy" class="form-control" name="dateEnd" ng-class="{red:(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty, green:!(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty}" type="date" ng-model="newCont.date_end.$date" required="true">
-                                    </p>
-                                    <p>
-                                        <button class="form-control" ng-click="createContest(newCont);
-                                            clearMsg();" ng-disabled="createContForm.$invalid">Legg til</button>
-                                    </p>
-                                    <span class="redMsg">
-                                        {{createErrMsg}}
-                                    </span>
-                                    <span class="greenMsg">
-                                        {{createSuccessMsg}}
-                                    </span>
-                                </form>
-                            </div>
-                        </div>
-
-
-                        <div class="drop" ng-init="dropActive = false" ng-repeat="contest in activeCont">
-                            <div class="dropHeading">
-                                <div class="lefty">
-                                    <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
-                                    <a class="text-center" ng-click="dropActive = !dropActive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}
-                                        <span class="clickableDiv"></span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="innerDrop" ng-show="dropActive">
-                                <form name="editContForm">
-                                    <p>
-                                        Administrator: {{contest.username}}
-                                    </p>
-                                    <p>
-                                        <span ng-show="editable">
-                                            <input placeholder="Tittel" name="editTitle" class="form-control" ng-class="{red:editContForm.editTitle.$error.required, green:!editContForm.editTitle.$error.required}" ng-model="editableContest.title" required="true">
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span ng-show="!editable">
-                                            Beskrivelse: {{contest.desc}}
-                                        </span>
-                                        <span ng-show="editable">
-                                            <textarea placeholder="Beskrivelse" name="editDesc" class="form-control" ng-class="{red:editContForm.editDesc.$error.required, green:!editContForm.editDesc.$error.required}" ng-model="editableContest.desc" required="true"></textarea>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span ng-show="!editable">
-                                            Premie: {{contest.prize}}
-                                        </span>
-                                        <span ng-show="editable">
-                                            <textarea placeholder="Premie" name="editPrize" class="form-control" ng-class="{red:editContForm.editPrize.$error.required, green:!editContForm.editPrize.$error.required}" ng-model="editableContest.prize" required="true"></textarea>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span ng-show="!editable">
-                                            Poeng: {{contest.points}}
-                                        </span>
-                                        <span ng-show="editable">
-                                            <input placeholder="Poeng" type="number" name="editPoints" class="form-control" ng-class="{red:editContForm.editPoints.$error.required || editContForm.editPoints.$error.min, green:!editContForm.editPoints.$error.required && !editContForm.editPoints.$error.min}" ng-model="editableContest.points" min="1" required="true">
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span ng-show="!editable">
-                                            Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
-                                        </span>
-                                        <br>
-                                        <span ng-show="editable">
-                                            <input type="date" name="editDateEnd" class="form-control" ng-class="{red:editContForm.editDateEnd.$error.required, green:!editContForm.editDateEnd.$error.required}" ng-model="editableContest.date_end.$date" required="true">
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <button class="form-control" ng-show="editable" ng-click="editable = !editable;
-                                                editContest(editableContest);
-                                                clearMsg();
-                                                contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
-                                    </p>
-                                </form>                                
-
-                                <!--admin features-->
-                                <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 || roleCookie == 2)" ng-click="editable = !editable;
-                                        editableContest = copyContest(contest);">Endre</a>
-                                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Angre endring</a>
-                                <div ng-init="toDelete = false">
-                                    <a class="stdLink" type="button" ng-show="!toDelete && (roleCookie == 1 || roleCookie == 2)" ng-click="toDelete = !toDelete">Slett</a>
-                                    <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
-                                    <div class="alert alert-info" ng-show="toDelete">
-                                        <a  ng-click="deleteContest(contest);
-                                                clearMsg();" class="alert-link">Bekreft</a>
-                                        at du ønsker å slette konkurransen
-                                    </div>
-                                </div>
-                                <!--end admin feature-->
-
-                                <a class="stdLink" ng-show="isParticipating(contest)" ng-click="dontParticipate(contest);
-                                        clearMsg();">Meld av</a>
-                                <a class="stdLink" ng-show="!isParticipating(contest)" ng-click="participate(contest);
-                                        clearMsg();">Delta</a>
-                                <!--participants-->
-                                <div>
-                                    <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
-                                    <li ng-repeat="participant in contest.participants" ng-show="showParticipants">
-                                        <ul>
-                                            {{participant}}
-                                        </ul>
-                                    </li>
-                                </div>
- 
-                                <span class="redMsg">
-                                    {{activeErrMsg}}
-                                </span>
-                                <span class="greenMsg">
-                                    {{activeMsg}}
-                                </span>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!--end active cont-->
-
-                <!--Inactive cont-->
-                <div class="col-sm-6">
-                    <div class="container contStrct">
-                        <h2 class="h2-contest">Tidligere konkurranser</h2>
-                        <div class="drop" ng-init="dropInactive = false" ng-repeat="contest in inactiveCont">
-                            <div class="dropHeading">
-                                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
-                                <a class="text-center" ng-click="dropInactive = !dropInactive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}
-                                    <span class="clickableDiv"></span>
-                                </a>
-                            </div>
-                            <div class="innerDrop" ng-show="dropInactive">
-                                <p>
-                                    Administrator: {{contest.username}}
-                                </p>
-                                <p>
-                                    Beskrivelse: {{contest.desc}}
-                                </p>
-                                <p>
-                                    Premie: {{contest.prize}}
-                                </p>
-                                <p>
-                                    Poeng: {{contest.points}}
-                                </p>
-                                <p>
-                                    Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
-                                </p>
-                                
-                                <!--participants-->
-                                <div>
-                                    <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
-                                    <li ng-repeat="participant in contest.participants" ng-show="showParticipants">
-                                        <ul>
-                                            {{participant}}
-                                        </ul>
-                                    </li>
-                                </div>
-                                                                
-                                 <!--Participants list -->
-                                 <div ng-show="username == contest.username">
-                                     <div ng-repeat="participant in contest.participants">
-                                         <form>
-                                             <input ng-click="declareWinner(contest, participant)" type="radio" name="participant">{{participant}}
-                                         </form>
-                                     </div>
-                                 </div>
-
-                            </div>
-                        </div>
-                        <br>
-                        <p>
-                            <a type="button" class="form-control" ng-click="getInactiveContests(skipNext)">Last flere</a>
-                        </p>
-                    </div>
-                </div>
-                <!--end inactive cont-->
+    <!--active cont-->
+    <div class="col-sm-6">
+        <h2>Inactive contests</h2>
+        <div class="drop" ng-show="(roleCookie == 1 || roleCookie == 2)">
+            <div class="dropHeading">
+                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
+                <a class="text-center" ng-click="dropCreate = !dropCreate">Ny konkurranse
+                    <span class="clickableDiv"></span>
+                </a>
+            </div>
+            <div class="innerDrop" ng-show="dropCreate">
+                <form name="createContForm">
+                    <p>
+                        <input placeholder="Tittel" name="title" class="form-control" ng-class="{red:createContForm.title.$error.required && createContForm.title.$dirty, green:!createContForm.title.$error.required && createContForm.title.$dirty}" type="text" ng-model="newCont.title" required="true">
+                    </p>
+                    <p>
+                        <textarea placeholder="Beskrivelse" name="desc" class="form-control"  ng-class="{red:createContForm.desc.$error.required && createContForm.desc.$dirty, green:!createContForm.desc.$error.required && createContForm.desc.$dirty}" ng-model="newCont.desc" required="true"></textarea>
+                    </p>
+                    <p>
+                        <textarea placeholder="Premie" name="prize" class="form-control"  ng-class="{red:createContForm.prize.$error.required && createContForm.prize.$dirty, green:!createContForm.prize.$error.required && createContForm.prize.$dirty}" ng-model="newCont.prize" required="true"></textarea>
+                    </p>
+                    <p>
+                        <input placeholder="Poeng" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}" type="number" ng-model="newCont.points" min="1" required="true">
+                    </p>
+                    <p>
+                        <input placeholder="dd/mm/yyyy" class="form-control" name="dateEnd" ng-class="{red:(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty, green:!(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty}" type="date" ng-model="newCont.date_end.$date" required="true">
+                    </p>
+                    <p>
+                        <button class="form-control" ng-click="createContest(newCont);
+                            clearMsg();" ng-disabled="createContForm.$invalid">Legg til</button>
+                    </p>
+                    <span class="redMsg">
+                        {{createErrMsg}}
+                    </span>
+                    <span class="greenMsg">
+                        {{createSuccessMsg}}
+                    </span>
+                </form>
             </div>
         </div>
+
+
+        <div class="drop" ng-init="dropActive = false" ng-repeat="contest in activeCont">
+            <div class="dropHeading">
+                <div class="lefty">
+                    <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
+                    <a class="text-center" ng-click="dropActive = !dropActive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}
+                        <span class="clickableDiv"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="innerDrop" ng-show="dropActive">
+                <form name="editContForm">
+                    <p>
+                        Administrator: {{contest.username}}
+                    </p>
+                    <p>
+                        <span ng-show="editable">
+                            <input placeholder="Tittel" name="editTitle" class="form-control" ng-class="{red:editContForm.editTitle.$error.required, green:!editContForm.editTitle.$error.required}" ng-model="editableContest.title" required="true">
+                        </span>
+                    </p>
+                    <p>
+                        <span ng-show="!editable">
+                            Beskrivelse: {{contest.desc}}
+                        </span>
+                        <span ng-show="editable">
+                            <textarea placeholder="Beskrivelse" name="editDesc" class="form-control" ng-class="{red:editContForm.editDesc.$error.required, green:!editContForm.editDesc.$error.required}" ng-model="editableContest.desc" required="true"></textarea>
+                        </span>
+                    </p>
+                    <p>
+                        <span ng-show="!editable">
+                            Premie: {{contest.prize}}
+                        </span>
+                        <span ng-show="editable">
+                            <textarea placeholder="Premie" name="editPrize" class="form-control" ng-class="{red:editContForm.editPrize.$error.required, green:!editContForm.editPrize.$error.required}" ng-model="editableContest.prize" required="true"></textarea>
+                        </span>
+                    </p>
+                    <p>
+                        <span ng-show="!editable">
+                            Poeng: {{contest.points}}
+                        </span>
+                        <span ng-show="editable">
+                            <input placeholder="Poeng" type="number" name="editPoints" class="form-control" ng-class="{red:editContForm.editPoints.$error.required || editContForm.editPoints.$error.min, green:!editContForm.editPoints.$error.required && !editContForm.editPoints.$error.min}" ng-model="editableContest.points" min="1" required="true">
+                        </span>
+                    </p>
+                    <p>
+                        <span ng-show="!editable">
+                            Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
+                        </span>
+                        <br>
+                        <span ng-show="editable">
+                            <input type="date" name="editDateEnd" class="form-control" ng-class="{red:editContForm.editDateEnd.$error.required, green:!editContForm.editDateEnd.$error.required}" ng-model="editableContest.date_end.$date" required="true">
+                        </span>
+                    </p>
+                    <p>
+                        <button class="form-control" ng-show="editable" ng-click="editable = !editable;
+                                editContest(editableContest);
+                                clearMsg();
+                                contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
+                    </p>
+                </form>                                
+
+                <!--admin features-->
+                <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 || roleCookie == 2)" ng-click="editable = !editable;
+                        editableContest = copyContest(contest);">Endre</a>
+                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Angre endring</a>
+                <div ng-init="toDelete = false">
+                    <a class="stdLink" type="button" ng-show="!toDelete && (roleCookie == 1 || roleCookie == 2)" ng-click="toDelete = !toDelete">Slett</a>
+                    <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
+                    <div class="alert alert-info" ng-show="toDelete">
+                        <a  ng-click="deleteContest(contest);
+                                clearMsg();" class="alert-link">Bekreft</a>
+                        at du ønsker å slette konkurransen
+                    </div>
+                </div>
+                <!--end admin feature-->
+
+                <a class="stdLink" ng-show="isParticipating(contest)" ng-click="dontParticipate(contest);
+                        clearMsg();">Meld av</a>
+                <a class="stdLink" ng-show="!isParticipating(contest)" ng-click="participate(contest);
+                        clearMsg();">Delta</a>
+                <!--participants-->
+                <div>
+                    <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
+                    <li ng-repeat="participant in contest.participants" ng-show="showParticipants">
+                        <ul>
+                            {{participant}}
+                        </ul>
+                    </li>
+                </div>
+
+                <span class="redMsg">
+                    {{activeErrMsg}}
+                </span>
+                <span class="greenMsg">
+                    {{activeMsg}}
+                </span>
+            </div>
+
+        </div>
     </div>
+    <!--end active cont-->
+
+    <!--Inactive cont-->
+    <div class="col-sm-6">
+        <h2>Inactive contests</h2>
+        <div class="drop" ng-init="dropInactive = false" ng-repeat="contest in inactiveCont">
+            <div class="dropHeading">
+                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropActive, 'glyphicon-chevron-right': !dropActive}"></a>
+                <a class="text-center" ng-click="dropInactive = !dropInactive">{{contest.date_end.$date| date:('dd.MM')}} - {{contest.title}}
+                    <span class="clickableDiv"></span>
+                </a>
+            </div>
+            <div class="innerDrop" ng-show="dropInactive">
+                <p>
+                    Administrator: {{contest.username}}
+                </p>
+                <p>
+                    Beskrivelse: {{contest.desc}}
+                </p>
+                <p>
+                    Premie: {{contest.prize}}
+                </p>
+                <p>
+                    Poeng: {{contest.points}}
+                </p>
+                <p>
+                    Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
+                </p>
+
+                 <!--winner-->
+                 <div ng-show="contest.winner !== undefined">
+                     <p>
+                         Winner: {{contest.winner}}
+                     </p>
+                 </div>
+
+                <!--participants-->
+                <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
+                <div ng-show="username !== contest.username">
+                    <div ng-repeat="participant in contest.participants" ng-show="showParticipants">
+                        {{participant}}
+                    </div>
+                </div>
+
+                 <!--Participants list -->
+                 <div ng-show="username == contest.username && contest.winner == undefined && showParticipants">
+                     <div ng-repeat="participant in contest.participants">
+                         <form>
+                             <a ng-click="declareWinner(contest, participant)" type="button">Winner! </a>{{participant}}
+                         </form>
+                     </div>
+                 </div>
+            </div>
+        </div>
+        <br>
+        <p>
+            <a type="button" class="form-control" ng-click="getInactiveContests(skipNext)">Last flere</a>
+        </p>
+    </div>
+    <!--end inactive cont-->
 </div>
