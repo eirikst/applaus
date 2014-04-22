@@ -9,30 +9,30 @@
         <div class="drop" ng-show="(roleCookie == 1 || roleCookie == 2)">
             <div class="dropHeading">
                 <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
-                <a class="text-center" ng-click="dropCreate = !dropCreate">Ny konkurranse
+                <a class="text-center" ng-click="dropCreate = !dropCreate">New contest
                     <span class="clickableDiv"></span>
                 </a>
             </div>
             <div class="innerDrop" ng-show="dropCreate">
                 <form name="createContForm">
                     <p>
-                        <input placeholder="Tittel" name="title" class="form-control" ng-class="{red:createContForm.title.$error.required && createContForm.title.$dirty, green:!createContForm.title.$error.required && createContForm.title.$dirty}" type="text" ng-model="newCont.title" required="true">
+                        <input placeholder="Title" name="title" class="form-control" ng-class="{red:createContForm.title.$error.required && createContForm.title.$dirty, green:!createContForm.title.$error.required && createContForm.title.$dirty}" type="text" ng-model="newCont.title" required="true">
                     </p>
                     <p>
-                        <textarea placeholder="Beskrivelse" name="desc" class="form-control"  ng-class="{red:createContForm.desc.$error.required && createContForm.desc.$dirty, green:!createContForm.desc.$error.required && createContForm.desc.$dirty}" ng-model="newCont.desc" required="true"></textarea>
+                        <textarea placeholder="Description" name="desc" class="form-control"  ng-class="{red:createContForm.desc.$error.required && createContForm.desc.$dirty, green:!createContForm.desc.$error.required && createContForm.desc.$dirty}" ng-model="newCont.desc" required="true"></textarea>
                     </p>
                     <p>
-                        <textarea placeholder="Premie" name="prize" class="form-control"  ng-class="{red:createContForm.prize.$error.required && createContForm.prize.$dirty, green:!createContForm.prize.$error.required && createContForm.prize.$dirty}" ng-model="newCont.prize" required="true"></textarea>
+                        <textarea placeholder="Prize" name="prize" class="form-control"  ng-class="{red:createContForm.prize.$error.required && createContForm.prize.$dirty, green:!createContForm.prize.$error.required && createContForm.prize.$dirty}" ng-model="newCont.prize" required="true"></textarea>
                     </p>
                     <p>
-                        <input placeholder="Poeng" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}" type="number" ng-model="newCont.points" min="1" required="true">
+                        <input placeholder="Points" name="points" class="form-control"  ng-class="{red:(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty, green:!(createContForm.points.$error.required || createContForm.points.$error.min) && createContForm.points.$dirty}" type="number" ng-model="newCont.points" min="1" required="true">
                     </p>
                     <p>
                         <input placeholder="dd/mm/yyyy" class="form-control" name="dateEnd" ng-class="{red:(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty, green:!(createContForm.dateEnd.$error.required || createContForm.dateEnd.$error.min) && createContForm.dateEnd.$dirty}" type="date" ng-model="newCont.date_end.$date" required="true">
                     </p>
                     <p>
                         <button class="form-control" ng-click="createContest(newCont);
-                            clearMsg();" ng-disabled="createContForm.$invalid">Legg til</button>
+                            clearMsg();" ng-disabled="createContForm.$invalid">Add</button>
                     </p>
                     <span class="redMsg">
                         {{createErrMsg}}
@@ -66,7 +66,7 @@
                     </p>
                     <p>
                         <span ng-show="!editable">
-                            Beskrivelse: {{contest.desc}}
+                            Description: {{contest.desc}}
                         </span>
                         <span ng-show="editable">
                             <textarea placeholder="Beskrivelse" name="editDesc" class="form-control" ng-class="{red:editContForm.editDesc.$error.required, green:!editContForm.editDesc.$error.required}" ng-model="editableContest.desc" required="true"></textarea>
@@ -74,7 +74,7 @@
                     </p>
                     <p>
                         <span ng-show="!editable">
-                            Premie: {{contest.prize}}
+                            Prize: {{contest.prize}}
                         </span>
                         <span ng-show="editable">
                             <textarea placeholder="Premie" name="editPrize" class="form-control" ng-class="{red:editContForm.editPrize.$error.required, green:!editContForm.editPrize.$error.required}" ng-model="editableContest.prize" required="true"></textarea>
@@ -82,7 +82,7 @@
                     </p>
                     <p>
                         <span ng-show="!editable">
-                            Poeng: {{contest.points}}
+                            Points {{contest.points}}
                         </span>
                         <span ng-show="editable">
                             <input placeholder="Poeng" type="number" name="editPoints" class="form-control" ng-class="{red:editContForm.editPoints.$error.required || editContForm.editPoints.$error.min, green:!editContForm.editPoints.$error.required && !editContForm.editPoints.$error.min}" ng-model="editableContest.points" min="1" required="true">
@@ -90,7 +90,7 @@
                     </p>
                     <p>
                         <span ng-show="!editable">
-                            Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
+                            Ends: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
                         </span>
                         <br>
                         <span ng-show="editable">
@@ -101,29 +101,29 @@
                         <button class="form-control" ng-show="editable" ng-click="editable = !editable;
                                 editContest(editableContest);
                                 clearMsg();
-                                contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Lagre</button>
+                                contest = copyContest(editableContest);" ng-disabled="editContForm.$invalid">Save</button>
                     </p>
                 </form>                                
 
                 <!--admin features-->
                 <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 || roleCookie == 2)" ng-click="editable = !editable;
-                        editableContest = copyContest(contest);">Endre</a>
-                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Angre endring</a>
+                        editableContest = copyContest(contest);">Change</a>
+                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Undo change</a>
                 <div ng-init="toDelete = false">
-                    <a class="stdLink" type="button" ng-show="!toDelete && (roleCookie == 1 || roleCookie == 2)" ng-click="toDelete = !toDelete">Slett</a>
-                    <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
+                    <a class="stdLink" type="button" ng-show="!toDelete && (roleCookie == 1 || roleCookie == 2)" ng-click="toDelete = !toDelete">Delete</a>
+                    <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Undo delete</a>
                     <div class="alert alert-info" ng-show="toDelete">
                         <a  ng-click="deleteContest(contest);
-                                clearMsg();" class="alert-link">Bekreft</a>
-                        at du ønsker å slette konkurransen
+                                clearMsg();" class="alert-link">Confirm</a>
+                        that you want to delete the contest
                     </div>
                 </div>
                 <!--end admin feature-->
 
                 <a class="stdLink" ng-show="isParticipating(contest)" ng-click="dontParticipate(contest);
-                        clearMsg();">Meld av</a>
+                        clearMsg();">Sign off</a>
                 <a class="stdLink" ng-show="!isParticipating(contest)" ng-click="participate(contest);
-                        clearMsg();">Delta</a>
+                        clearMsg();">Sign up</a>
                 <!--participants-->
                 <div>
                     <a class="stdLink" ng-click="showParticipants=!showParticipants"><span ng-show="!showParticipants">Participants</span><span ng-show="showParticipants">Hide participants</span></a>
@@ -161,16 +161,16 @@
                     Administrator: {{contest.username}}
                 </p>
                 <p>
-                    Beskrivelse: {{contest.desc}}
+                    Description {{contest.desc}}
                 </p>
                 <p>
-                    Premie: {{contest.prize}}
+                    Prize: {{contest.prize}}
                 </p>
                 <p>
-                    Poeng: {{contest.points}}
+                    Points: {{contest.points}}
                 </p>
                 <p>
-                    Frist: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
+                    Ends: {{contest.date_end.$date| date:('dd.MM.yyyy')}}
                 </p>
 
                  <!--winner-->
@@ -200,7 +200,7 @@
         </div>
         <br>
         <p>
-            <a type="button" class="form-control" ng-click="getInactiveContests(skipNext)">Last flere</a>
+            <a type="button" class="form-control form-control-custom form-control-medium" ng-click="getInactiveContests(skipNext)">Load more</a>
         </p>
     </div>
     <!--end inactive cont-->

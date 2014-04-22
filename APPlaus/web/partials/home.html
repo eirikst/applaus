@@ -1,21 +1,4 @@
 <div ng-swipe-left="changeView('contests')" ng-swipe-right="changeView('assignments')">
-    <!--Carousel--
-    <div ng-swipe-right="prevSlide()">
-        <div style="height: 150px">
-            <carousel interval="slideInterval">
-                <slide ng-repeat="slide in slides" active="slide.active">
-                    <div style="height:150px;">
-                        <div class="carousel-caption">
-                            <h5>{{slide.text}}</h5>
-                            <h1>{{slide.points}}</h1>
-                        </div>
-                    </div>
-                </slide>
-            </carousel>
-        </div>
-    </div>
-    <!--Carousel end-->
-
     <span class="redMsg">
         {{genError}}<!--general error message-->
     </span>
@@ -37,58 +20,58 @@
                     <div ng-show="myRankMonth===1">
                         <h4>Best!</h4>
                         <p>
-                            You have collected most points this month! Keep up the good work!
+                            You have collected most {{pointsMonth}} points this month! Keep up the good work!
                         </p>
                         <p ng-show="lowestThisMonth !== nrOfUsers">
-                            Watch out for {{userBelowMeMonth}}({{pointsBelowMeMonth}}) behind you!
+                            Watch out for {{userBelowMeMonth}} behind you with {{pointsBelowMeMonth}} points!
                         </p>
                     </div>
                     <!-- top five -->
                     <div ng-show="myRankMonth>=2 && myRankMonth <= 5">
                         <h4>Top 5!</h4>
                         <p>
-                            You are part of top 5 at {{myRankMonth}}. place at collecting points this month! Keep up the good work!
+                            You are at {{myRankMonth}}. place this month with {{pointsMonth}} points. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeMonth}} is above you with {{pointsAboveMeMonth}} points.
-                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}}({{pointsBelowMeMonth}}) behind you!</span>
+                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}} with {{pointsBelowMeMonth}} points!</span>
                         </p>
                     </div>
                     <!-- top third -->
                     <div ng-show="myRankMonth>5 && percentageMonth<0.333">
                         <h4>Top third!</h4>
                         <p>
-                            You are part of the top third at {{myRankMonth}}. place! Keep up the good work!
+                            You have collected {{pointsMonth}} points this month! You are part of the top third. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeMonth}} is above you with {{pointsAboveMeMonth}} points.
-                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}}({{pointsBelowMeMonth}}) behind you!</span>
+                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}} with {{pointsBelowMeMonth}} points!</span>
                         </p>
                     </div>
                     <!-- top half -->
                     <div ng-show="myRankMonth>5 && percentageMonth>0.333 && percentageMonth<0.5">
                         <p>
-                            You are part of the top half at {{myRankMonth}}. place! Keep up the good work!
+                            You have collected {{pointsMonth}} points this month! You are part of the top half. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeMonth}} is above you with {{pointsAboveMeMonth}} points.
-                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}}({{pointsBelowMeMonth}}) behind you!</span>
+                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}} with {{pointsBelowMeMonth}} points!</span>
                         </p>
                     </div>
                     <!-- bottom half -->
-                    <div ng-show="myRankMonth>5 && percentageMonth>0.333 && percentageMonth>0.5">
+                    <div ng-show="myRankMonth>5 && percentageMonth>0.333 && percentageMonth>0.5 && lowestThisMonth !== nrOfUsers">
                         <p>
-                            You are part of the top half at {{myRankMonth}}. place! Keep up the good work!
+                            You have collected {{pointsMonth}} points this month. Keep on collecting points!
                         </p>
                         <p>
                             {{userAboveMeMonth}} is above you with {{pointsAboveMeMonth}} points.
-                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}}({{pointsBelowMeMonth}}) behind you!</span>
+                            <span ng-show="lowestThisMonth !== nrOfUsers">Watch out for {{userBelowMeMonth}} with {{pointsBelowMeMonth}} points!</span>
                         </p>
                     </div>
                     <!-- bottom half -->
                     <div ng-show="myRankMonth>5 && percentageMonth>0.333 && percentageMonth>0.5 && lowestThisMonth === nrOfUsers">
                         <p>
-                            You are part of the top half at {{myRankMonth}}. place! Keep up the good work!
+                            You have collected {{pointsMonth}} points points this month. Keep on collecting points!
                         </p>
                         <p>
                             {{userAboveMeMonth}} is above you with {{pointsAboveMeMonth}} points.
@@ -103,58 +86,58 @@
                     <div ng-show="myRankQuarter===1">
                         <h4>Best!</h4>
                         <p>
-                            You have collected most points this quarter! Keep up the good work!
+                            You have collected most {{pointsQuarter}} points this quarter! Keep up the good work!
                         </p>
                         <p ng-show="lowestThisQuarter !== nrOfUsers">
-                            Watch out for {{userBelowMeQuarter}}({{pointsBelowMeQuarter}}) behind you!
+                            Watch out for {{userBelowMeQuarter}} behind you with {{pointsBelowMeQuarter}} points!
                         </p>
                     </div>
                     <!-- top five -->
                     <div ng-show="myRankQuarter>=2 && myRankQuarter <= 5">
                         <h4>Top 5!</h4>
                         <p>
-                            You are part of top 5 at {{myRankQuarter}}. place at collecting points this quarter! Keep up the good work!
+                            You are at {{myRankQuarter}}. place this quarter with {{pointsQuarter}} points. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeQuarter}} is above you with {{pointsAboveMeQuarter}} points.
-                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}}({{pointsBelowMeQuarter}}) behind you!</span>
+                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}} with {{pointsBelowMeQuarter}} points!</span>
                         </p>
                     </div>
                     <!-- top third -->
                     <div ng-show="myRankQuarter>5 && percentageQuarter<0.333">
                         <h4>Top third!</h4>
                         <p>
-                            You are part of the top third at {{myRankQuarter}}. place! Keep up the good work!
+                            You have collected {{pointsQuarter}} points this quarter! You are part of the top third. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeQuarter}} is above you with {{pointsAboveMeQuarter}} points.
-                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}}({{pointsBelowMeQuarter}}) behind you!</span>
+                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}} with {{pointsBelowMeQuarter}} points!</span>
                         </p>
                     </div>
                     <!-- top half -->
                     <div ng-show="myRankQuarter>5 && percentageQuarter>0.333 && percentageQuarter<0.5">
                         <p>
-                            You are part of the top half at {{myRankQuarter}}. place! Keep up the good work!
+                            You have collected {{pointsQuarter}} points this quarter! You are part of the top half. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeQuarter}} is above you with {{pointsAboveMeQuarter}} points.
-                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}}({{pointsBelowMeQuarter}}) behind you!</span>
+                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}} with {{pointsBelowMeQuarter}} points!</span>
                         </p>
                     </div>
                     <!-- bottom half -->
-                    <div ng-show="myRankQuarter>5 && percentageQuarter>0.333 && percentageQuarter>0.5">
+                    <div ng-show="myRankQuarter>5 && percentageQuarter>0.333 && percentageQuarter>0.5 && lowestThisQuarter !== nrOfUsers">
                         <p>
-                            You are part of the top half at {{myRankQuarter}}. place! Keep up the good work!
+                            You have collected {{pointsQuarter}} points this quarter. Keep on collecting points!
                         </p>
                         <p>
                             {{userAboveMeQuarter}} is above you with {{pointsAboveMeQuarter}} points.
-                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}}({{pointsBelowMeQuarter}}) behind you!</span>
+                            <span ng-show="lowestThisQuarter !== nrOfUsers">Watch out for {{userBelowMeQuarter}} with {{pointsBelowMeQuarter}} points!</span>
                         </p>
                     </div>
                     <!-- bottom half -->
                     <div ng-show="myRankQuarter>5 && percentageQuarter>0.333 && percentageQuarter>0.5 && lowestThisQuarter === nrOfUsers">
                         <p>
-                            You are part of the top half at {{myRankQuarter}}. place! Keep up the good work!
+                            You have collected {{pointsQuarter}} points this quarter. Keep on collecting points!
                         </p>
                         <p>
                             {{userAboveMeQuarter}} is above you with {{pointsAboveMeQuarter}} points.
@@ -162,64 +145,65 @@
                     </div>
                 </div>
                 <!--quarter tab end-->
+                
                 <!--half year tab-->
                 <div ng-show="tabAct3">
                     <!-- number one -->
                     <div ng-show="myRankHalfYear===1">
                         <h4>Best!</h4>
                         <p>
-                            You have collected most points this half year! Keep up the good work!
+                            You have collected most {{pointsHalfYear}} points this half year! Keep up the good work!
                         </p>
                         <p ng-show="lowestThisHalfYear !== nrOfUsers">
-                            Watch out for {{userBelowMeHalfYear}}({{pointsBelowMeHalfYear}}) behind you!
+                            Watch out for {{userBelowMeHalfYear}} behind you with {{pointsBelowMeHalfYear}} points!
                         </p>
                     </div>
                     <!-- top five -->
                     <div ng-show="myRankHalfYear>=2 && myRankHalfYear <= 5">
                         <h4>Top 5!</h4>
                         <p>
-                            You are part of top 5 at {{myRankHalfYear}}. place at collecting points this half year! Keep up the good work!
+                            You are at {{myRankHalfYear}}. place this half year with {{pointsHalfYear}} points. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeHalfYear}} is above you with {{pointsAboveMeHalfYear}} points.
-                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}}({{pointsBelowMeHalfYear}}) behind you!</span>
+                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}} with {{pointsBelowMeHalfYear}} points!</span>
                         </p>
                     </div>
                     <!-- top third -->
                     <div ng-show="myRankHalfYear>5 && percentageHalfYear<0.333">
                         <h4>Top third!</h4>
                         <p>
-                            You are part of the top third at {{myRankHalfYear}}. place! Keep up the good work!
+                            You have collected {{pointsHalfYear}} points this half year! You are part of the top third. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeHalfYear}} is above you with {{pointsAboveMeHalfYear}} points.
-                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}}({{pointsBelowMeHalfYear}}) behind you!</span>
+                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}} with {{pointsBelowMeHalfYear}} points!</span>
                         </p>
                     </div>
                     <!-- top half -->
                     <div ng-show="myRankHalfYear>5 && percentageHalfYear>0.333 && percentageHalfYear<0.5">
                         <p>
-                            You are part of the top half at {{myRankHalfYear}}. place! Keep up the good work!
+                            You have collected {{pointsHalfYear}} points this half year! You are part of the top half. Keep up the good work!
                         </p>
                         <p>
                             {{userAboveMeHalfYear}} is above you with {{pointsAboveMeHalfYear}} points.
-                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}}({{pointsBelowMeHalfYear}}) behind you!</span>
+                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}} with {{pointsBelowMeHalfYear}} points!</span>
                         </p>
                     </div>
                     <!-- bottom half -->
-                    <div ng-show="myRankHalfYear>5 && percentageHalfYear>0.333 && percentageHalfYear>0.5">
+                    <div ng-show="myRankHalfYear>5 && percentageHalfYear>0.333 && percentageHalfYear>0.5 && lowestThisHalfYear !== nrOfUsers">
                         <p>
-                            You are part of the top half at {{myRankHalfYear}}. place! Keep up the good work!
+                            You have collected {{pointsHalfYear}} points this half year. Keep on collecting points!
                         </p>
                         <p>
                             {{userAboveMeHalfYear}} is above you with {{pointsAboveMeHalfYear}} points.
-                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}}({{pointsBelowMeHalfYear}}) behind you!</span>
+                            <span ng-show="lowestThisHalfYear !== nrOfUsers">Watch out for {{userBelowMeHalfYear}} with {{pointsBelowMeHalfYear}} points!</span>
                         </p>
                     </div>
                     <!-- bottom half -->
                     <div ng-show="myRankHalfYear>5 && percentageHalfYear>0.333 && percentageHalfYear>0.5 && lowestThisHalfYear === nrOfUsers">
                         <p>
-                            You are part of the top half at {{myRankHalfYear}}. place! Keep up the good work!
+                            You have collected {{pointsHalfYear}} points this half year. Keep on collecting points!
                         </p>
                         <p>
                             {{userAboveMeHalfYear}} is above you with {{pointsAboveMeHalfYear}} points.
@@ -331,10 +315,10 @@
                 <div class="innerDrop" ng-show="dropIdea">
                     <form name="ideabankForm">
                         <p>
-                            <input name="ideaTitle" type="text"  ng-model="idea.title" class="form-control" placeholder="Tittel" required="true" ng-class="{red:ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty, green:!ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty}">
+                            <input name="ideaTitle" type="text"  ng-model="idea.title" class="form-control" placeholder="Title" required="true" ng-class="{red:ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty, green:!ideabankForm.ideaTitle.$error.required && ideabankForm.ideaTitle.$dirty}">
                         </p>
                         <p>
-                            <textarea name="ideaText" class="form-control"  ng-model="idea.text" placeholder="Tekst" required="true" ng-class="{red:ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty, green:!ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty}"></textarea>
+                            <textarea name="ideaText" class="form-control"  ng-model="idea.text" placeholder="Text" required="true" ng-class="{red:ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty, green:!ideabankForm.ideaText.$error.required && ideabankForm.ideaText.$dirty}"></textarea>
                         </p>
                         <p>
                             <button class="form-control" ng-click="addIdea(idea);
@@ -386,7 +370,7 @@
                     </p>
                     <form name="regForm">
                         <p>
-                            <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}" required="true"></textarea>
+                            <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Comment" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}" required="true"></textarea>
                         </p>
                         <p>
                             <input class="form-control" ng-model='assignment.date_done' type="date" name="regDate"  ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}" required="true">
@@ -434,7 +418,7 @@
                         <input name="newsTitle" type="text" class="form-control" ng-model="story.title" placeholder="Tittel" required="true" ng-class="{red:addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty, green:!addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty}">
                     </p>
                     <p>
-                        <textarea name="newsText" class="form-control" ng-model="story.text" placeholder="Tekst" required="true" ng-class="{red:addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty, green:!addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty}"></textarea>
+                        <textarea name="newsText" class="form-control" ng-model="story.text" placeholder="Text" required="true" ng-class="{red:addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty, green:!addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty}"></textarea>
                     </p>
                     <p>
                         <button class="form-control" ng-click="addNewsAll(story);

@@ -1,5 +1,51 @@
 <div ng-swipe-left="changeView('assignments')">
-    <div ng-repeat="(key, value) in (topFiveMonthPoints | getOrdered)">
-            {{key}} - {{value}}
+    <div class="col-sm-12">
+        <h1 class="text-center">Stats and achievements</h1>
+        <div class="infoField">
+            <h2 class="text-center">Stats</h2>
+            <ul class="nav nav-pills" ng-init="tabAct1=true;tabAct2=false;tabAct3=false;">
+                <li ng-class="{active:tabAct1}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabAct1=true;tabAct2=false;tabAct3=false;">Month</a></li>
+                <li ng-class="{active:tabAct2}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabAct1=false;tabAct2=true;tabAct3=false;">Quarter</a></li>
+                <li ng-class="{active:tabAct3}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabAct1=false;tabAct2=false;tabAct3=true;">Half year</a></li>
+            </ul>
+
+            <div class="contentOfTab">
+                <div ng-show="tabAct1">
+                    <h3>
+                        Top 5
+                    </h3>
+                    <div>
+                        <div ng-repeat="user in topFiveMonth">
+                            {{user.username}} - {{user.points}}
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="tabAct2">
+                    <h3>
+                        Top 5
+                    </h3>
+                    <div>
+                        <div ng-repeat="user in topFiveQuarter">
+                            {{user.username}} - {{user.points}}
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="tabAct3">
+                    <h3>
+                        Top 5
+                    </h3>
+                    <div>
+                        <div ng-repeat="user in topFiveHalfYear">
+                            {{user.username}} - {{user.points}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--achievements-->
+        <div class="infoField">
+            <h2 class="text-center">Achievements</h2>
+        </div>
+        <!--end achievements-->
     </div>
 </div>

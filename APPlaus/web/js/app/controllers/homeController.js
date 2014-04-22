@@ -36,6 +36,7 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         var halfyear = 180;
         HomeService.getStats(month)
                 .success(function(data, status, headers, config) {
+                    $scope.pointsMonth = data.points;
                     $scope.myRankMonth = data.highest;
                     $scope.nrOfUsers = data.total;
                     $scope.lowestThisMonth = data.lowest;
@@ -44,12 +45,14 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     $scope.userBelowMeMonth = data.belowUser;
                     $scope.pointsBelowMeMonth = data.belowPoints;
                     $scope.percentageMonth = $scope.myRankMonth / $scope.nrOfUsers;
+                    console.log($scope.percentageMonth);
                     console.log("getStats success");
                 }).error(function(data, status, headers, config) {
                     console.log("Failed http action=getHomeStats");
         });
         HomeService.getStats(quarter)
                 .success(function(data, status, headers, config) {
+                    $scope.pointsQuarter = data.points;
                     $scope.myRankQuarter = data.highest;
                     $scope.lowestThisQuarter = data.lowest;
                     $scope.userAboveMeQuarter = data.aboveUser;
@@ -64,6 +67,7 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         });
         HomeService.getStats(halfyear)
                 .success(function(data, status, headers, config) {
+                    $scope.pointsHalfYear = data.points;
                     $scope.myRankHalfYear = data.highest;
                     $scope.lowestThisHalfYear = data.lowest;
                     $scope.userAboveMeHalfYear = data.aboveUser;

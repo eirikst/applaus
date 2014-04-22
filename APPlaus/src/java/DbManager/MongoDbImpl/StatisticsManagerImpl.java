@@ -53,7 +53,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
     /**
      * Gets the top five list on points for given period
      * @param period period to fetch points/list
-     * @return JSON serialzed list og points
+     * @return JSON serialized list og points
      */
     @Override
     public String getTopFive(int period) {
@@ -74,14 +74,11 @@ public class StatisticsManagerImpl implements StatisticsManager {
         //sort the two lists on points
         sortLists(usernames, points);
         
+        Map toRet = new HashMap();
+        toRet.put("usernames", usernames.subList(0, 5));
+        toRet.put("points", points.subList(0, 5));
         
-        Map userPoints = new HashMap();
-        for(int i = 0; i < 5 && i < usernames.size() && i < points.size(); i++) 
-        {
-            userPoints.put(usernames.get(i), points.get(i));
-        }
-        
-        return JSON.serialize(userPoints);
+        return JSON.serialize(toRet);
     }
     
     /**

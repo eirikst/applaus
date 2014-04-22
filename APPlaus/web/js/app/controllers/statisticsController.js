@@ -8,32 +8,42 @@ controllers.controller('StatisticsCtrl', function($scope, $location, StatisticsS
         var halfyear = 180;
         StatisticsService.getTopFive(month)
                 .success(function(data, status, headers, config) {
-                    $scope.topFiveMonthPoints = data;
-                    /*topFiveMonthUsernames = Object.keys(topFiveMonthPoints);
-                    console.log(topFiveMonthPoints);
-                    console.log(topFiveMonthUsernames);
-                    
-                    for(var k in data) {
-                        console.log(k);
+                    $scope.topFiveMonth = [new Object(), new Object(), 
+                            new Object(), new Object(), new Object()];
+                    for(var i = 0; i < data.usernames.length; i++) {
+                        $scope.topFiveMonth[i].username = data.usernames[i];
                     }
-                    for(var i  = 0; i < topFiveMonthUsernames.length; i++) {
-                        $scope.topFiveMonth[i].usernames = topFiveMonthUsernames[i];
-                        $scope.topFiveMonth[i].points = topFiveMonthPoints[i];
-                    }*/
+                    for(var i = 0; i < data.points.length; i++) {
+                        $scope.topFiveMonth[i].points = data.points[i];
+                    }
                         }).error(function(data, status, headers, config) {
                 $scope.genErr = "An unexpected error ocurred. Please try again.";
                 console.log("Failed http action=getTopFive");
         });
         StatisticsService.getTopFive(quarter)
                 .success(function(data, status, headers, config) {
-                    $scope.topFiveQuarter = data;
+                    $scope.topFiveQuarter = [new Object(), new Object(), 
+                            new Object(), new Object(), new Object()];
+                    for(var i = 0; i < data.usernames.length; i++) {
+                        $scope.topFiveQuarter[i].username = data.usernames[i];
+                    }
+                    for(var i = 0; i < data.points.length; i++) {
+                        $scope.topFiveQuarter[i].points = data.points[i];
+                    }
                         }).error(function(data, status, headers, config) {
                 $scope.genErr = "An unexpected error ocurred. Please try again.";
                 console.log("Failed http action=getTopFive");
         });
         StatisticsService.getTopFive(halfyear)
                 .success(function(data, status, headers, config) {
-                    $scope.topFiveHalfYear = data;
+                    $scope.topFiveHalfYear = [new Object(), new Object(), 
+                            new Object(), new Object(), new Object()];
+                    for(var i = 0; i < data.usernames.length; i++) {
+                        $scope.topFiveHalfYear[i].username = data.usernames[i];
+                    }
+                    for(var i = 0; i < data.points.length; i++) {
+                        $scope.topFiveHalfYear[i].points = data.points[i];
+                    }
                         }).error(function(data, status, headers, config) {
                 $scope.genErr = "An unexpected error ocurred. Please try again.";
                 console.log("Failed http action=getTopFive");
