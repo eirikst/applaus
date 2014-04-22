@@ -12,6 +12,16 @@ services.service('HomeService', function($http) {
         return promise;
     };
     
+    this.getStats = function(period) {
+        var promise = $http({
+          url: 'APPlausServlet',
+          method: "POST",
+          data: "action=getHomeStats&period=" + period,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
     this.getGoals = function() {
         var promise = $http({
               url: 'APPlausServlet',

@@ -21,25 +21,51 @@ var employeeApp = angular.module('employeeApp',
 employeeApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider
             .when('/assignments', 
-    {templateUrl: 'partials/assignments.html', controller: 'AssignCtrl'}
+    {templateUrl: 'partials/assignments.html', controller: 'AssignCtrl', 
+        depth:2}
             );
     $routeProvider
             .when('/contests', 
-    {templateUrl: 'partials/contests.html', controller: 'ContCtrl'}
+    {templateUrl: 'partials/contests.html', controller: 'ContCtrl', depth:4}
             );
     $routeProvider
             .when('/home', 
-    {templateUrl: 'partials/home.html', controller: 'HomeCtrl'}
+    {templateUrl: 'partials/home.html', controller: 'HomeCtrl', depth:3}
             );
     $routeProvider
             .when('/adminList', 
-    {templateUrl: 'partials/adminList.html', controller: 'AdminCtrl'}
+    {templateUrl: 'partials/adminList.html', controller: 'AdminCtrl', depth:0}
             );
     $routeProvider
             .when('/ideabank', 
-    {templateUrl: 'partials/ideabank.html', controller: 'IdeaCtrl'}
+    {templateUrl: 'partials/ideabank.html', controller: 'IdeaCtrl', depth:5}
             );
     $routeProvider
-            .otherwise({redirectTo: '/home'}
+            .when('/stats', 
+    {templateUrl: 'partials/stats.html', controller: 'StatisticsCtrl', depth:1}
+            );
+    $routeProvider
+            .otherwise({redirectTo: '/home', depth:0}
             );
 }]);
+
+
+employeeApp.run(function($rootScope, $window) {
+  // publish current transition direction on rootScope
+  $rootScope.direction = 'ltr';
+  // listen change start events
+  $rootScope.$on('$routeChangeStart', function(event, next, current) {
+    $rootScope.direction = 'rtl';
+   // console.log(arguments);
+    if(current === undefined || next.depth === 0 || current.depth === 0) {
+        $rootScope.direction = 'ltr'; 
+    }
+    else if (current && next && (current.depth > next.depth)) {
+      $rootScope.direction = 'ltr';  
+    }
+    // back
+    $rootScope.back = function() {
+      $window.history.back();
+    }
+  });
+});

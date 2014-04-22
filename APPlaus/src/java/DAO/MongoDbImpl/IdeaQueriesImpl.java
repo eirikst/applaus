@@ -25,7 +25,7 @@ public class IdeaQueriesImpl implements IdeaQueries {
     private final DB db;
     
     private IdeaQueriesImpl() throws UnknownHostException {
-        db = MongoConnection.getInstance().getDB();
+        db = MongoConnectionImpl.getInstance().getDB();
     }
     
     public static IdeaQueriesImpl getInstance() throws UnknownHostException {
@@ -273,14 +273,14 @@ public class IdeaQueriesImpl implements IdeaQueries {
         
         DBObject query = new BasicDBObject();
         query.put("_id", objIdIdea);
-        query.put("username", username);
         
         DBObject comment = new BasicDBObject("comment_id", objIdComment);
+        comment.put("writer", username);
         
         DBObject comments = new BasicDBObject();
         comments.put("$pull", new BasicDBObject("comments", comment));
-        
-        collection.update(query, comments);
+
+        WriteResult res = collection.update(query, comments);
     }
 
     /**

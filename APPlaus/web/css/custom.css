@@ -6,11 +6,12 @@
 .drop {
     margin-top:5px;
     margin-bottom:5px;
-    background-color: rgba(255,255,255,0.4);    
+    //background-color: rgba(255,255,255,0.4);    
+    background-color:lightgray;
     
-    -webkit-border-radius:5px 5px 5px 5px;
-    -moz-border-radius:5px 5px 5px 5px;
-    border-radius:5px 5px 5px 5px;
+    -webkit-border-radius:2px 2px 2px 2px;
+    -moz-border-radius:2px 2px 2px 2px;
+    border-radius:2px 2px 2px 2px;
 }
 
 .dropHeading {
@@ -52,21 +53,10 @@
     height:400px;
 }
 
-.h2-contest {
-    margin-bottom: 15px;
-}
-
 .index-icon {
     margin:5px;
     width:25px;
     height:25px;
-}
-
-.index-icons {
-}
-
-.contStrct {
-    max-width:350px;
 }
 
 .righty {
@@ -122,7 +112,7 @@ lefty {
 
 .content {
     position:absolute;
-    top:55px;
+    top:50px;
     bottom:0px;
     left:0px;
     right:0px;
@@ -189,7 +179,7 @@ lefty {
 }
 
 .headerLeft70 {
-    width:90;
+    width:90%;
     text-align:left;
 }
 
@@ -203,5 +193,149 @@ lefty {
     margin-left:5px;;
     margin-right: auto;
     margin-top:auto;
-    margin-bottom:5px;;
+    margin-bottom:5px;
 }
+
+.infoField {
+    background-color:lightgray;
+    margin-top:20px;
+    padding-top:1px;
+    padding-left:20px;
+    padding-right:20px;
+    padding-bottom:20px;
+    
+    -webkit-border-radius:2px 2px 2px 2px;
+    -moz-border-radius:2px 2px 2px 2px;
+    border-radius:2px 2px 2px 2px;
+}
+
+.contentOfTab {
+    margin-top:10px;
+}
+
+.container-1024 {
+    max-width:1024px;
+}
+
+.container-512 {
+    max-width:512px;
+}
+
+body {
+   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   font-weight: 300;
+}
+
+.navigation {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.navigation {
+    background-color:#44AAEE;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.navigationInner {
+    text-align: center;
+    background-color:#44AAEE;
+    width:95%;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+.navigationCenter {
+    width:60%;
+    margin-left:auto;
+    margin-right: auto;
+}
+.navigationSide {
+    width:20%;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+
+/* Slide animation */
+
+.view-animate-container {
+    position:relative;
+    height:100%;
+    //overflow:hidden;
+}
+
+.view-animate {
+    padding:10px;
+}
+
+.view-animate.ng-enter, .view-animate.ng-leave {
+    -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
+    transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
+
+    display:block;
+    width:100%;
+
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:10px;
+}
+
+.rtl .view-animate.ng-enter {
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}
+.rtl .view-animate.ng-enter.ng-enter-active {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.rtl .view-animate.ng-leave.ng-leave-active {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+
+.ltr .view-animate.ng-enter {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+.ltr .view-animate.ng-enter.ng-enter-active {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.ltr .view-animate.ng-leave.ng-leave-active {
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}
+
+/* Slide animation end */
+
+
+/* fade animation */
+
+/*
+ The animate class is apart of the element and the ng-enter class
+ is attached to the element once the enter animation event is triggered
+*/
+.reveal-animation.ng-enter {
+    -webkit-transition: 0.5s linear all; /* Safari/Chrome */
+    transition: 0.5s linear all; /* All other modern browsers and IE10+ */
+ 
+    /* The animation preparation code */
+    opacity: 0;
+}
+ 
+/*
+ Keep in mind that you want to combine both CSS
+ classes together to avoid any CSS-specificity
+ conflicts
+*/
+.reveal-animation.ng-enter.ng-enter-active {
+    /* The animation code itself */
+    opacity: 1;
+}
+
+/* end fade animation */

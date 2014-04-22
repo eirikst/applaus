@@ -1,10 +1,11 @@
 package Servlets;
 
 import APPlausException.InputException;
+import DAO.DatabaseConnection;
 import DAO.MongoDbImpl.AssignmentQueriesImpl;
 import DAO.MongoDbImpl.ContestQueriesImpl;
 import DAO.MongoDbImpl.IdeaQueriesImpl;
-import DAO.MongoDbImpl.MongoConnection;
+import DAO.MongoDbImpl.MongoConnectionImpl;
 import DAO.MongoDbImpl.NewsQueriesImpl;
 import DAO.MongoDbImpl.SectionQueriesImpl;
 import DAO.MongoDbImpl.UserQueriesImpl;
@@ -18,6 +19,8 @@ import DbManager.MongoDbImpl.AuthenticationManagerImpl;
 import DbManager.MongoDbImpl.ContestManagerImpl;
 import DbManager.MongoDbImpl.HomeManagerImpl;
 import DbManager.MongoDbImpl.IdeaManagerImpl;
+import DbManager.MongoDbImpl.StatisticsManagerImpl;
+import DbManager.StatisticsManager;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.io.IOException;
@@ -49,6 +52,7 @@ public class APPlausServlet extends HttpServlet {
     private AssignmentManager assignMan;
     private ContestManager contMan;
     private IdeaManager ideaMan;
+    private StatisticsManager statsMan;
     
     @Override
     public void init() throws ServletException {
@@ -66,6 +70,8 @@ public class APPlausServlet extends HttpServlet {
             contMan = new ContestManagerImpl(ContestQueriesImpl.getInstance(), 
                     UserQueriesImpl.getInstance());
             ideaMan = new IdeaManagerImpl(IdeaQueriesImpl.getInstance());
+            statsMan = new StatisticsManagerImpl(AssignmentQueriesImpl.
+                    getInstance(), UserQueriesImpl.getInstance());
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -821,7 +827,8 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
             }
-
+            
+            //get points home
             else if(action.equals("getPointsHome")) {
                 if(!isUser(roleId)) {
                     response.sendError(401);//internal error
@@ -838,6 +845,74 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
             }
+            
+            // get stats home
+            else if(action.equals("getHomeStats")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String periodString = request.getParameter("period");
+                if(periodString == null) {
+                    LOGGER.log(Level.INFO, "period value null");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                int period = -1;
+                try {
+                    period = Integer.parseInt(periodString);
+                    String returnObj = statsMan.getPointsStats(username, period);
+                    if(returnObj == null) {//period not 
+                        response.sendError(400);//bad request
+                        return;
+                    }
+                    else {
+                        out.print(returnObj);
+                        response.setStatus(200);//success
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "Period parameter not an integer.");
+                    response.sendError(400);
+                    return;
+                }
+            }
+            
+            // get top five
+            else if(action.equals("getTopFive")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String periodString = request.getParameter("period");
+                if(periodString == null) {
+                    LOGGER.log(Level.INFO, "period value null");
+                    response.sendError(400);//bad request
+                    return;
+                }
+                int period = -1;
+                try {
+                    period = Integer.parseInt(periodString);
+                    String returnObj = statsMan.getTopFive(period);
+                    if(returnObj == null) {//period not 
+                        response.sendError(400);//bad request
+                        return;
+                    }
+                    else {
+                        out.print(returnObj);
+                        response.setStatus(200);//success
+                        return;
+                    }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "Period parameter not an integer.");
+                    response.sendError(400);
+                    return;
+                }
+            }
+            
+            
             
             // add idea
             else if(action.equals("addIdea")) {
@@ -1220,16 +1295,16 @@ public class APPlausServlet extends HttpServlet {
     }// </editor-fold>
  
     /**
-     * Closes mongo client destroy
+     * Closes database connection on destroy
      */
    @Override
     public void destroy() {
         try {
-            MongoConnection connection = MongoConnection.getInstance();
+            DatabaseConnection connection = MongoConnectionImpl.getInstance();
             connection.close();
         }
         catch(UnknownHostException e) {
-            LOGGER.log(Level.SEVERE, "Error closing MongoConnection.", e);
+            LOGGER.log(Level.SEVERE, "Error closing database connection.", e);
         }
     }
 }

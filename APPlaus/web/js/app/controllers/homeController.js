@@ -30,11 +30,61 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     };
 
     //sets a goal according to parameter
+    $scope.getStats = function() {
+        var month = 30;
+        var quarter = 90;
+        var halfyear = 180;
+        HomeService.getStats(month)
+                .success(function(data, status, headers, config) {
+                    $scope.myRankMonth = data.highest;
+                    $scope.nrOfUsers = data.total;
+                    $scope.lowestThisMonth = data.lowest;
+                    $scope.userAboveMeMonth = data.aboveUser;
+                    $scope.pointsAboveMeMonth = data.abovePoints;
+                    $scope.userBelowMeMonth = data.belowUser;
+                    $scope.pointsBelowMeMonth = data.belowPoints;
+                    $scope.percentageMonth = $scope.myRankMonth / $scope.nrOfUsers;
+                    console.log("getStats success");
+                }).error(function(data, status, headers, config) {
+                    console.log("Failed http action=getHomeStats");
+        });
+        HomeService.getStats(quarter)
+                .success(function(data, status, headers, config) {
+                    $scope.myRankQuarter = data.highest;
+                    $scope.lowestThisQuarter = data.lowest;
+                    $scope.userAboveMeQuarter = data.aboveUser;
+                    $scope.pointsAboveMeQuarter = data.abovePoints;
+                    $scope.userBelowMeQuarter = data.belowUser;
+                    $scope.pointsBelowMeQuarter = data.belowPoints;
+                    $scope.percentageQuarter = $scope.myRankQuarter / $scope.nrOfUsers;
+                    console.log(data);  
+                    console.log("getStats success");
+                }).error(function(data, status, headers, config) {
+                    console.log("Failed http action=getHomeStats");
+        });
+        HomeService.getStats(halfyear)
+                .success(function(data, status, headers, config) {
+                    $scope.myRankHalfYear = data.highest;
+                    $scope.lowestThisHalfYear = data.lowest;
+                    $scope.userAboveMeHalfYear = data.aboveUser;
+                    $scope.pointsAboveMeHalfYear = data.abovePoints;
+                    $scope.userBelowMeHalfYear = data.belowUser;
+                    $scope.pointsBelowMeHalfYear = data.belowPoints;
+                    $scope.percentageHalfYear = $scope.myRankHalfYear / $scope.nrOfUsers;
+                    console.log(data);  
+                    console.log("getStats success");
+                }).error(function(data, status, headers, config) {
+                    console.log("Failed http action=getHomeStats");
+        });
+    };
+
+    //sets a goal according to parameter
     $scope.setGoal = function(goal) {
         HomeService.setGoal(goal)
                 .success(function(data, status, headers, config) {
                     console.log("setGoal success");
                     $scope.goal = goal;
+                    $scope.progress = ($scope.week / $scope.goal) * 100;
                 }).error(function(data, status, headers, config) {
             $scope.setGoalErr = "Det skjedde en feil ved oppdatering av " +
                     "målsetting. Vennligst prøv igjen senere.";
@@ -113,6 +163,10 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         IdeaService.addIdea(idea)
                 .success(function(data, status, headers, config) {
                 $scope.ideaMsg = "Ide lagt til i idebank!";
+                $scope.week += 20;//IDEA POINTS!
+                $scope.month += 20;//IDEA POINTS!
+                $scope.year += 20;//IDEA POINTS!
+                $scope.progress = ($scope.week / $scope.goal) * 100;
             console.log("addIdea success");
                 }).error(function(data, status, headers, config) {
             $scope.ideaErr = "Det skjedde en feil. "
@@ -125,13 +179,17 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     //assignment related
 
     // user registers a completed assignment
-    $scope.registerAssignment = function(id, assignment) {
+    $scope.registerAssignment = function(type, assignment) {
         var d = new Date(assignment.date_done);//gets date
         assignment.time = d.getTime();//date as long time
-        AssignService.registerAssignment(id, assignment)
+        AssignService.registerAssignment(type._id.$oid, assignment)
                 .success(function(data, status, headers, config) {
                     if(data == 1) {
                         $scope.assignMsg = "Oppgave lagt til!";
+                        $scope.week += type.points;
+                        $scope.month += type.points;
+                        $scope.year += type.points;
+                        $scope.progress = ($scope.week / $scope.goal) * 100;
                     }
                     else if(data == -1) {
                         $scope.assignErrMsg = "Du kan bare registrere for dager tidligere denne uka eller idag";
@@ -172,6 +230,7 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     getAssignmentTypes();
     var skip = 0;
     $scope.getPoints();
+    $scope.getStats();
     $scope.getNews(skip);
     $scope.roleCookie = $cookies.role;//role cookie
     $scope.isMobile = DeviceService.isMobile();

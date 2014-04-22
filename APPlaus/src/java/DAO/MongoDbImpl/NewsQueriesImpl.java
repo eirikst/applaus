@@ -26,7 +26,7 @@ public class NewsQueriesImpl implements NewsQueries {
     private final DB db;
     
     private NewsQueriesImpl() throws UnknownHostException {
-        db = MongoConnection.getInstance().getDB();
+        db = MongoConnectionImpl.getInstance().getDB();
         System.out.println(db.getCollection("contest").find());
     }
     

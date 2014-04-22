@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 import DbManager.MongoDbImpl.AuthenticationManagerImpl;
 import Tools.DateTools;
-import static Tools.DateTools.getToday;
 import APPlausException.InputException;
 import com.mongodb.AggregationOutput;
 import com.mongodb.MongoException;
@@ -37,7 +36,7 @@ public class UserQueriesImpl implements UserQueries{
     private final DB db;
     
     private UserQueriesImpl() throws UnknownHostException {
-        db = MongoConnection.getInstance().getDB();
+        db = MongoConnectionImpl.getInstance().getDB();
         System.out.println(db.getCollection("contest").find());
     }
     
@@ -747,5 +746,31 @@ public class UserQueriesImpl implements UserQueries{
         Iterable<DBObject> it = userColl.find(query);
         
         return it.iterator();
+    }
+    
+    /**
+     * Gets a String Iterator with the usernames of all the active users in the 
+     * system
+     * @return String Iterator with the usernames of all the active users in the 
+     * system
+     */
+    @Override
+    public List<String> getActiveUsers() {
+        DBCollection collection = db.getCollection("user");
+        DBObject query = new BasicDBObject();
+        query.put("_id", 0);
+        query.put("username", 1);
+        DBCursor cursor = collection.find(new BasicDBObject(), query);
+        
+        List users = new ArrayList();
+        
+        while(cursor.hasNext()) {
+            BasicDBObject obj = (BasicDBObject)cursor.next();
+            String username = obj.getString("username");
+            if(username != null) {
+                users.add(username);
+            }
+        }
+        return users;
     }
 }

@@ -1,0 +1,5 @@
+<div ng-swipe-left="changeView('assignments')">
+    <div ng-repeat="(key, value) in (topFiveMonthPoints | getOrdered)">
+            {{key}} - {{value}}
+    </div>
+</div>

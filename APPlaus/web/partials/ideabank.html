@@ -1,4 +1,4 @@
-<div class="container" ng-swipe-right="changeView('contests')">
+<div ng-swipe-right="changeView('contests')">
     <span class="redMsg">
         {{createErrMsg}}
     </span>
@@ -127,7 +127,7 @@
                         </strong>
                     </td>
                     <td class="headerRight30">
-                        <span ng-show="idea.username == usernameCookie">
+                        <span>
                             <span class="glyphicon glyphicon-marginleft5px glyphicon-hovergray" ng-class="{'glyphicon-plus-sign':!commentable, 'glyphicon-minus-sign':commentable}" ng-click="commentable=!commentable"></span>
                         </span>
                     </td>

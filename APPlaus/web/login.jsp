@@ -28,11 +28,11 @@
 
     </head>
 
-    <body style="background-color:#ff3333">
+    <body style="background-color:white">
 
         <!--static navbar-->
-        <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation">
-            <div class="navbar-content-login text-center">
+        <div class="navigation" role="navigation">
+            <div class="navigationInner">
                 <h4>Velkommen til APPlaus!</h4>
             </div>
         </div>

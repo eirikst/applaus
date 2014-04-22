@@ -40,43 +40,45 @@
         <title>APPlaus</title>
     </head>
 
-    <body style="background-color:#ff3333">
+    <body style="background-color:white">
 
         <!--static navbar-->
-        <div class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation" ng-controller="HeaderCtrl">
-            <div class="navbar-content-index text-center">
-                
-                <span class="text-center" style="margin:0 auto;">
-                <!--nav icons-->
-                <a href="#profile" ng-show="!isActive('/profile')"><img class="index-icon" src="img/Profile.png"></a>
-                <a href="#profile" ng-show="isActive('/profile')"><img class="index-icon" src="img/Profile_selected.png"></a>
-                <a href="#assignments" ng-show="!isActive('/assignments')"><img class="index-icon" src="img/Assignment.png"></a>
-                <a href="#assignments" ng-show="isActive('/assignments')"><img class="index-icon" src="img/Assignment_selected.png"></a>
-                <a href="#home" ng-show="!isActive('/home')"><img class="index-icon" src="img/Home.png"></a>
-                <a href="#home" ng-show="isActive('/home')"><img class="index-icon" src="img/Home_selected.png"></a>
-                <a href="#contests" ng-show="!isActive('/contests')"><img class="index-icon" src="img/Contest.png"></a>
-                <a href="#contests" ng-show="isActive('/contests')"><img class="index-icon" src="img/Contest_selected.png"></a>
-                <a href="#ideabank" ng-show="!isActive('/ideabank')"><img class="index-icon" src="img/Idea.png"></a>
-                <a href="#ideabank" ng-show="isActive('/ideabank')"><img class="index-icon" src="img/Idea_selected.png"></a>
-                <!--end nav icons-->
-                </span>
-                
-                <!--nav dropmenu-->
-                <ul class="nav pull-right">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" ng-class="glyphicon - chevron - down" data-toggle="dropdown">
-                            Mer
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a type="button" href="#adminList" ng-show="roleCookie == 1">Admin features</a></li>
-                            <li><a href="logout.jsp">Logout</a></li>
+        <div class="navigation" ng-controller="HeaderCtrl">
+            <table class="navigationInner">
+                <tr>
+                    <td class="navigationSide"></td><!--on each side to center main content-->
+                    <td class="navigationCenter text-center">
+                        <span>
+                            <!--nav icons-->
+                            <a href="#stats" ng-show="!isActive('/stats')"><img class="index-icon" src="img/Profile.png"></a>
+                            <a href="#stats" ng-show="isActive('/stats')"><img class="index-icon" src="img/Profile_selected.png"></a>
+                            <a href="#assignments" ng-show="!isActive('/assignments')"><img class="index-icon" src="img/Assignment.png"></a>
+                            <a href="#assignments" ng-show="isActive('/assignments')"><img class="index-icon" src="img/Assignment_selected.png"></a>
+                            <a href="#home" ng-show="!isActive('/home')"><img class="index-icon" src="img/Home.png"></a>
+                            <a href="#home" ng-show="isActive('/home')"><img class="index-icon" src="img/Home_selected.png"></a>
+                            <a href="#contests" ng-show="!isActive('/contests')"><img class="index-icon" src="img/Contest.png"></a>
+                            <a href="#contests" ng-show="isActive('/contests')"><img class="index-icon" src="img/Contest_selected.png"></a>
+                            <a href="#ideabank" ng-show="!isActive('/ideabank')"><img class="index-icon" src="img/Idea.png"></a>
+                            <a href="#ideabank" ng-show="isActive('/ideabank')"><img class="index-icon" src="img/Idea_selected.png"></a>
+                            <!--end nav icons-->
+                        </span>
+                    </td>
+                    <td class="navigationSide">
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a style="color:white" class="dropdown-toggle" ng-class="glyphicon - chevron - down" data-toggle="dropdown">
+                                    Mer
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a type="button" href="#adminList" ng-show="roleCookie == 1">Admin features</a></li>
+                                    <li><a href="logout.jsp">Logout</a></li>
+                                </ul>
+                            </li>
                         </ul>
-                    </li>
-                </ul>
-                <!--nav dropmenu end-->
-
-            </div>
+                    </td>
+                </tr>
+            </table>
         </div>
         <!--static navbar end-->
 
@@ -84,9 +86,12 @@
         <div class="content">
 
             <!--partial-->
-            <div ng-view="" class="reveal-animation"></div>
+            <!--div ng-view="" class="container container-1024 reveal-animation"></div-->
             <!--end partial-->
-
+            
+        <div class="view-animate-container container container-1024" ng-class="direction">
+          <div ng-view class="view-animate"></div>
+        </div>
         </div>
         <!--end content-->
 
@@ -99,12 +104,14 @@
         <script src="js/app/controllers/contController.js"></script>       
         <script src="js/app/controllers/adminController.js"></script>       
         <script src="js/app/controllers/ideaController.js"></script>       
+        <script src="js/app/controllers/statisticsController.js"></script>       
         <script src="js/app/services/services.js"></script>
         <script src="js/app/services/homeServices.js"></script>
         <script src="js/app/services/assignmentServices.js"></script>
         <script src="js/app/services/contestServices.js"></script>
         <script src="js/app/services/adminServices.js"></script>
         <script src="js/app/services/ideaServices.js"></script>
+        <script src="js/app/services/statisticsServices.js"></script>
         <script src="js/app/directives/directives.js"></script>
         <script src="js/app/filters/filters.js"></script>
         <!--end angular scripts-->
