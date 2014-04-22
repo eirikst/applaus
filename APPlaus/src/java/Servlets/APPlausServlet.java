@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -289,6 +291,42 @@ public class APPlausServlet extends HttpServlet {
                     LOGGER.log(Level.INFO, "roleId not parseable to int", e);
                     response.sendError(400);//bad request
                     return;
+                }
+            }
+            
+            else if(action.equals("editAssignmentType")) {
+                String assignId = (String)request.getParameter("assignId");
+                String title = (String)request.getParameter("title");
+                int points = parseInt(request.getParameter("points"));
+                String desc = (String)request.getParameter("desc");
+                boolean active = parseBoolean(request.getParameter("active"));
+                try {
+                    
+                    boolean edit = assignMan.editAssignmentType(assignId, title, points, desc, active);
+                    if(!edit) {
+                        response.sendError(500);//error
+                    }
+                }
+                catch(NumberFormatException e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    LOGGER.info("Could not parse points or date to integer or "
+                            + "long. "
+                            + sw.toString());
+                    response.sendError(500);//error
+                }    
+            }
+            
+            //delete assignment
+            else if(action.equals("deleteAssignmentType")) {
+                int deleted = assignMan.deleteAssignmentType(request
+                        .getParameter("assignId"));
+                if(deleted == 1) {
+                    response.setStatus(200);
+                }
+                else {
+                    response.sendError(500);
                 }
             }
             

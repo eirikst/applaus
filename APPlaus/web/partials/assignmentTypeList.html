@@ -1,0 +1,138 @@
+<!--assignmentTypeList-->
+<div class="container">
+    <h2 class="text-center">Assignment Type List</h2>
+    <span class="redMsg">
+        {{assignmentTypeListErr}}
+    </span>
+    
+  
+        
+        
+    <div ng-repeat="type in assignmentTypeList">
+        <div class="drop" ng-init="dropArchive = false">
+            <div class="dropHeading">
+                <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
+                <a class="text-center" ng-click="dropArchive = !dropArchive">{{type.title}} - Points: {{type.points}}
+                    <span class="clickableDiv"></span>
+                </a>
+            </div>
+            <div class="innerDrop" ng-show="dropArchive">
+                <form name="editAssignForm">
+                    
+                    <span ng-show="!editable"><p>Title : {{type.title}}</p></span>
+                    <span ng-show="editable">
+                        <input type="text" name="editTitle" class="form-control" ng-class="{red:editAssignForm.editTitle.$error.required, green:!editAssignForm.editTitle.$error.required}" ng-model="editableAssignment.title" required="true">
+                    </span>
+                    
+                    <span ng-show="!editable"><p>Points: {{type.points}}</p></span>
+                    <span ng-show="editable">
+                        <input type="number" name="editPoints" class="form-control" ng-class="{red:editAssignForm.editPoints.$error.required, green:!editAssignForm.editPoints.$error.required}" ng-model="editableAssignment.points" required="true">
+                    </span>
+                    
+                    <span ng-show="!editable"><p>Description: {{type.desc}}</p></span>
+                    <span ng-show="editable">
+                        <textarea name="editDesc" class="form-control" ng-class="{red:editAssignForm.editDesc.$error.required, green:!editAssignForm.editDesc.$error.required}" ng-model="editableAssignment.desc" required="true"></textarea>
+                    </span>
+                    
+                    <span ng-show="!editable"><p>Active : <input ng-model="type.active" type="checkbox" ng-disabled="!editable"/></p></span>
+                    <span ng-show="editable">
+                        <p>Active: <input name="editActive" type="checkbox" ng-model="editableAssignment.active"></p>
+                    </span>
+                    
+                    <p>
+                    <button class="form-control" ng-show="editable" ng-click="editable = !editable;
+                        editAssignment(editableAssignment);
+                        clearMsg();
+                        type = copyAssignment(editableAssignment);" ng-disabled="editAssignForm.$invalid">Lagre</button>
+                    </p>
+                </form>
+
+                <a class="stdLink" type="button" ng-show="!editable" ng-click="editable = !editable;
+                    editableAssignment = copyAssignment(type);">Edit</a>
+                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Undo edit</a>
+                <div ng-init="toDelete = false">
+                        <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Delete</a>
+                        <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Undo delete</a>
+                        <div class="alert alert-info" ng-show="toDelete">
+                            <a  ng-click="deleteAssignment(type);
+                                    clearMsg();" class="alert-link">Confirm</a>
+                            that you want to delete the assignment
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </div> 
+        
+        
+       
+   <!--       
+        
+    <table  class="table transp-list">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Points</th>
+                <th>Description</th>
+                <th>Active</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="type in assignmentTypeList">
+            <tr>
+                <td>
+                    <span ng-show="!editable">{{type.title | truncate:15}}</span>
+                    <span ng-show="editable">
+                        <input type="text" placeholder="{{type.title}}" name="editTitle" class="form-control" ng-class="{red:editAssignForm.editTitle.$error.required, green:!editAssignForm.editTitle.$error.required}" ng-model="editableAssignment.title" required="true">
+                    </span>
+                </td>
+                <td>
+                    <span ng-show="!editable">{{type.points}}</span>
+                    <span ng-show="editable">
+                        <input type="number" placeholder="{{type.points}}" name="editPoints" class="form-control" ng-class="{red:editAssignForm.editPoints.$error.required, green:!editAssignForm.editPoints.$error.required}" ng-model="editableAssignment.points" required="true">
+                    </span>
+                </td>
+                <td>
+                    <span ng-show="!editable">{{type.desc | truncate:25}}</span>
+                    <span ng-show="editable">
+                        <textarea placeholder="{{type.desc}}" name="editDesc" class="form-control" ng-class="{red:editAssignForm.editDesc.$error.required, green:!editAssignForm.editDesc.$error.required}" ng-model="editableAssignment.desc" required="true"></textarea>
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        <input ng-model="type.active" type="checkbox" ng-disabled="!editable"/>{{type.active}}
+                    </span>
+                </td>
+                
+                <td> 
+                    <a class="stdLink" type="button" ng-show="!editable" ng-click="editable = !editable;
+                        editableAssignment = copyAssignment(type);">Edit</a>
+                    <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Angre endring</a>
+                    
+                    <button class="form-control" ng-show="editable" ng-click="editable = !editable;
+                        editAssignment(editableAssignment);
+                        clearMsg();
+                        assignment = copyAssignment(editableAssignment);" ng-disabled="editAssignForm.$invalid">Lagre
+                    </button>
+                </td>
+                
+                <td>
+                    <div ng-init="toDelete = false">
+                        <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Delete</a>
+                        <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
+                        <div class="alert alert-info" ng-show="toDelete">
+                            <a  ng-click="deleteAssignment(type);
+                                    clearMsg();" class="alert-link">Confirm</a>
+                            that you want to delete the assignment
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>   
+        
+   
+   -->
+</div>
+<!--assignmentTypeList end-->

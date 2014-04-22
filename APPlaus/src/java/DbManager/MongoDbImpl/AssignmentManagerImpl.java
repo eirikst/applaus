@@ -150,6 +150,32 @@ public class AssignmentManagerImpl implements AssignmentManager {
         }
     }
     
+    @Override
+    public boolean editAssignmentType(String assignId, String title, int points, String desc, boolean active) {
+        try {
+            return assignQ.editAssignmentType(assignId, title, points, desc, active);
+        }
+        catch(InputException | MongoException e) {
+            LOGGER.warning(e.toString());
+            return false;
+        }
+    }
+    
+    @Override
+    public int deleteAssignmentType(String objId) {
+        try {
+            boolean okDelete = assignQ.deleteAssignmentType(objId);
+            return 0;
+        }
+        catch(InputException e) {
+                    LOGGER.severe(e.toString());
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.warning(e.toString());
+            return -2;
+        }
+    }
     
     public String listParticipants(String contestId) {
         try {

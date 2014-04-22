@@ -30,5 +30,7 @@ public interface AssignmentManager {
     
     public boolean editAssignment(String contestId, String comment, Date date_done, String username);    
     public int deleteAssignment(String objId, String username);
+    public boolean editAssignmentType(String assignId, String title, int points, String desc, boolean active);    
+    public int deleteAssignmentType(String objId);
     public String listParticipants(String contestId);
 }

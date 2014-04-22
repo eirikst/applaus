@@ -20,4 +20,8 @@ public interface AssignmentQueries {
             String comment) throws InputException, MongoException;
     public DBObject createAssignment(String title, String desc,
             int points) throws InputException, MongoException;
+    public boolean editAssignmentType(String assignId, String title, int points, String desc, boolean active) 
+            throws InputException, MongoException; 
+    public boolean deleteAssignmentType(String objId) 
+            throws InputException, MongoException;
 }
