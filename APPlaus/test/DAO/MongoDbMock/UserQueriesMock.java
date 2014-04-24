@@ -283,4 +283,14 @@ public class UserQueriesMock implements UserQueries {
         }
         return users;
     }
+
+    @Override
+    public void addAchievement(String username, String name, int number) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<DBObject> getAchievements(String username) throws MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

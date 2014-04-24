@@ -2,33 +2,33 @@
     <span class="redMsg">
         {{fetchErrMsg}}<!--Error fetching info-->
     </span>
-    <h2 class="text-center">Registrerte oppgaver</h2>
+    <h2 class="text-center">Registered assignments</h2>
     <div class="drop" ng-init="dropAssignCreate = false" ng-show="roleCookie == 1 || roleCookie == 2">
         <div class="dropHeading">
             <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
-            <a class="text-center" ng-click="dropAssignCreate = !dropAssignCreate">Lag en ny type oppgave
+            <a class="text-center" ng-click="dropAssignCreate = !dropAssignCreate">Create a new assignment type
                 <span class="clickableDiv"></span>
             </a>
         </div>
         <div class="innerDrop" ng-show="dropAssignCreate">
             <form name="newAssignForm">
                 <p>
-                    <input name="newAssignTitle" class="form-control" ng-model="toAddAssignment.title" type="text" placeholder="Navn" required="true" ng-class="{red:newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty, green:!newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty}">
+                    <input name="newAssignTitle" class="form-control" ng-model="toAddAssignment.title" type="text" placeholder="Name" required="true" ng-class="{red:newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty, green:!newAssignForm.newAssignTitle.$error.required && newAssignForm.newAssignTitle.$dirty}">
                 </p>
 
                 <p>
-                    <input name="newAssignPoints" class="form-control" ng-model="toAddAssignment.points" type="number" placeholder="Poeng" required="true" min="1" ng-class="{red:(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty, green:!(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty}">
+                    <input name="newAssignPoints" class="form-control" ng-model="toAddAssignment.points" type="number" placeholder="Points" required="true" min="1" ng-class="{red:(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty, green:!(newAssignForm.newAssignPoints.$error.required || newAssignForm.newAssignPoints.$error.min) && newAssignForm.newAssignPoints.$dirty}">
                 </p>
 
                 <p>
-                    <textarea name="newAssignDesc" ng-model="toAddAssignment.desc" placeholder="Beskrivelse" class="form-control" required="true" ng-class="{red:newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty, green:!newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty}"></textarea>
+                    <textarea name="newAssignDesc" ng-model="toAddAssignment.desc" placeholder="Description" class="form-control" required="true" ng-class="{red:newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty, green:!newAssignForm.newAssignDesc.$error.required && newAssignForm.newAssignDesc.$dirty}"></textarea>
                 </p>
 
                 <p>
                     <button data-ng-click="createAssignment(toAddAssignment);
                         clearMsg();"
                             class="form-control" ng-disabled="newAssignForm.$invalid">
-                        Registrer
+                        Register
                     </button>
                 </p>
                 <span class="redMsg">
@@ -44,7 +44,7 @@
     <div class="drop" ng-init="dropAssignReg = false">
         <div class="dropHeading">
             <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropAssignCreate, 'glyphicon-chevron-right': !dropAssignCreate}"></a>
-            <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Registrer oppgave
+            <a class="text-center" ng-click="dropAssignReg = !dropAssignReg">Register assignment
                 <span class="clickableDiv"></span>
             </a>
         </div>
@@ -56,11 +56,11 @@
             </p>
             <p>
                 {{selectedOption.desc}}<br/>
-                Oppgaven gir {{selectedOption.points}} poeng
+                The assignment is worth {{selectedOption.points}} points
             </p>
             <form name="regForm">
                 <p>
-                    <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Kommentar" required="true" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}"></textarea>
+                    <textarea ng-model='assignment.comment' name="regComment" class="form-control" placeholder="Comment" required="true" ng-class="{red:regForm.regComment.$error.required && regForm.regComment.$dirty, green:!regForm.regComment.$error.required && regForm.regComment.$dirty}"></textarea>
                 </p>
                 <p>
                     <input class="form-control" ng-model='assignment.date_done.$date' type="date" name="regDate" required="true" ng-class="{red:regForm.regDate.$error.required && regForm.regDate.$dirty, green:!regForm.regDate.$error.required && regForm.regDate.$dirty}">
@@ -70,7 +70,7 @@
                         clearMsg();"
                             ng-disabled="regForm.$invalid; selectedOption.active == false"
                             class="form-control">
-                        Registrer
+                        Register
                     </button>
                 </p>
                 <span class="redMsg">
@@ -94,41 +94,40 @@
             </div>
             <div class="innerDrop" ng-show="dropArchive">
                 <form name="editAssignForm">
-                    <p>Poeng:  {{assignment.points}}     </p>
-                    <p>oid: {{assignment.thisId.$oid}}</p>
+                    <p>Points:  {{assignment.points}}     </p>
 
                     <span ng-show="!editable">
-                        <p>Dato: {{assignment.date_done.$date| date:('dd.MM.yyyy')}} </p>
+                        <p>Date: {{assignment.date_done.$date| date:('dd.MM.yyyy')}} </p>
                     </span>
                     <span ng-show="editable">
-                        Dato: <input type="date" name="editDateDone" class="form-control" ng-class="{red:editAssignForm.editDateDone.$error.required, green:!editAssignForm.editDateDone.$error.required}" ng-model="editableAssignment.date_done.$date" required="true">
+                        Date: <input type="date" name="editDateDone" class="form-control" ng-class="{red:editAssignForm.editDateDone.$error.required, green:!editAssignForm.editDateDone.$error.required}" ng-model="editableAssignment.date_done.$date" required="true">
                     </span>
 
                     <span ng-show="!editable">
-                        <p>Kommentar: {{assignment.comment}} </p>
+                        <p>Comment: {{assignment.comment}} </p>
                     </span>
                     <span ng-show="editable">
-                        <textarea placeholder="Kommentar" name="editComment" class="form-control" ng-class="{red:editAssignForm.editComment.$error.required, green:!editAssignForm.editComment.$error.required}" ng-model="editableAssignment.comment" required="true"></textarea>
+                        <textarea placeholder="Comment" name="editComment" class="form-control" ng-class="{red:editAssignForm.editComment.$error.required, green:!editAssignForm.editComment.$error.required}" ng-model="editableAssignment.comment" required="true"></textarea>
                     </span>
 
                     <p>
                     <button class="form-control" ng-show="editable" ng-click="editable = !editable;
                         editAssignment(editableAssignment);
                         clearMsg();
-                        assignment = copyAssignment(editableAssignment);" ng-disabled="editAssignForm.$invalid">Lagre</button>
+                        assignment = copyAssignment(editableAssignment);" ng-disabled="editAssignForm.$invalid">Save</button>
                     </p>
                 </form>
 
                 <a class="stdLink" type="button" ng-show="!editable" ng-click="editable = !editable;
-                    editableAssignment = copyAssignment(assignment);">Endre</a>
-                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Angre endring</a>
+                    editableAssignment = copyAssignment(assignment);">Change</a>
+                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Undo change</a>
                 <div ng-init="toDelete = false">
-                    <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Slett</a>
-                    <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
+                    <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Delete</a>
+                    <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Undo delete</a>
                     <div class="alert alert-info" ng-show="toDelete">
                         <a  ng-click="deleteAssignment(assignment);
-                                clearMsg();" class="alert-link">Bekreft</a>
-                        at du ønsker å slette oppgaven
+                                clearMsg();" class="alert-link">Confirm</a>
+                        that you want to delete the assignment
                     </div>
                 </div>
 
@@ -137,7 +136,7 @@
     </div>       
     <div>
         <p>
-            <a type="button" class="form-control" ng-click="getAllAssignments(skip)">Last flere</a>
+            <a type="button" class="form-control form-control-medium" ng-click="getAllAssignments(skip)">Load more</a>
         </p>
     </div>
 </div>

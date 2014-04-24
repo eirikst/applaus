@@ -418,4 +418,118 @@ public class AssignmentManagerImplTest {
             assignments.add(obj);
         }
     }
+
+    /**
+     * Test of getAssignmentsTypes method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testGetAssignmentsTypes() {
+        System.out.println("getAssignmentsTypes");
+        AssignmentManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.getAssignmentsTypes();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of createAssignment method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testCreateAssignment() {
+        System.out.println("createAssignment");
+        String title = "";
+        String desc = "";
+        int points = 0;
+        AssignmentManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.createAssignment(title, desc, points);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of registerAssignment method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testRegisterAssignment() {
+        System.out.println("registerAssignment");
+        String username = "";
+        String id = "";
+        Date dateDone = null;
+        String comment = "";
+        AssignmentManagerImpl instance = null;
+        int expResult = 0;
+        int result = instance.registerAssignment(username, id, dateDone, comment);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAllAssignmentsUserSorted method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testGetAllAssignmentsUserSorted() {
+        System.out.println("getAllAssignmentsUserSorted");
+        String username = "";
+        int skip = 0;
+        AssignmentManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.getAllAssignmentsUserSorted(username, skip);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of editAssignmentType method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testEditAssignmentType() {
+        System.out.println("editAssignmentType");
+        String assignId = "";
+        String title = "";
+        int points = 0;
+        String desc = "";
+        boolean active = false;
+        AssignmentManagerImpl instance = null;
+        boolean expResult = false;
+        boolean result = instance.editAssignmentType(assignId, title, points, desc, active);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of deleteAssignmentType method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testDeleteAssignmentType() {
+        System.out.println("deleteAssignmentType");
+        String objId = "";
+        AssignmentManagerImpl instance = null;
+        int expResult = 0;
+        int result = instance.deleteAssignmentType(objId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of listParticipants method, of class AssignmentManagerImpl.
+     */
+    @Test
+    public void testListParticipants() {
+        System.out.println("listParticipants");
+        String contestId = "";
+        AssignmentManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.listParticipants(contestId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

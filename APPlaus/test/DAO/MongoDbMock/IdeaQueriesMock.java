@@ -174,11 +174,23 @@ public class IdeaQueriesMock implements IdeaQueries {
 
     @Override
     public DBObject getMostIdeaLikesInfo(String username) throws InputException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(username == null) {
+            throw new InputException("Username null");
+        }
+        DBObject likesInfo = new BasicDBObject();
+        likesInfo.put("_id", "username1");
+        likesInfo.put("num", 10);
+        return likesInfo;
     }
 
     @Override
     public DBObject getMostCommentsInfo(String username) throws InputException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(username == null) {
+            throw new InputException("Username null");
+        }
+        DBObject commentsInfo = new BasicDBObject();
+        commentsInfo.put("_id", "username1");
+        commentsInfo.put("num", 10);
+        return commentsInfo;
     }
 }

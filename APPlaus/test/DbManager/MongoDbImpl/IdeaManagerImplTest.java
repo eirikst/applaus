@@ -312,7 +312,7 @@ public class IdeaManagerImplTest {
      * Testing on successful like, should return true.
      */
     @Test
-    public void likeIdeaSuccess() {
+    public void testLikeIdeaSuccess() {
         System.out.println("likeIdea");
         String ideaId = "000000000000000000000000";
         String username = "username1";
@@ -331,7 +331,7 @@ public class IdeaManagerImplTest {
      * Testing on null input, whould return false.
      */
     @Test
-    public void likeIdeaNullInput() {
+    public void testLikeIdeaNullInput() {
         System.out.println("likeIdea");
         String ideaId = "000000000000000000000000";
         String username = "username1";
@@ -352,7 +352,7 @@ public class IdeaManagerImplTest {
      * Testing on wrong object id, should return false.
      */
     @Test
-    public void likeIdeaWrongOID() {
+    public void testLikeIdeaWrongOID() {
         System.out.println("likeIdea");
         String ideaId = "wrong oid";
         String username = "username1";
@@ -371,7 +371,7 @@ public class IdeaManagerImplTest {
      * Testing on successful like, should return true.
      */
     @Test
-    public void likeCommentSuccess() {
+    public void testLikeCommentSuccess() {
         System.out.println("likeComment");
         String ideaId = "000000000000000000000000";
         String username = "username1";
@@ -390,7 +390,7 @@ public class IdeaManagerImplTest {
      * Testing on null input, whould return false.
      */
     @Test
-    public void likeCommentNullInput() {
+    public void testLikeCommentNullInput() {
         System.out.println("likeComment");
         String ideaId = "000000000000000000000000";
         String username = "username1";
@@ -411,7 +411,7 @@ public class IdeaManagerImplTest {
      * Testing on wrong object id, should return false.
      */
     @Test
-    public void likeCommentWrongOID() {
+    public void testLikeCommentWrongOID() {
         System.out.println("likeComment");
         String ideaId = "wrong oid";
         String username = "username1";
@@ -430,7 +430,7 @@ public class IdeaManagerImplTest {
      * Testing on successful delete, should return true.
      */
     @Test
-    public void deleteCommentSuccess() {
+    public void testDeleteCommentSuccess() {
         System.out.println("deleteComment");
         String ideaId = "000000000000000000000000";
         String commentId = "000000000000000000000000";
@@ -449,7 +449,7 @@ public class IdeaManagerImplTest {
      * Testing on null input, whould return false.
      */
     @Test
-    public void deleteCommentNullInput() {
+    public void testDeleteCommentNullInput() {
         System.out.println("deleteComment");
         String ideaId = "000000000000000000000000";
         String commentId = "000000000000000000000000";
@@ -472,7 +472,7 @@ public class IdeaManagerImplTest {
      * Testing on wrong object id, should return false.
      */
     @Test
-    public void deleteCommentWrongOID() {
+    public void testDeleteCommentWrongOID() {
         System.out.println("deleteComment");
         String ideaId = "000000000000000000000000";
         String commentId = "000000000000000000000000";
@@ -487,5 +487,53 @@ public class IdeaManagerImplTest {
         assertFalse(result);
         result = instance.deleteComment(ideaId, "wrong format", username);
         assertFalse(result);
+    }
+
+    /**
+     * Test of getCommentsAndLikeInfo method, of class IdeaManagerImpl. Testing 
+     * a successful scenario
+     */
+    @Test
+    public void testGetCommentsAndLikeInfoSuccess() {
+        System.out.println("getCommentsAndLikeInfo");
+        String username = "username";
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        DBObject likesInfo = new BasicDBObject();
+        likesInfo.put("_id", "username1");
+        likesInfo.put("num", 10);
+
+        DBObject commentsInfo = new BasicDBObject();
+        commentsInfo.put("_id", "username1");
+        commentsInfo.put("num", 10);
+        
+        DBObject expObj = new BasicDBObject();
+        expObj.put("likesInfo", likesInfo);
+        expObj.put("commentInfo", commentsInfo);
+        
+        //result
+        String expResult = JSON.serialize(expObj);
+        String result = instance.getCommentsAndLikeInfo(username);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of getCommentsAndLikeInfo method, of class IdeaManagerImpl. Testing 
+     * an unsuccessful scenario because of null as username input
+     */
+    @Test
+    public void testGetCommentsAndLikeNullInput() {
+        System.out.println("getCommentsAndLikeInfo");
+        
+        //init mock and test class
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        IdeaManagerImpl instance = new IdeaManagerImpl(ideaQMock);        
+        
+        //result
+        String result = instance.getCommentsAndLikeInfo(null);
+        assertNull(result);
     }
 }

@@ -18,7 +18,7 @@ import org.junit.runners.Suite;
  * @author eirikstadheim
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({DbManager.MongoDbImpl.ContestManagerImplTest.class, DbManager.MongoDbImpl.AuthenticationManagerImplTest.class, DbManager.MongoDbImpl.HomeManagerImplTest.class, DbManager.MongoDbImpl.AssignmentManagerImplTest.class, DbManager.MongoDbImpl.IdeaManagerImplTest.class})
+@Suite.SuiteClasses({ContestManagerImplTest.class, AuthenticationManagerImplTest.class, HomeManagerImplTest.class, StatisticsManagerImplTest.class, AssignmentManagerImplTest.class, IdeaManagerImplTest.class})
 public class MongoDbImplSuite {
 
     @BeforeClass

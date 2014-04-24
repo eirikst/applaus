@@ -324,4 +324,55 @@ public class ContestManagerImplTest {
         result = instance.editContest(contestId, title, desc, prize, dateEnd, -1);
         assertEquals(expResult, result);
     }
+
+    /**
+     * Test of deleteContest method, of class ContestManagerImpl.
+     */
+    @Test
+    public void testDeleteContest() {
+        System.out.println("deleteContest");
+        String objId = "";
+        ContestManagerImpl instance = null;
+        int expResult = 0;
+        int result = instance.deleteContest(objId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of createContest method, of class ContestManagerImpl.
+     */
+    @Test
+    public void testCreateContest() {
+        System.out.println("createContest");
+        String title = "";
+        String desc = "";
+        String prize = "";
+        Date dateEnd = null;
+        int points = 0;
+        String username = "";
+        ContestManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.createContest(title, desc, prize, dateEnd, points, username);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of declareWinner method, of class ContestManagerImpl.
+     */
+    @Test
+    public void testDeclareWinner() {
+        System.out.println("declareWinner");
+        String contestId = "";
+        String username = "";
+        ContestManagerImpl instance = null;
+        boolean expResult = false;
+        boolean result = instance.declareWinner(contestId, username);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

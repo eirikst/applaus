@@ -592,5 +592,87 @@ public class AuthenticationManagerImplTest {
         obj.put("role_id", 1);
         users.add(obj);
     }
+
+    /**
+     * Test of login method, of class AuthenticationManagerImpl.
+     */
+    @Test
+    public void testLogin() {
+        System.out.println("login");
+        String username = "";
+        String password = "";
+        AuthenticationManagerImpl instance = null;
+        int expResult = 0;
+        int result = instance.login(username, password);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of registerUser method, of class AuthenticationManagerImpl.
+     */
+    @Test
+    public void testRegisterUser() {
+        System.out.println("registerUser");
+        String username = "";
+        String password = "";
+        String pwdRepeat = "";
+        String firstname = "";
+        String lastname = "";
+        String email = "";
+        String sectionId = "";
+        AuthenticationManagerImpl instance = null;
+        int expResult = 0;
+        int result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, email, sectionId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of newPassword method, of class AuthenticationManagerImpl.
+     */
+    @Test
+    public void testNewPassword() {
+        System.out.println("newPassword");
+        String email = "";
+        AuthenticationManagerImpl instance = null;
+        int expResult = 0;
+        int result = instance.newPassword(email);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setRole method, of class AuthenticationManagerImpl.
+     */
+    @Test
+    public void testSetRole() {
+        System.out.println("setRole");
+        String username = "";
+        int role = 0;
+        AuthenticationManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.setRole(username, role);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getSections method, of class AuthenticationManagerImpl.
+     */
+    @Test
+    public void testGetSections() {
+        System.out.println("getSections");
+        AuthenticationManagerImpl instance = null;
+        String expResult = "";
+        String result = instance.getSections();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }
