@@ -2,6 +2,7 @@ package DAO;
 
 import APPlausException.InputException;
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import java.util.Date;
@@ -28,10 +29,6 @@ public interface UserQueries {
             throws InputException, MongoException;
     public void setRole(String username, int role)
             throws InputException, MongoException;
-    public void participate(String username, String contestId)
-            throws InputException, MongoException;
-    public void dontParticipate(String username, String contestId)
-            throws InputException, MongoException;
     public BasicDBList userActiveContList(String username)
             throws InputException, MongoException;
     public int getWeekGoal(String username, int week)
@@ -57,4 +54,5 @@ public interface UserQueries {
             throws InputException, MongoException;
     public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException;
     public List<String> getActiveUsers();
+    public List<BasicDBObject> getUsersAndSection();
 }

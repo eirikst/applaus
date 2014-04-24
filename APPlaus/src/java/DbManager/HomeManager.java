@@ -1,5 +1,7 @@
 package DbManager;
 
+import java.util.Date;
+
 /**
  *
  * @author eirikstadheim
@@ -18,7 +20,8 @@ public interface HomeManager {
     //WEEK, MONTH, YEAR
     //when: 0 this, -1 last etc
     public int getPoints(String username, int period);    
-    
+    public int getAssignmentPointsUser(String username, Date from, Date to);
+    public String getPointsSeperate(String username, int period);
     public boolean setGoal(String username, int points);
     
     /**

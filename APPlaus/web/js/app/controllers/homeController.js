@@ -1,14 +1,6 @@
 var controllers = angular.module('employeeApp.controllers');
 
 controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies, HomeService, IdeaService, AssignService, DeviceService) {
-    //carousel!
-    /*$scope.slideInterval = 5000;
-     var slides = $scope.slides = [];
-     slides.push({image:'http://placehold.it/800x320', text:'Antall poeng samlet denne uka', points:$scope.week});
-     slides.push({image:'http://placehold.it/800x320', text:'Antall poeng samlet denne måned', points:$scope.month});
-     slides.push({image:'http://placehold.it/800x320', text:'Antall poeng samlet i år', points:$scope.year});
-     */
-
     //Goal and points related
 
     //gets points and goals, progress...

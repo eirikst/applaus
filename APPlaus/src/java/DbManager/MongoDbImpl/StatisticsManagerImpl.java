@@ -2,25 +2,28 @@
 
 package DbManager.MongoDbImpl;
 
-import DAO.AssignmentQueries;
 import DAO.MongoDbImpl.AssignmentQueriesImpl;
 import DAO.MongoDbImpl.ContestQueriesImpl;
 import DAO.MongoDbImpl.IdeaQueriesImpl;
 import DAO.MongoDbImpl.NewsQueriesImpl;
 import DAO.MongoDbImpl.UserQueriesImpl;
+import DAO.SectionQueries;
 import DAO.UserQueries;
 import DbManager.HomeManager;
 import DbManager.StatisticsManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -29,14 +32,14 @@ import java.util.logging.Logger;
 public class StatisticsManagerImpl implements StatisticsManager {
     private static final Logger LOGGER = Logger.getLogger(StatisticsManagerImpl.
             class.getName());
-    private final AssignmentQueries assignQ;
+    private final SectionQueries sectionQ;
     private final UserQueries userQ;
     
     //fysj
     private HomeManager homeMan;
     
-    public StatisticsManagerImpl(AssignmentQueries assignQ, UserQueries userQ) {
-        this.assignQ = assignQ;
+    public StatisticsManagerImpl(SectionQueries sectionQ, UserQueries userQ) {
+        this.sectionQ = sectionQ;
         this.userQ = userQ;
         try {
         this.homeMan = new HomeManagerImpl(UserQueriesImpl.getInstance(), 
@@ -88,9 +91,22 @@ public class StatisticsManagerImpl implements StatisticsManager {
     }
     
     /**
-     * 
-     * @param username
-     * @return 
+     * Gets stats of a user for a given period
+     * @param username username of user
+     * @param period period of stats. Valid inputs are DateTools.WEEK, LAST_WEEK
+     * , MONTH, QUARTER, HALF_YEAR, YEAR, FOREVER.
+     * @return JSON serialized String containing stats about the user. Stats 
+     * included are:
+     * - points
+     * - highest(rank if users share amount of points)
+     * - lowest(rank if users share amount of points)
+     * - total(number of users)
+     * If user has not most points:
+     * - aboveUser(username of user above)
+     * - abovePoints(nr of points of user above)
+     * If user has not least points:
+     * - belowUser(username of user below)
+     * - belowPoints(nr of points of user below)
      */
     @Override
     public String getPointsStats(String username, int period) {
@@ -129,6 +145,60 @@ public class StatisticsManagerImpl implements StatisticsManager {
         }
         
         return JSON.serialize(retObj);
+    }
+    
+    /**
+     * Gets statistics about the different sections, meaning points for the 
+     * given period for the given section, and nr of users in that section.
+     * @param period period of stats. Valid inputs are DateTools.WEEK, LAST_WEEK
+     * , MONTH, QUARTER, HALF_YEAR, YEAR, FOREVER.
+     * @return JSON serialized String containing the points per section.
+     */
+    @Override
+    public String getSectionStats(int period) {
+        List<Integer> points = new ArrayList();
+        List<BasicDBObject> users = userQ.getUsersAndSection();
+        for(int i = 0; i < users.size(); i++) {
+            String thisUser = users.get(i).getString("username");
+            int thisPoints = 0;
+            if(thisUser != null) {
+                try {
+                    thisPoints = homeMan.getPoints(thisUser, period);
+                }
+                catch(IllegalArgumentException e) {
+                    return null;//period not okay specified
+                }
+            }
+            points.add(thisPoints);
+        }
+        
+        List sectionInfo = new ArrayList();
+        try {
+            Iterator<DBObject> sections = sectionQ.getSections();
+            while(sections.hasNext()) {
+                DBObject thisSection = sections.next();
+                int pointsSection = 0;
+                int nrOfUsers = 0;
+                ObjectId sectionId = (ObjectId)thisSection.get("_id");
+                for(int i = 0; i < users.size(); i++) {
+                    if(sectionId.equals(users.get(i).getString("section"))) {
+                        nrOfUsers ++;
+                        pointsSection += points.get(i);
+                    }
+                }
+                DBObject section = new BasicDBObject();
+                section.put("sectionid", sectionId);
+                section.put("name", thisSection.get("name"));
+                section.put("points", pointsSection);
+                section.put("nrOfUsers", nrOfUsers);
+                sectionInfo.add(section);
+            }
+            return JSON.serialize(sectionInfo);
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting sections.", e);
+            return null;
+        }
     }
     
     /**

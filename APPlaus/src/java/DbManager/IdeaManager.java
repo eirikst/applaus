@@ -13,4 +13,5 @@ public interface IdeaManager {
     public boolean likeComment(String commentId, String username, boolean like);
     public boolean deleteComment(String ideaId, String commentId, 
             String username);
+    public String getCommentsAndLikeInfo(String username);
 }

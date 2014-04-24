@@ -13,8 +13,9 @@ public class DateTools {
     public static final int WEEK = 7;
     public static final int MONTH = 30;
     public static final int QUARTER = 90;
-    public static final int YEAR = 365;
     public static final int HALF_YEAR = 180;
+    public static final int YEAR = 365;
+    public static final int FOREVER = 0;
     
     //int 0 next monday, -1 last etc, if monday, gets next
     public static Date getMonday(int week) {

@@ -132,18 +132,6 @@ public class UserQueriesMock implements UserQueries {
         }
     }
 
-    public void participate(String username, String contestId)
-            throws InputException, MongoException {
-        if(username == null || contestId == null) {
-            throw new InputException("Some of the input is null");
-        }
-    }
-    public void dontParticipate(String username, String contestId)
-            throws InputException, MongoException {
-        if(username == null || contestId == null) {
-            throw new InputException("Some of the input is null");
-        }
-    }
     public BasicDBList userActiveContList(String username)
             throws InputException, MongoException {
         if(username == null) {
@@ -254,12 +242,45 @@ public class UserQueriesMock implements UserQueries {
         //and does not need to be tested here
         return assignments.iterator();
     }
-
-public boolean deleteAssignment(String objId) throws InputException, MongoException {
-        return false;
+    
+    @Override
+    public List<String> getActiveUsers() {
+        List users = new ArrayList();
+        for(int i = 0; i < 10; i++) {
+            users.add("user" + i);
+        }
+        return users;
     }
-    public boolean editAssignment(String contestId, String comment, Date date_done)
-            throws InputException, MongoException {
-        return false;
+
+    @Override
+    public boolean deleteAssignment(String objId, String username) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean editAssignment(String contestId, String comment, Date date_done, String username) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+    @Override
+    public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<BasicDBObject> getUsersAndSection() {
+        List users = new ArrayList();
+        for(int i = 0; i < 5; i++) {
+            BasicDBObject user = new BasicDBObject();
+            user.put("username", "user" + i);
+            user.put("section", "section1");
+        }
+        for(int i = 0; i < 5; i++) {
+            BasicDBObject user = new BasicDBObject();
+            user.put("username", "user1" + i);
+            user.put("section", "section2");
+        }
+        return users;
     }
 }

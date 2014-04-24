@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import DAO.IdeaQueries;
 import DbManager.IdeaManager;
+import com.mongodb.BasicDBObject;
 
 /**
  *
@@ -179,6 +180,33 @@ public class IdeaManagerImpl implements IdeaManager {
         catch(MongoException e) {
             LOGGER.log(Level.WARNING, "Exception while deleting comment.", e);
             return false;
+        }
+    }
+    
+    /**
+     * Uses the IdeaQueries' methods getMostIdeaLikesInfo(username) and 
+     * getMostCommentsInfo(username) to get information about likes and comments
+     * , meaning who has commented and liked most of the user's ideas.
+     * @param username username of user
+     * @return JSON serialized String containing info about likes and comments.
+     */
+    @Override
+    public String getCommentsAndLikeInfo(String username) {
+        DBObject info = new BasicDBObject();
+        try {
+            info.put("likesInfo", ideaQ.getMostIdeaLikesInfo(username));
+            info.put("commentInfo", ideaQ.getMostCommentsInfo(username));
+            return JSON.serialize(info);
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting like or comment "
+                    + "information.", e);
+            return null;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting like or comment "
+                    + "information.", e);
+            return null;
         }
     }
 }

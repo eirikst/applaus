@@ -161,4 +161,24 @@ public class IdeaQueriesMock implements IdeaQueries {
             throw new InputException("ideaId or commentId not on format of Object ID.");
         }
     }
+
+    @Override
+    public int getNumberOfIdeas(String username, Date from, Date to) throws InputException {
+        return 10;
+    }
+
+    @Override
+    public int getNumberOfIdeaLikes(String username, Date from, Date to) throws InputException {
+        return 25;
+    }
+
+    @Override
+    public DBObject getMostIdeaLikesInfo(String username) throws InputException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public DBObject getMostCommentsInfo(String username) throws InputException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

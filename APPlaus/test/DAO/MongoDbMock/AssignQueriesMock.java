@@ -54,4 +54,14 @@ public class AssignQueriesMock implements AssignmentQueries {
         returnObj.put("_id", new ObjectId("000000000000000000000000"));
         return returnObj;
     }
+
+    @Override
+    public boolean editAssignmentType(String assignId, String title, int points, String desc, boolean active) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean deleteAssignmentType(String objId) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -1,6 +1,8 @@
 package DbManager.MongoDbImpl;
 
 import DAO.MongoDbMock.AssignQueriesMock;
+import DAO.MongoDbMock.ContestQueriesMock;
+import DAO.MongoDbMock.IdeaQueriesMock;
 import DAO.MongoDbMock.NewsQueriesMock;
 import DAO.MongoDbMock.UserQueriesMock;
 import Tools.DateTools;
@@ -57,8 +59,12 @@ public class HomeManagerImplTest {
         UserQueriesMock userQMock = new UserQueriesMock();
         setGoalList(userQMock.userGoals);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         String username = "username1";
         
@@ -84,8 +90,12 @@ public class HomeManagerImplTest {
         UserQueriesMock userQMock = new UserQueriesMock();
         setGoalList(userQMock.userGoals);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         String username = "username500";
         
@@ -112,8 +122,12 @@ public class HomeManagerImplTest {
         UserQueriesMock userQMock = new UserQueriesMock();
         setGoalList(userQMock.userGoals);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         String username = "username2";
         
@@ -139,8 +153,12 @@ public class HomeManagerImplTest {
         UserQueriesMock userQMock = new UserQueriesMock();
         setGoalList(userQMock.userGoals);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         String username = "username3";
         
@@ -166,8 +184,12 @@ public class HomeManagerImplTest {
         UserQueriesMock userQMock = new UserQueriesMock();
         setGoalList(userQMock.userGoals);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         String username = null;
         
@@ -195,8 +217,12 @@ public class HomeManagerImplTest {
         setAssignList(userQMock.assignments);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
         setAssignList(assignQMock.assignments);
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         
         String username = "username1";
@@ -223,8 +249,12 @@ public class HomeManagerImplTest {
         setAssignList(userQMock.assignments);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
         setAssignList(assignQMock.assignments);
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         
         String username = "username1";
@@ -248,9 +278,12 @@ public class HomeManagerImplTest {
         setAssignList(userQMock.assignments);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
         setAssignList(assignQMock.assignments);
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
-
+                newsQMock, ideaQMock, contQMock);
         String username = "username1";
         int period = DateTools.WEEK;
         
@@ -276,8 +309,12 @@ public class HomeManagerImplTest {
         setAssignList(userQMock.assignments);
         AssignQueriesMock assignQMock = new AssignQueriesMock();
         setAssignList(assignQMock.assignments);
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
 
         String username = "username1";
         int period = DateTools.WEEK;
@@ -304,8 +341,12 @@ public class HomeManagerImplTest {
         NewsQueriesMock newsQMock = new NewsQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         //exp
         boolean expResult = true;
@@ -329,8 +370,12 @@ public class HomeManagerImplTest {
         NewsQueriesMock newsQMock = new NewsQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         //exp
         boolean expResult = false;
@@ -360,11 +405,15 @@ public class HomeManagerImplTest {
         userQMock.usersNewsOids.add(new ObjectId("000000000000000000000006"));
         userQMock.usersNewsOids.add(new ObjectId("000000000000000000000007"));
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
 
         String username = "username1";
         int skip = 0;
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         //exp
         List<DBObject> expList = new ArrayList();
@@ -395,10 +444,15 @@ public class HomeManagerImplTest {
         userQMock.usersNewsOids.add(new ObjectId("000000000000000000000007"));
         AssignQueriesMock assignQMock = new AssignQueriesMock();
 
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
+        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
+                newsQMock, ideaQMock, contQMock);
+        
         String username = "username1";
         int skip = 10;
-        HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
         
         //exp
         List<DBObject> expList = new ArrayList();
@@ -420,8 +474,12 @@ public class HomeManagerImplTest {
         NewsQueriesMock newsQMock = new NewsQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
 
         String title = "title1";
         String text = "text1";
@@ -450,8 +508,12 @@ public class HomeManagerImplTest {
         NewsQueriesMock newsQMock = new NewsQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
 
         String title = "title1";
         String text = "text1";
@@ -571,8 +633,12 @@ public class HomeManagerImplTest {
         NewsQueriesMock newsQMock = new NewsQueriesMock();
         UserQueriesMock userQMock = new UserQueriesMock();
         AssignQueriesMock assignQMock = new AssignQueriesMock();
+        IdeaQueriesMock ideaQMock = new IdeaQueriesMock();
+        setIdeas(ideaQMock.ideas);
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        
         HomeManagerImpl instance = new HomeManagerImpl(userQMock, assignQMock,
-                newsQMock);
+                newsQMock, ideaQMock, contQMock);
         
         //exp
         int expResult = 1;
@@ -594,6 +660,24 @@ public class HomeManagerImplTest {
             obj.put("desc", "desc" + i);
             obj.put("points", 5 + i);
             assignments.add(obj);
+        }
+    }
+    
+    /**
+     * Private method setting the a List of ideas with 20 Objects.
+     * @param ideas List to set.
+     */
+    private void setIdeas(List<DBObject> ideas) {
+        for(int i = 0; i < 10; i++) {
+            DBObject obj = new BasicDBObject();
+            ObjectId oid = new ObjectId("00000000000000000000000" + i);
+            Date date = new Date(1000000);
+            obj.put("_id", oid);
+            obj.put("title", "Title" + i);
+            obj.put("text", "Text" + i);
+            obj.put("date", date);
+            obj.put("username", "username" + i);
+            ideas.add(obj);
         }
     }
 }

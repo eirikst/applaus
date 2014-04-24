@@ -109,34 +109,16 @@ public class HomeManagerImpl implements HomeManager {
         else if(period == DateTools.YEAR) {
             from = DateTools.getFirstDateOfYear();
         }
+        else if(period == DateTools.FOREVER) {
+            from = new Date(0L);//uses epoch as "forever"
+        }
         else {
             throw new IllegalArgumentException("period must be WEEK, LAST_WEEK,"
-                    + " MONTH; QUARTER, HALF_YEAR or YEAR(7, -7, 30, 90, 180, 365).");
+                    + " MONTH; QUARTER, HALF_YEAR, YEAR OR FOREVER(7, -7, 30, "
+                    + "90, 180, 365, 0).");
         }
+        int points = getAssignmentPointsUser(username, from, to);
         try {
-            Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(
-                    username, from, to);
-            Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt();
-            
-            ArrayList<DBObject> assignments = new ArrayList<>();
-            while(assignmentsIt.hasNext()) {
-                assignments.add(assignmentsIt.next());
-            }
-
-            int points = 0;
-            while(userAssignments.hasNext()) {
-                BasicDBObject userAssignment = (BasicDBObject) userAssignments
-                        .next();
-
-                for(int i = 0; i < assignments.size(); i++) {
-                    BasicDBObject assignment = (BasicDBObject) assignments
-                            .get(i);
-                    if(userAssignment.getString("_id").equals(assignment
-                            .getObjectId("_id").toString())) {
-                        points += assignment.getInt("points");
-                    }
-                }
-            }
             points += contQ.getContestPointsUser(username, from, to);
             points += ideaQ.getNumberOfIdeaLikes(username, from, to) * 2;//NUMBER OF POINTS FOR LIKES
             int noOfIdeas = ideaQ.getNumberOfIdeas(username, from, to);
@@ -151,6 +133,126 @@ public class HomeManagerImpl implements HomeManager {
         catch(MongoException e) {
             LOGGER.log(Level.WARNING, "Exception while getting points.", e);
             return -2;
+        }
+    }
+    
+    /**
+     * Gets points a user has collected by doing assignments
+     * @param username username of user
+     * @param from first date to count
+     * @param to last date to count
+     * @return number of points collected by doing assignments between the two 
+     * dates.
+     */
+    @Override
+    public int getAssignmentPointsUser(String username, Date from, Date to) {
+        int points = 0;
+        try {
+            Iterator<DBObject> userAssignments = userQ.getAssignmentsUser(
+                    username, from, to);
+            Iterator<DBObject> assignmentsIt = assignQ.getAssignmentsIt();
+            
+            ArrayList<DBObject> assignments = new ArrayList<>();
+            while(assignmentsIt.hasNext()) {
+                assignments.add(assignmentsIt.next());
+            }
+
+            while(userAssignments.hasNext()) {
+                BasicDBObject userAssignment = (BasicDBObject) userAssignments
+                        .next();
+
+                for(int i = 0; i < assignments.size(); i++) {
+                    BasicDBObject assignment = (BasicDBObject) assignments
+                            .get(i);
+                    if(userAssignment.getString("_id").equals(assignment
+                            .getObjectId("_id").toString())) {
+                        points += assignment.getInt("points");
+                    }
+                }
+            }
+        }
+        catch(InputException e) {
+            LOGGER.log(Level.INFO, "Exception while getting points.", e);
+            return -1;
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting points.", e);
+            return -2;
+        }
+        return points;
+    }
+    
+    /**
+     * Gets the different points separated(collected from assignments, conetsts,
+     *  ideas or likes.
+     * @param username username of user
+     * @param period period of the points to get. Valid inputs are 
+     * DateTools.WEEK, LAST_WEEK, MONTH, QUARTER, HALF_YEAR, YEAR, FOREVER.
+     * @return JSON serialized String containing:
+     * - assignPoints
+     * - contPoints
+     * - ideaPoints
+     * - likesPoints
+     */
+    @Override
+    public String getPointsSeperate(String username, int period) {
+        Date to = new Date();
+        Date from;
+        if(period == DateTools.WEEK) {
+            from = DateTools.getMonday(-1);
+        }
+        else if(period == DateTools.LAST_WEEK) {
+            from = DateTools.getMonday(-2);
+            to = DateTools.getMonday(-1);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(to);
+            cal.add(Calendar.MILLISECOND, -1);
+            to = cal.getTime();
+        }
+        else if(period == DateTools.MONTH) {
+            from = DateTools.getFirstDateOfMonth();
+        }
+        else if(period == DateTools.QUARTER) {
+            from = DateTools.getFirstDateOfQuarter();
+        }
+        else if(period == DateTools.HALF_YEAR) {
+            from = DateTools.getFirstDateOfHalfYear();
+        }
+        else if(period == DateTools.YEAR) {
+            from = DateTools.getFirstDateOfYear();
+        }
+        else if(period == DateTools.FOREVER) {
+            from = new Date(0L);//uses epoch as "forever"
+        }
+        else {
+            throw new IllegalArgumentException("period must be WEEK, LAST_WEEK,"
+                    + " MONTH; QUARTER, HALF_YEAR, YEAR OR FOREVER(7, -7, 30, "
+                    + "90, 180, 365, 0).");
+        }
+        
+        int assignPoints = getAssignmentPointsUser(username, from, to);
+        if(assignPoints < 0 ) {
+            return null; //error
+        }
+        
+        try {
+            int contPoints = contQ.getContestPointsUser(username, from, to);
+            int likesPoints = ideaQ.getNumberOfIdeaLikes(username, from, to) * 2;//NUMBER OF POINTS FOR LIKES
+            int noOfIdeas = ideaQ.getNumberOfIdeas(username, from, to);
+            int ideaPoints = noOfIdeas * 20;
+            
+            DBObject obj = new BasicDBObject();
+            obj.put("assignPoints", assignPoints);
+            obj.put("contPoints", contPoints);
+            obj.put("likesPoints", likesPoints);
+            obj.put("ideaPoints", ideaPoints);
+            obj.put("totalPoints", assignPoints + contPoints + likesPoints 
+                    + ideaPoints);
+            return JSON.serialize(obj);
+        }
+        catch(InputException | MongoException e) {
+            LOGGER.log(Level.INFO, "Exception while getting points.", e);
+            return null;
         }
     }
     

@@ -21,6 +21,7 @@ import DbManager.MongoDbImpl.HomeManagerImpl;
 import DbManager.MongoDbImpl.IdeaManagerImpl;
 import DbManager.MongoDbImpl.StatisticsManagerImpl;
 import DbManager.StatisticsManager;
+import Tools.DateTools;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class APPlausServlet extends HttpServlet {
             contMan = new ContestManagerImpl(ContestQueriesImpl.getInstance(), 
                     UserQueriesImpl.getInstance());
             ideaMan = new IdeaManagerImpl(IdeaQueriesImpl.getInstance());
-            statsMan = new StatisticsManagerImpl(AssignmentQueriesImpl.
+            statsMan = new StatisticsManagerImpl(SectionQueriesImpl.
                     getInstance(), UserQueriesImpl.getInstance());
         }
         catch(java.net.UnknownHostException e) {
@@ -96,6 +97,7 @@ public class APPlausServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html");
+        request.setCharacterEncoding("UTF-8");
         //printwriter
         
         
@@ -909,6 +911,71 @@ public class APPlausServlet extends HttpServlet {
                         response.setStatus(200);//success
                         return;
                     }
+                }
+                catch(NumberFormatException e) {
+                    LOGGER.log(Level.INFO, "Period parameter not an integer.");
+                    response.sendError(400);
+                    return;
+                }
+            }
+            
+            // get total points separated
+            else if(action.equals("getTotalPointsSeparated")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String pointsSeparated = homeMan.getPointsSeperate(username, 
+                        DateTools.FOREVER);
+                if(pointsSeparated == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.print(pointsSeparated);
+                    response.setStatus(200);//success
+                    return;
+                }
+            }
+            
+            // get info about comment and likes
+            else if(action.equals("getCommentLikeStats")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String info = ideaMan.getCommentsAndLikeInfo(username);
+                if(info == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.print(info);
+                    response.setStatus(200);//success
+                    return;
+                }
+            }
+            
+            // get stats about sections
+            else if(action.equals("getSectionStats")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//unauthorized
+                    return;
+                }
+                String periodStr = request.getParameter("period");
+                if(periodStr == null) {
+                    response.sendError(400);//bad request
+                    return;
+                }
+                try {
+                    int period = Integer.parseInt(periodStr);
+                    String sectionInfo = statsMan.getSectionStats(period);
+                    if(sectionInfo == null) {
+                        response.sendError(500);//internal error
+                        return;
+                    }
+                    out.print(sectionInfo);
+                    return;
                 }
                 catch(NumberFormatException e) {
                     LOGGER.log(Level.INFO, "Period parameter not an integer.");

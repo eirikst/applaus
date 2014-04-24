@@ -173,4 +173,28 @@ public class ContestQueriesMock implements ContestQueries {
         }
         return false;
     }
+
+    @Override
+    public boolean declareWinner(String contestId, String username) throws InputException, MongoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void participate(String username, String contestId) throws InputException, MongoException {
+        if(username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+    }
+
+    @Override
+    public void dontParticipate(String username, String contestId) throws InputException, MongoException {
+        if(username == null || contestId == null) {
+            throw new InputException("Some of the input is null");
+        }
+    }
+
+    @Override
+    public int getContestPointsUser(String username, Date from, Date to) throws InputException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -86,87 +86,6 @@ public class UserQueriesImpl implements UserQueries{
         }
     }
     
-    
-    /**
-     * Registers that a user with username is participating in contest with 
-     * given id.
-     * @param username username of participant
-     * @param contestId id of contest
-     * @throws InputException if invalid input
-     * @throws MongoException if database error
-     */
-    @Override
-    public void participate(String username, String contestId) throws
-            InputException, MongoException {
-        if(username == null || contestId == null) {
-            throw new InputException("Some of the input is null");
-        }
-        
-        //fetching active ids to check if the id parameter matches any of the
-        //active contests
-        DBCollection contestColl = db.getCollection("contest");
-        BasicDBObject query = new BasicDBObject();
-	query.put("date_end", BasicDBObjectBuilder.start("$gte"
-                , DateTools.getToday()).get());
-        DBObject field = new BasicDBObject();
-        field.put("_id", 1);
-
-        //finds id, sets to participate on given contest
-        try(DBCursor cursor = contestColl.find(query, field)) {
-            while(cursor.hasNext()) {
-                if(cursor.next().get("_id").equals(contestId)) {
-                    DBCollection userColl = db.getCollection("user");
-                    BasicDBObject userDoc = new BasicDBObject();
-                    userDoc.put("username", username);
-                    String json = "{$addToSet:{contests:\"" + contestId + "\"}}";
-                    DBObject push = (DBObject) JSON.parse(json);
-                    userColl.update(userDoc, push);
-                    break;
-                }
-            }
-        }
-    }
-    
-    /**
-     * Registers that given user doesn't participate in contest with id
-     * contestId
-     * @param username username of participant
-     * @param contestId id of contest
-     * @throws InputException if invalid input
-     * @throws MongoException if database error
-     */
-    @Override
-    public void dontParticipate(String username, String contestId)
-            throws InputException, MongoException {
-        if(username == null || contestId == null) {
-            throw new InputException("Some of the input is null");
-        }
-        
-        //fetching active ids to check if the id parameter matches any of the
-        //active contests
-        DBCollection contestColl = db.getCollection("contest");
-        BasicDBObject query = new BasicDBObject();
-	query.put("date_end", BasicDBObjectBuilder.start("$gte"
-                , DateTools.getToday()).get());
-        DBObject field = new BasicDBObject();
-        field.put("_id", 1);
-
-        //finds id, sets to participate on given contest
-        try(DBCursor cursor = contestColl.find(query, field)) {
-            while(cursor.hasNext()) {
-                if(cursor.next().get("_id").equals(contestId)) {
-                    DBCollection userColl = db.getCollection("user");
-                    BasicDBObject userDoc = new BasicDBObject();
-                    userDoc.put("username", username);
-                    String json = "{$pull:{contests:\"" + contestId + "\"}}";
-                    DBObject push = (DBObject) JSON.parse(json);
-                    userColl.update(userDoc, push);
-                    break;
-                }
-            }
-        }
-    }
-    
     /**
      * Finds the list of contests the user are participating in.
      * @param username of given user
@@ -770,6 +689,38 @@ public class UserQueriesImpl implements UserQueries{
             if(username != null) {
                 users.add(username);
             }
+        }
+        return users;
+    }
+    
+    /**
+     * Gets a List of DBObject with the usernames and sections of all the users 
+     * in the system, including inactive ones.
+     * @return List of DBObject objects
+     */
+    @Override
+    public List<BasicDBObject> getUsersAndSection() {
+        DBCollection collection = db.getCollection("user");
+        DBObject query = new BasicDBObject();
+        query.put("_id", 0);
+        query.put("username", 1);
+        query.put("section", 1);
+        DBCursor cursor = collection.find(new BasicDBObject(), query);
+        
+        List users = new ArrayList();
+        
+        while(cursor.hasNext()) {
+            BasicDBObject obj = (BasicDBObject)cursor.next();
+            String username = obj.getString("username");
+            String section = obj.getString("section");
+            
+            BasicDBObject userInfo = new BasicDBObject();
+            
+            if(username != null && section != null) {
+                userInfo.put("username", username);
+                userInfo.put("section", section);
+            }
+            users.add(userInfo);
         }
         return users;
     }

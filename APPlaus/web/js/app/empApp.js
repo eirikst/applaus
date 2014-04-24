@@ -49,7 +49,7 @@ employeeApp.config(['$routeProvider', function($routeProvider) {
     {templateUrl: 'partials/stats.html', controller: 'StatisticsCtrl', depth:1}
             );
     $routeProvider
-            .otherwise({redirectTo: '/home', depth:0}
+            .otherwise({redirectTo: '/home', depth:3}
             );
 }]);
 

@@ -7,4 +7,5 @@ package DbManager;
 public interface StatisticsManager {
     public String getPointsStats(String username, int period);
     public String getTopFive(int period);
+    public String getSectionStats(int period);
 }

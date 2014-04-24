@@ -30,7 +30,6 @@ public class SectionQueriesImpl implements SectionQueries {
     @Override
     public Iterator<DBObject> getSections() {
         DBCollection collection = db.getCollection("section");
-        System.out.println("inne");
         try(DBCursor cursor = collection.find()) {
             Iterator it = cursor.iterator();
             return it;

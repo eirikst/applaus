@@ -349,4 +349,92 @@ public class IdeaQueriesImpl implements IdeaQueries {
         }
         return 0;
     }
+    
+    /**
+     * Gets the the username of the user that likes the most of the given user's 
+     * ideas, and how many likes it is.
+     * @param username username of user
+     * @return DBObject containing username and number of likes from this user. 
+     * If no likes on any of the ideas, an empty object is returned.
+     * @throws InputException if username is null
+     */
+    @Override
+    public DBObject getMostIdeaLikesInfo(String username) throws InputException {
+        if(username == null) {
+            throw new InputException("username is null.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject match = new BasicDBObject();
+        match.put("$match", new BasicDBObject("username", username));
+        
+        DBObject unwindLikes = new BasicDBObject();
+        unwindLikes.put("$unwind", "$likes");
+        
+        DBObject toGroup = new BasicDBObject();
+        toGroup.put("_id", "$likes");
+        toGroup.put("num", new BasicDBObject("$sum", 1));
+        
+        DBObject group = new BasicDBObject("$group", toGroup);
+        
+        DBObject sort = new BasicDBObject();
+        sort.put("$sort", new BasicDBObject("num", -1));
+        
+        DBObject limit = new BasicDBObject();
+        limit.put("$limit", 1);
+
+        AggregationOutput output = collection.aggregate(match, unwindLikes, 
+                group, sort, limit);
+        
+        Iterator i = output.results().iterator();
+        if(i.hasNext()) {
+            return (DBObject)i.next();
+        }
+        return null;
+    }
+    
+    /**
+     * Gets the the username of the user that has commented the most on the 
+     * given user's ideas, and how many comments it is.
+     * @param username username of user
+     * @return DBObject containing username and number of comments from this user. 
+     * If no comments on any of the ideas, an empty object is returned.
+     * @throws InputException if username is null
+     */
+    @Override
+    public DBObject getMostCommentsInfo(String username) throws InputException {
+        if(username == null) {
+            throw new InputException("username is null.");
+        }
+        
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject match = new BasicDBObject();
+        match.put("$match", new BasicDBObject("username", username));
+        
+        DBObject unwindComments = new BasicDBObject();
+        unwindComments.put("$unwind", "$comments");
+        
+        DBObject toGroup = new BasicDBObject();
+        toGroup.put("_id", "$comments.writer");
+        toGroup.put("num", new BasicDBObject("$sum", 1));
+        
+        DBObject group = new BasicDBObject("$group", toGroup);
+        
+        DBObject sort = new BasicDBObject();
+        sort.put("$sort", new BasicDBObject("num", -1));
+        
+        DBObject limit = new BasicDBObject();
+        limit.put("$limit", 1);
+
+        AggregationOutput output = collection.aggregate(match, unwindComments, 
+                group, sort, limit);
+        
+        Iterator i = output.results().iterator();
+        if(i.hasNext()) {
+            return (DBObject)i.next();
+        }
+        return null;
+    }
 }

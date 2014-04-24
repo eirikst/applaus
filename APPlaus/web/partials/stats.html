@@ -1,9 +1,61 @@
 <div ng-swipe-left="changeView('assignments')">
-    <div class="col-sm-12">
-        <h1 class="text-center">Stats and achievements</h1>
-        <div class="infoField">
-            <h2 class="text-center">Stats</h2>
-            <ul class="nav nav-pills" ng-init="tabAct1=true;tabAct2=false;tabAct3=false;">
+    <h1 class="text-center">Stats and achievements</h1>
+    <div class="col-sm-6">
+        <div class="infoField text-center">
+            <h2>Sections</h2>
+            <ul class="nav nav-pills" ng-init="tabSecAct1=true;tabSecAct2=false;tabSecAct3=false;" style="display: inline-block">
+                <li ng-class="{active:tabSecAct1}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabSecAct1=true;tabSecAct2=false;tabSecAct3=false;">Month</a></li>
+                <li ng-class="{active:tabSecAct2}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabSecAct1=false;tabSecAct2=true;tabSecAct3=false;">Quarter</a></li>
+                <li ng-class="{active:tabSecAct3}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabSecAct1=false;tabSecAct2=false;tabSecAct3=true;">Half year</a></li>
+            </ul>
+            <!--total-->
+            <div>
+                <h4>Total points collected</h4>
+                <div ng-show="tabSecAct1">
+                    <p ng-repeat="section in sectionMonth | orderBy: 'points':true">
+                        {{section.name}} - {{section.points}}p
+                    </p>
+                </div>
+                <div ng-show="tabSecAct2">
+                    <p ng-repeat="section in sectionQuarter | orderBy: 'points':true">
+                        {{section.name}} - {{ section.points}}p
+                    </p>
+                </div>
+                <div ng-show="tabSecAct3">
+                    <p ng-repeat="section in sectionHalfYear | orderBy: 'points':true">
+                        {{section.name}} - {{ section.points}}p
+                    </p>
+                </div>
+            </div>
+            <!--end total-->
+            
+            <!--average-->
+            <div>
+                <h4>Average points collected</h4>
+                <div ng-show="tabSecAct1">
+                    <p ng-repeat="section in sectionMonth | orderBy: 'average':true">
+                        {{section.name}} - {{ section.average}}p
+                    </p>
+                </div>
+                <div ng-show="tabSecAct2">
+                    <p ng-repeat="section in sectionQuarter | orderBy: 'average':true">
+                        {{section.name}} - {{ section.average}}p
+                    </p>
+                </div>
+                <div ng-show="tabSecAct3">
+                    <p ng-repeat="section in sectionHalfYear | orderBy: 'average':true">
+                        {{section.name}} - {{ section.average}}p
+                    </p>
+                </div>
+            </div>
+            <!--end average-->
+        </div>
+    </div>
+    
+    <div class="col-sm-6">
+                <div class="infoField text-center">
+            <h2 class="text-center">Top 5</h2>
+            <ul class="nav nav-pills" ng-init="tabAct1=true;tabAct2=false;tabAct3=false;" style="display: inline-block">
                 <li ng-class="{active:tabAct1}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabAct1=true;tabAct2=false;tabAct3=false;">Month</a></li>
                 <li ng-class="{active:tabAct2}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabAct1=false;tabAct2=true;tabAct3=false;">Quarter</a></li>
                 <li ng-class="{active:tabAct3}"><a style="-webkit-border-radius:2px 2px 2px 2px;-moz-border-radius:2px 2px 2px 2px;border-radius:2px 2px 2px 2px;" ng-click="tabAct1=false;tabAct2=false;tabAct3=true;">Half year</a></li>
@@ -11,37 +63,62 @@
 
             <div class="contentOfTab">
                 <div ng-show="tabAct1">
-                    <h3>
-                        Top 5
-                    </h3>
                     <div>
                         <div ng-repeat="user in topFiveMonth">
-                            {{user.username}} - {{user.points}}
+                            {{user.username}} - {{user.points}}p
                         </div>
                     </div>
                 </div>
                 <div ng-show="tabAct2">
-                    <h3>
-                        Top 5
-                    </h3>
                     <div>
                         <div ng-repeat="user in topFiveQuarter">
-                            {{user.username}} - {{user.points}}
+                            {{user.username}} - {{user.points}}p
                         </div>
                     </div>
                 </div>
                 <div ng-show="tabAct3">
-                    <h3>
-                        Top 5
-                    </h3>
                     <div>
                         <div ng-repeat="user in topFiveHalfYear">
-                            {{user.username}} - {{user.points}}
+                            {{user.username}} - {{user.points}}p
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        
+        <!--personal-->
+        <div class="infoField text-center">
+            <h2 class="text-center">Personal</h2>
+            <p>
+                Number of points collected in total: <strong>{{totalPoints}}</strong>
+            </p>
+            <p>
+                Number of points from assignments: <strong>{{assignPoints}}</strong>
+            </p>
+            <p>
+                Number of points from contests: <strong>{{contPoints}}</strong>
+            </p>
+            <p>
+                Number of points from ideas: <strong>{{ideaPoints}}</strong>
+            </p>
+            <p>
+                Number of points from likes: <strong>{{likesPoints}}</strong>
+            </p>
+            <p ng-show="userLikes._id!==undefined">
+                Top liker of your ideas: <strong>{{userLikes._id}}, 
+                    {{userLikes.num}} likes</strong>
+            </p>
+            <p ng-show="userMostCom._id!==undefined">
+                Top commenter on your ideas: <strong>{{userMostCom._id}}, 
+                    {{userMostCom.num}} comments</strong>
+            </p>
+        </div>
+        <!--end personal-->
+    </div>
+    
+    
+    <div class="col-sm-12">
         <!--achievements-->
         <div class="infoField">
             <h2 class="text-center">Achievements</h2>
