@@ -2,6 +2,7 @@
 
 package DbManager.MongoDbImpl;
 
+import APPlausException.InputException;
 import DAO.MongoDbImpl.AssignmentQueriesImpl;
 import DAO.MongoDbImpl.ContestQueriesImpl;
 import DAO.MongoDbImpl.IdeaQueriesImpl;
@@ -11,12 +12,15 @@ import DAO.SectionQueries;
 import DAO.UserQueries;
 import DbManager.HomeManager;
 import DbManager.StatisticsManager;
+import com.google.common.collect.Lists;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -275,5 +279,178 @@ public class StatisticsManagerImpl implements StatisticsManager {
                 return -1;//no match
             }
         }
+    }
+    
+    public String getAchievements(String username){
+        try {
+            List<DBObject> achievements = userQ.getAchievements(username);
+            return JSON.serialize(achievements);
+        }
+        catch(MongoException e) {
+            LOGGER.log(Level.WARNING, "Exception while getting assignments.", e);
+            return null;
+        }
+    }
+    
+    public boolean regAssignmentAchievement(String username) throws InputException{
+        // ################################################
+        
+        int size = 0;
+        try {
+            Date epoch = new Date();
+            epoch.setTime(0);
+            Iterator<DBObject> assignments = userQ.getAssignmentsUser(username, epoch, new Date());
+            size = Lists.newArrayList(assignments).size();
+            System.out.println("Size: " + size);
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        String number = "" + size;
+        int length = number.length();
+
+        try {
+            if(checkSize(length, size)){
+                String name = "Registered Assignments";
+                userQ.addAchievement(username, name, size);
+            }
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean participateAchievement(String username) throws InputException{
+        int size = 0;
+        try {
+            BasicDBList contests = userQ.userActiveContList(username);
+            size = Lists.newArrayList(contests).size();
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        String number = "" + size;
+        int length = number.length();
+        
+        try {
+            if(checkSize(length, size)){
+                String name = "Participated contests";
+                userQ.addAchievement(username, name, size);
+            }
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean contestWinnerAchievement(String username) throws InputException{
+        int size = 0;
+        try {
+            BasicDBList contests = userQ.userActiveContList(username);
+            size = Lists.newArrayList(contests).size();
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        String number = "" + size;
+        int length = number.length();
+        
+        try {
+            if(checkSize(length, size)){
+                String name = "Participated contests";
+                userQ.addAchievement(username, name, size);
+            }
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean writeIdeaAchievement(String username) throws InputException{
+        int size = 0;
+        try {
+            BasicDBList ideas = userQ.userActiveContList(username);
+            size = Lists.newArrayList(ideas).size();
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        String number = "" + size;
+        int length = number.length();
+        
+        try {
+            if(checkSize(length, size)){
+                String name = "Participated contests";
+                userQ.addAchievement(username, name, size);
+            }
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean likeIdeaAchievement(String username) throws InputException{
+        int size = 0;
+        try {
+            BasicDBList ideas = userQ.userActiveContList(username);
+            size = Lists.newArrayList(ideas).size();
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        String number = "" + size;
+        int length = number.length();
+        
+        try {
+            if(checkSize(length, size)){
+                String name = "Participated contests";
+                userQ.addAchievement(username, name, size);
+            }
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean commentIdeaAchievement(String username) throws InputException{
+        int size = 0;
+        try {
+            BasicDBList ideas = userQ.userActiveContList(username);
+            size = Lists.newArrayList(ideas).size();
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        String number = "" + size;
+        int length = number.length();
+        
+        try {
+            if(checkSize(length, size)){
+                String name = "Participated contests";
+                userQ.addAchievement(username, name, size);
+            }
+        }
+        catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean checkSize(int length, int size){
+        if ((Math.pow(10,length))/2 == size){
+            return true;
+        }
+        if ((Math.pow(10,length))/10 == size && length > 1){
+            return true;
+        }
+        if ((Math.pow(10,length))/4 == size && length > 1){
+            return true;
+        }
+        return false;
     }
 }

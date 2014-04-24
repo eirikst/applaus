@@ -724,4 +724,43 @@ public class UserQueriesImpl implements UserQueries{
         }
         return users;
     }
+    
+    public void addAchievement(String username, String name, int number) throws InputException, MongoException {
+        if(username == null || name == null) {
+            throw new InputException("One or several input objects is null.");
+        }if (number < 0){
+             throw new InputException("Number is less than zero.");
+        }
+        
+        DBCollection coll = db.getCollection("user");
+        DBObject query = new BasicDBObject();
+        query.put("username", username);
+        DBObject field = new BasicDBObject();;
+        
+        field.put("name", name);
+        Date now = new Date();
+        field.put("date", now);
+        field.put("number", number);
+        
+        BasicDBObject pushToAssign = new BasicDBObject("$push", 
+                new BasicDBObject("achievements", field));
+        
+        coll.update(query, pushToAssign);
+    }
+    
+    public List<DBObject> getAchievements(String username) 
+            throws MongoException {
+        DBObject query = new BasicDBObject();
+        query.put("username", username);
+
+        DBObject field = new BasicDBObject();
+        field.put("achievements", 1);
+        field.put("_id", 0);
+        
+        DBCollection coll = db.getCollection("user");
+        try (DBCursor cursor = coll.find(query, field)) {
+            List<DBObject> achievements = (List<DBObject>) cursor.next().get("achievements");
+            return achievements;
+        }
+    }
 }

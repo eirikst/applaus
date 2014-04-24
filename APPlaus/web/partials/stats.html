@@ -122,6 +122,11 @@
         <!--achievements-->
         <div class="infoField">
             <h2 class="text-center">Achievements</h2>
+                
+                <div ng-repeat="achievement in achievements">
+                    {{achievement.date.$date| date:('dd.MM.yyyy')}} - {{achievement.number}} {{achievement.name}}
+                </div>
+            
         </div>
         <!--end achievements-->
     </div>

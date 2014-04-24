@@ -41,4 +41,14 @@ services.service('StatisticsService', function($http) {
           });
         return promise;
     };
+    
+    this.getAchievements = function() {
+        var promise = $http({
+              url: 'APPlausServlet',
+              method: "POST",
+              data: "action=getAchievements",
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          });
+        return promise;
+    }
 })

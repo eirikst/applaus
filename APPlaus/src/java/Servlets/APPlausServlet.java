@@ -635,6 +635,13 @@ public class APPlausServlet extends HttpServlet {
                 }
                 int ok = contMan.participate(username,
                         contestId);
+                try{
+                    boolean achievement = statsMan.participateAchievement(username);
+                }catch(InputException e) {
+                    LOGGER.log(Level.INFO, "Input bad.");
+                    response.setStatus(400);//bad request
+                    return;
+                }
                 if(ok == 1) {
                     response.setStatus(200);//success
                     return;
@@ -709,6 +716,8 @@ public class APPlausServlet extends HttpServlet {
                         int ok = assignMan.registerAssignment(username, id, 
                                 date, comment);
                         System.out.println(ok);
+                        boolean achievement = statsMan.regAssignmentAchievement(username);
+                        
                         if(ok == 1 || ok == -1) {
                             response.setStatus(200);//success
                             out.print(ok);
@@ -721,6 +730,11 @@ public class APPlausServlet extends HttpServlet {
                     }
                     catch(NumberFormatException e) {
                         LOGGER.log(Level.INFO, "date not long.");
+                        response.setStatus(400);//bad request
+                        return;
+                    }
+                    catch(InputException e) {
+                        LOGGER.log(Level.INFO, "Input bad.");
                         response.setStatus(400);//bad request
                         return;
                     }
@@ -1254,6 +1268,24 @@ public class APPlausServlet extends HttpServlet {
                 catch(NumberFormatException e) {
                     LOGGER.warning("skip post value not an integer");
                     response.sendError(400);//bad request
+                    return;
+                }
+            }
+            
+            //get achievements
+            else if(action.equals("getAchievements")) {
+                if(!isUser(roleId)) {
+                    response.sendError(401);//internal error
+                    return;
+                }
+                String responseStr = statsMan.getAchievements(username);
+                if(responseStr == null) {
+                    response.sendError(400);//bad request
+                    return;
+                }
+                else {
+                    out.println(responseStr);
+                    response.setStatus(200);//success
                     return;
                 }
             }

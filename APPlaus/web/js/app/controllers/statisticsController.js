@@ -139,9 +139,22 @@ controllers.controller('StatisticsCtrl', function($scope, $location, StatisticsS
         }
     }
     
+    //gets the list of achievements of a user from the system
+    $scope.getAchievements = function() {
+        StatisticsService.getAchievements()
+                .success(function(data, status, headers, config) {
+                    $scope.achievements = data;//sets assignment table with info from DB
+                    console.log("getAchievements success");
+                }).error(function(data, status, headers, config) {
+            $scope.fetchErrMsg = "Det skjedde en feil under henting av achievements. Vennligst prøv igjen.";
+            console.log("Failed http action=getAchievements");
+        });
+    };
+    
     //init calls
     getTopFive();
     getTotalPointsSeparated();
     getCommentLikeStats();
     getSectionStats();
+    $scope.getAchievements();
 });

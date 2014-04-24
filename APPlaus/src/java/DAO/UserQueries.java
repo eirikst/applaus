@@ -55,4 +55,6 @@ public interface UserQueries {
     public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException;
     public List<String> getActiveUsers();
     public List<BasicDBObject> getUsersAndSection();
+    public void addAchievement(String username, String name, int number) throws InputException, MongoException;
+    public List<DBObject> getAchievements(String username) throws MongoException;
 }
