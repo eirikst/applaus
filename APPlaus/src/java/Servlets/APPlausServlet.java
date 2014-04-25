@@ -74,7 +74,8 @@ public class APPlausServlet extends HttpServlet {
                     UserQueriesImpl.getInstance());
             ideaMan = new IdeaManagerImpl(IdeaQueriesImpl.getInstance());
             statsMan = new StatisticsManagerImpl(SectionQueriesImpl.
-                    getInstance(), UserQueriesImpl.getInstance());
+                    getInstance(), UserQueriesImpl.getInstance(), ContestQueriesImpl.
+                    getInstance(), IdeaQueriesImpl.getInstance());
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");
@@ -1007,6 +1008,15 @@ public class APPlausServlet extends HttpServlet {
                 }
 
                 String responseStr = ideaMan.addIdea(title, text, username);
+                
+                try {
+                    boolean achievement = statsMan.writeIdeaAchievement(username);
+                }catch(InputException e) {
+                    LOGGER.log(Level.INFO, "Skip parameter not an integer.");
+                    response.sendError(400);
+                    return;
+                }   
+                
                 if(responseStr != null) {
                     out.println(responseStr);
                     response.setStatus(200);//success
