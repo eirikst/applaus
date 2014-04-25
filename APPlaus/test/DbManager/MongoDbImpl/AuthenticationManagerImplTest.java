@@ -608,29 +608,31 @@ public class AuthenticationManagerImplTest {
         
         //init mock and test class
         SectionQueriesMock sectionQMock = new SectionQueriesMock();
-        UserQueriesMock userQMock = new UserQueriesMock();
-        setUserListDBObject(userQMock.usersDBObj);
-        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
-        (userQMock, sectionQMock);
         
         DBObject obj = new BasicDBObject();
         obj.put("_id", new ObjectId("000000000000000000000000"));
         obj.put("name", "section0");
         DBObject obj1 = new BasicDBObject();
-        obj.put("_id", new ObjectId("000000000000000000000001"));
-        obj.put("name", "section1");
-        DBObject obj2 = new BasicDBObject();
-        obj.put("_id", new ObjectId("000000000000000000000002"));
-        obj.put("name", "section2");
-        DBObject obj3 = new BasicDBObject();
-        obj.put("_id", new ObjectId("000000000000000000000003"));
-        obj.put("name", "section3");
+        obj1.put("_id", new ObjectId("000000000000000000000001"));
+        obj1.put("name", "section1");
+        sectionQMock.sections.add(obj);
+        sectionQMock.sections.add(obj1);
+        
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setUserListDBObject(userQMock.usersDBObj);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
+        
+        DBObject expObj = new BasicDBObject();
+        expObj.put("_id", new ObjectId("000000000000000000000000"));
+        expObj.put("name", "section0");
+        DBObject expObj2 = new BasicDBObject();
+        expObj2.put("_id", new ObjectId("000000000000000000000001"));
+        expObj2.put("name", "section1");
         
         List list = new ArrayList();
-        list.add(obj);
-        list.add(obj1);
-        list.add(obj2);
-        list.add(obj3);
+        list.add(expObj);
+        list.add(expObj2);
         Iterator it = list.iterator();
         String expResult = JSON.serialize(it);//woot
         

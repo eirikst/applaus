@@ -22,7 +22,9 @@ public class UserQueriesMock implements UserQueries {
     public List<ObjectId> usersNewsOids = new ArrayList();
     public List<BasicDBObject> userGoals = new ArrayList();
     public List<DBObject> assignments = new ArrayList();
-    
+    public List usersStr = new ArrayList();
+    public List usersAndSection = new ArrayList();
+
     
     public int checkLogin(String username, String password)
             throws InputException, MongoException {
@@ -224,18 +226,13 @@ public class UserQueriesMock implements UserQueries {
         if(username == null || skip < 0) {
             throw new InputException("username null or skip < 0");
         }
-        //does not need sorting, because that happens in the database system, 
-        //and does not need to be tested here
+        //does not need sorting, because that happens in the database system
         return assignments.iterator();
     }
     
     @Override
     public List<String> getActiveUsers() {
-        List users = new ArrayList();
-        for(int i = 0; i < 10; i++) {
-            users.add("user" + i);
-        }
-        return users;
+        return usersStr;
     }
 
     @Override
@@ -250,18 +247,7 @@ public class UserQueriesMock implements UserQueries {
 
     @Override
     public List<BasicDBObject> getUsersAndSection() {
-        List users = new ArrayList();
-        for(int i = 0; i < 5; i++) {
-            BasicDBObject user = new BasicDBObject();
-            user.put("username", "user" + i);
-            user.put("section", "section1");
-        }
-        for(int i = 0; i < 5; i++) {
-            BasicDBObject user = new BasicDBObject();
-            user.put("username", "user1" + i);
-            user.put("section", "section2");
-        }
-        return users;
+        return usersAndSection;
     }
 
     @Override
