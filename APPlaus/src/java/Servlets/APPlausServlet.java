@@ -75,7 +75,7 @@ public class APPlausServlet extends HttpServlet {
             ideaMan = new IdeaManagerImpl(IdeaQueriesImpl.getInstance());
             statsMan = new StatisticsManagerImpl(SectionQueriesImpl.
                     getInstance(), UserQueriesImpl.getInstance(), ContestQueriesImpl.
-                    getInstance(), IdeaQueriesImpl.getInstance());
+                    getInstance(), IdeaQueriesImpl.getInstance(), homeMan);
         }
         catch(java.net.UnknownHostException e) {
             LOGGER.severe("Database host cannot be resolved. + e");

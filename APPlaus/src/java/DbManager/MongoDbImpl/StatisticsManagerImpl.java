@@ -44,21 +44,13 @@ public class StatisticsManagerImpl implements StatisticsManager {
     //fysj
     private HomeManager homeMan;
     
-    public StatisticsManagerImpl(SectionQueries sectionQ, UserQueries userQ, ContestQueries contQ, IdeaQueries ideaQ) {
+    public StatisticsManagerImpl(SectionQueries sectionQ, UserQueries userQ,
+            ContestQueries contQ, IdeaQueries ideaQ, HomeManager homeMan) {
         this.sectionQ = sectionQ;
         this.userQ = userQ;
         this.contQ = contQ;
         this.ideaQ = ideaQ;
-        try {
-        this.homeMan = new HomeManagerImpl(UserQueriesImpl.getInstance(), 
-                    AssignmentQueriesImpl.getInstance(), 
-                    NewsQueriesImpl.getInstance(), 
-                    IdeaQueriesImpl.getInstance(),
-                    ContestQueriesImpl.getInstance());
-        }
-        catch(UnknownHostException e) {
-            LOGGER.log(Level.SEVERE, "Unknown host" , e);
-        }
+        this.homeMan = homeMan;
     }
     
     /**
@@ -118,6 +110,9 @@ public class StatisticsManagerImpl implements StatisticsManager {
      */
     @Override
     public String getPointsStats(String username, int period) {
+        if(username == null) {
+            throw new IllegalArgumentException("username cannot be null");
+        }
         List<Integer> points = new ArrayList();
         List<String> usernames = userQ.getActiveUsers();
         for(int i = 0; i < usernames.size(); i++) {
@@ -131,27 +126,27 @@ public class StatisticsManagerImpl implements StatisticsManager {
             }
             points.add(thisPoints);
         }
-        
+
         //sort the two lists on points
         sortLists(usernames, points);
         //getting the real rank
         int high = getIndex(username, usernames, points, true);
         int low = getIndex(username, usernames, points, false);
-        
+
         DBObject retObj = new BasicDBObject();
         retObj.put("highest", high + 1);//real number, not index
         retObj.put("lowest", low + 1);//real number, not index
         retObj.put("points", points.get(high));
-        retObj.put("total", usernames.size() + 1);
+        retObj.put("total", usernames.size());
         if(high != 0) {
             retObj.put("aboveUser", usernames.get(high - 1));
             retObj.put("abovePoints", points.get(high - 1));
         }
-        if(high < usernames.size() - 1) {
+        if(low < usernames.size() - 1) {
             retObj.put("belowUser", usernames.get(high + 1));
             retObj.put("belowPoints", points.get(high + 1));
         }
-        
+
         return JSON.serialize(retObj);
     }
     
@@ -255,7 +250,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         if(pointsUser == -1) {
             return -1;//not username match
         }
-        
+
         if(highest) {
             for(int i = 0; i < users.size(); i++) {
                 if(pointsUser == points.get(i)) {
@@ -277,7 +272,8 @@ public class StatisticsManagerImpl implements StatisticsManager {
                 }
             }
             if(set) {
-                return points.size();//comes here if last/shared last in list
+                return points.size() - 1;//ends up here if last/shared last in 
+                                        //list, returns last in list
             }
             else {
                 return -1;//no match

@@ -76,7 +76,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
         
         int period = 0;
         
@@ -124,7 +124,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
         
         int period = 0;
         
@@ -171,7 +171,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
         
         int period = 0;
         
@@ -215,7 +215,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
         
         int period = 0;
         
@@ -256,7 +256,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
 
         
         String username = "username3";
@@ -300,7 +300,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
 
         
         String username = "username3";
@@ -335,7 +335,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
 
         
         String username = null;
@@ -377,7 +377,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
 
         
         int period = 0;
@@ -436,7 +436,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
 
         
         int period = 0;
@@ -496,7 +496,7 @@ public class StatisticsManagerImplTest {
                 newsQMock, ideaQMock, contQMock);
 
         StatisticsManagerImpl instance = new StatisticsManagerImpl(secQMock, 
-                userQMock, homeMan);
+                userQMock, contQMock, ideaQMock, homeMan);
 
         int period = -23;
         
