@@ -1,8 +1,8 @@
-
-
 package DbManager.MongoDbImpl;
 
 import APPlausException.InputException;
+import DAO.ContestQueries;
+import DAO.IdeaQueries;
 import DAO.MongoDbImpl.AssignmentQueriesImpl;
 import DAO.MongoDbImpl.ContestQueriesImpl;
 import DAO.MongoDbImpl.IdeaQueriesImpl;
@@ -38,13 +38,17 @@ public class StatisticsManagerImpl implements StatisticsManager {
             class.getName());
     private final SectionQueries sectionQ;
     private final UserQueries userQ;
+    private final ContestQueries contQ;
+    private final IdeaQueries ideaQ;
     
     //fysj
     private HomeManager homeMan;
     
-    public StatisticsManagerImpl(SectionQueries sectionQ, UserQueries userQ) {
+    public StatisticsManagerImpl(SectionQueries sectionQ, UserQueries userQ, ContestQueries contQ, IdeaQueries ideaQ) {
         this.sectionQ = sectionQ;
         this.userQ = userQ;
+        this.contQ = contQ;
+        this.ideaQ = ideaQ;
         try {
         this.homeMan = new HomeManagerImpl(UserQueriesImpl.getInstance(), 
                     AssignmentQueriesImpl.getInstance(), 
@@ -293,8 +297,6 @@ public class StatisticsManagerImpl implements StatisticsManager {
     }
     
     public boolean regAssignmentAchievement(String username) throws InputException{
-        // ################################################
-        
         int size = 0;
         try {
             Date epoch = new Date();
@@ -324,8 +326,10 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean participateAchievement(String username) throws InputException{
         int size = 0;
         try {
+            /**
             BasicDBList contests = userQ.userActiveContList(username);
             size = Lists.newArrayList(contests).size();
+            */
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -348,8 +352,12 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean contestWinnerAchievement(String username) throws InputException{
         int size = 0;
         try {
-            BasicDBList contests = userQ.userActiveContList(username);
-            size = Lists.newArrayList(contests).size();
+            List<DBObject> contests = contQ.getInactiveContests(0);
+            for(int i=0; i < contests.size(); i++){
+                if(username.equals(contests.get(i).get("winner"))){
+                    size += 1;
+                }
+            }
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -359,7 +367,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         
         try {
             if(checkSize(length, size)){
-                String name = "Participated contests";
+                String name = "Contests won";
                 userQ.addAchievement(username, name, size);
             }
         }
@@ -372,8 +380,9 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean writeIdeaAchievement(String username) throws InputException{
         int size = 0;
         try {
-            BasicDBList ideas = userQ.userActiveContList(username);
-            size = Lists.newArrayList(ideas).size();
+            Date epoch = new Date();
+            epoch.setTime(0);
+            size = ideaQ.getNumberOfIdeas(username, epoch, new Date());
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -383,7 +392,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         
         try {
             if(checkSize(length, size)){
-                String name = "Participated contests";
+                String name = "Submitted ideas";
                 userQ.addAchievement(username, name, size);
             }
         }
@@ -396,8 +405,11 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean likeIdeaAchievement(String username) throws InputException{
         int size = 0;
         try {
-            BasicDBList ideas = userQ.userActiveContList(username);
-            size = Lists.newArrayList(ideas).size();
+            /**
+            Date epoch = new Date();
+            epoch.setTime(0);
+            size = ideaQ.getNumberOfIdeaLikes(username, epoch, new Date());
+            */
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -407,7 +419,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         
         try {
             if(checkSize(length, size)){
-                String name = "Participated contests";
+                String name = "Recieved likes";
                 userQ.addAchievement(username, name, size);
             }
         }
@@ -420,8 +432,10 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean commentIdeaAchievement(String username) throws InputException{
         int size = 0;
         try {
-            BasicDBList ideas = userQ.userActiveContList(username);
+            /**
+            List<DBObject> ideas = ideaQ.getIdeas(0);
             size = Lists.newArrayList(ideas).size();
+            */
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -431,7 +445,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         
         try {
             if(checkSize(length, size)){
-                String name = "Participated contests";
+                String name = "Recieved comments";
                 userQ.addAchievement(username, name, size);
             }
         }
@@ -449,6 +463,19 @@ public class StatisticsManagerImpl implements StatisticsManager {
             return true;
         }
         if ((Math.pow(10,length))/4 == size && length > 1){
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean checkSizeIdea(int length, int size){
+        if ((Math.pow(10,length))/2 == size){
+            return true;
+        }
+        if ((Math.pow(10,length))/10 == size && length > 1){
+            return true;
+        }
+        if ((Math.pow(10,length))/5 == size && length > 1){
             return true;
         }
         return false;
