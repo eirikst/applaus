@@ -18,16 +18,16 @@ public class SectionQueriesMock implements SectionQueries {
     public Iterator<DBObject> getSections() {
         DBObject obj = new BasicDBObject();
         obj.put("_id", new ObjectId("000000000000000000000000"));
-        obj.put("name", new ObjectId("section0"));
+        obj.put("name", "section0");
         DBObject obj1 = new BasicDBObject();
         obj.put("_id", new ObjectId("000000000000000000000001"));
-        obj.put("name", new ObjectId("section1"));
+        obj.put("name", "section1");
         DBObject obj2 = new BasicDBObject();
         obj.put("_id", new ObjectId("000000000000000000000002"));
-        obj.put("name", new ObjectId("section2"));
+        obj.put("name", "section2");
         DBObject obj3 = new BasicDBObject();
         obj.put("_id", new ObjectId("000000000000000000000003"));
-        obj.put("name", new ObjectId("section3"));
+        obj.put("name", "section3");
         
         List list = new ArrayList();
         list.add(obj);

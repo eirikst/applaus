@@ -412,77 +412,13 @@ public class AssignmentManagerImplTest {
     private void setUserAssignList(List<DBObject> assignments) {
         for(int i = 0; i < 10; i++) {
             DBObject obj = new BasicDBObject();
-            obj.put("id", new ObjectId("00000000000000000000000" + i));
+            obj.put("_id", new ObjectId("00000000000000000000000" + i));
             obj.put("comment", "comment" + i);
             obj.put("date_done", new Date(1000000));
             assignments.add(obj);
         }
     }
 
-    /**
-     * Test of getAssignmentsTypes method, of class AssignmentManagerImpl.
-     */
-    @Test
-    public void testGetAssignmentsTypes() {
-        System.out.println("getAssignmentsTypes");
-        AssignmentManagerImpl instance = null;
-        String expResult = "";
-        String result = instance.getAssignmentsTypes();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of createAssignment method, of class AssignmentManagerImpl.
-     */
-    @Test
-    public void testCreateAssignment() {
-        System.out.println("createAssignment");
-        String title = "";
-        String desc = "";
-        int points = 0;
-        AssignmentManagerImpl instance = null;
-        String expResult = "";
-        String result = instance.createAssignment(title, desc, points);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of registerAssignment method, of class AssignmentManagerImpl.
-     */
-    @Test
-    public void testRegisterAssignment() {
-        System.out.println("registerAssignment");
-        String username = "";
-        String id = "";
-        Date dateDone = null;
-        String comment = "";
-        AssignmentManagerImpl instance = null;
-        int expResult = 0;
-        int result = instance.registerAssignment(username, id, dateDone, comment);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAllAssignmentsUserSorted method, of class AssignmentManagerImpl.
-     */
-    @Test
-    public void testGetAllAssignmentsUserSorted() {
-        System.out.println("getAllAssignmentsUserSorted");
-        String username = "";
-        int skip = 0;
-        AssignmentManagerImpl instance = null;
-        String expResult = "";
-        String result = instance.getAllAssignmentsUserSorted(username, skip);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of editAssignmentType method, of class AssignmentManagerImpl.
@@ -518,18 +454,4 @@ public class AssignmentManagerImplTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of listParticipants method, of class AssignmentManagerImpl.
-     */
-    @Test
-    public void testListParticipants() {
-        System.out.println("listParticipants");
-        String contestId = "";
-        AssignmentManagerImpl instance = null;
-        String expResult = "";
-        String result = instance.listParticipants(contestId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 }

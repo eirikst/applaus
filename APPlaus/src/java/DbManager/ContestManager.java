@@ -37,13 +37,6 @@ public interface ContestManager {
      */
     public int dontParticipate(String username, String contestId);    
     /**
-     * Calls UserQueriesImpl.userActiveContList to find the list of contests
-     * the user are participating in.
-     * @param username of given user
-     * @return JSON serialized array of contests or null on fail.
-     */
-    public String userActiveContList(String username);    
-    /**
      * Deletes a contest from the database if it matches the given contest id 
      * and contest is still active(end date is later than this date)
      * @param objId contest object id represented by a String

@@ -5,7 +5,10 @@ import DAO.MongoDbMock.UserQueriesMock;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -593,86 +596,46 @@ public class AuthenticationManagerImplTest {
         users.add(obj);
     }
 
-    /**
-     * Test of login method, of class AuthenticationManagerImpl.
-     */
-    @Test
-    public void testLogin() {
-        System.out.println("login");
-        String username = "";
-        String password = "";
-        AuthenticationManagerImpl instance = null;
-        int expResult = 0;
-        int result = instance.login(username, password);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+
 
     /**
-     * Test of registerUser method, of class AuthenticationManagerImpl.
+     * Test of getSections method, of class AuthenticationManagerImpl Testing a 
+     * successful scenario.
      */
     @Test
-    public void testRegisterUser() {
-        System.out.println("registerUser");
-        String username = "";
-        String password = "";
-        String pwdRepeat = "";
-        String firstname = "";
-        String lastname = "";
-        String email = "";
-        String sectionId = "";
-        AuthenticationManagerImpl instance = null;
-        int expResult = 0;
-        int result = instance.registerUser(username, password, pwdRepeat, firstname, lastname, email, sectionId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of newPassword method, of class AuthenticationManagerImpl.
-     */
-    @Test
-    public void testNewPassword() {
-        System.out.println("newPassword");
-        String email = "";
-        AuthenticationManagerImpl instance = null;
-        int expResult = 0;
-        int result = instance.newPassword(email);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setRole method, of class AuthenticationManagerImpl.
-     */
-    @Test
-    public void testSetRole() {
-        System.out.println("setRole");
-        String username = "";
-        int role = 0;
-        AuthenticationManagerImpl instance = null;
-        String expResult = "";
-        String result = instance.setRole(username, role);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getSections method, of class AuthenticationManagerImpl.
-     */
-    @Test
-    public void testGetSections() {
+    public void testGetSectionsSuccess() {
         System.out.println("getSections");
-        AuthenticationManagerImpl instance = null;
-        String expResult = "";
+        
+        //init mock and test class
+        SectionQueriesMock sectionQMock = new SectionQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        setUserListDBObject(userQMock.usersDBObj);
+        AuthenticationManagerImpl instance = new AuthenticationManagerImpl
+        (userQMock, sectionQMock);
+        
+        DBObject obj = new BasicDBObject();
+        obj.put("_id", new ObjectId("000000000000000000000000"));
+        obj.put("name", "section0");
+        DBObject obj1 = new BasicDBObject();
+        obj.put("_id", new ObjectId("000000000000000000000001"));
+        obj.put("name", "section1");
+        DBObject obj2 = new BasicDBObject();
+        obj.put("_id", new ObjectId("000000000000000000000002"));
+        obj.put("name", "section2");
+        DBObject obj3 = new BasicDBObject();
+        obj.put("_id", new ObjectId("000000000000000000000003"));
+        obj.put("name", "section3");
+        
+        List list = new ArrayList();
+        list.add(obj);
+        list.add(obj1);
+        list.add(obj2);
+        list.add(obj3);
+        Iterator it = list.iterator();
+        String expResult = JSON.serialize(it);//woot
+        
         String result = instance.getSections();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

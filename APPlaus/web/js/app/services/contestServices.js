@@ -21,16 +21,6 @@ services.service('ContestService', function($http) {
         });
         return promise;
     };
-
-    this.getUsersActiveContests = function() {
-        var promise = $http({
-              url: 'APPlausServlet',
-              method: "POST",
-              data: "action=userActiveContList",
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        });
-        return promise;
-    };
     
     this.participate =  function(contest) {
         var promise = $http({

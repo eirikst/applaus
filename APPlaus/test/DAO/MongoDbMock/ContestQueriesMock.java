@@ -22,6 +22,7 @@ import org.bson.types.ObjectId;
  */
 public class ContestQueriesMock implements ContestQueries {
     public List<DBObject> contests = new ArrayList<>();
+    public List<BasicDBObject> usersContests = new ArrayList<>();
     
     @Override
     public List<DBObject> getActiveContests() throws MongoException {
@@ -31,25 +32,14 @@ public class ContestQueriesMock implements ContestQueries {
         toAdd.put("title", "title");
         toAdd.put("desc", "desc");
         toAdd.put("prize", "prize");
-        toAdd.put("dateEnd", new Date());
+        toAdd.put("dateEnd", new Date(0));
         toAdd.put("points", 10);
         contests.add(toAdd);
 
-        //tomorrows date is needed or else mongo will show today's contests
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DAY_OF_MONTH, -1);
-        Date tomorrow = calendar.getTime();
-        
-        List<DBObject> contestList = new ArrayList<>();
-            
-        for(int i = 0; i < contests.size(); i++) {
-            if (tomorrow.before((Date)contests.get(i).get("dateEnd"))) {
-                contestList.add(contests.get(i));
-            }
-        }
-        return contestList;
+        return contests;
     }
     
+    @Override
     public List<DBObject> getInactiveContests(int skip)
             throws InputException, MongoException {
         if(skip < 0) {
@@ -61,28 +51,20 @@ public class ContestQueriesMock implements ContestQueries {
         toAdd.put("title", "title");
         toAdd.put("desc", "desc");
         toAdd.put("prize", "prize");
-        toAdd.put("dateEnd", new Date(20140101));
+        toAdd.put("dateEnd", new Date(0));
         toAdd.put("points", 10);
         contests.add(toAdd);
 
-        //tomorrows date is needed or else mongo will show today's contests
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DAY_OF_MONTH, -1);
-        Date tomorrow = calendar.getTime();
-        
-        List<DBObject> contestList = new ArrayList<>();
-            
-        for(int i = 0; i < contests.size(); i++) {
-            if (tomorrow.after((Date)contests.get(i).get("dateEnd"))) {
-                contestList.add(contests.get(i));
-            }
-        }
-        return contestList;
+        return contests;
     }
     
+    @Override
     public boolean deleteContest(String objId)
             throws InputException, MongoException {
-         
+        if(objId == null) {
+            throw new InputException("objId is null");
+        }
+        
         DBObject toAdd = new BasicDBObject();
         toAdd.put("contestId", "000000000000000000000000");
         toAdd.put("title", "title");
@@ -97,7 +79,6 @@ public class ContestQueriesMock implements ContestQueries {
                 contests.remove(i);
                 return true;
             }
-            
         }
         return false;
     }
@@ -195,6 +176,13 @@ public class ContestQueriesMock implements ContestQueries {
 
     @Override
     public int getContestPointsUser(String username, Date from, Date to) throws InputException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(username == null || from == null || to == null) {
+            throw new InputException("Some of the input is null");
+        }
+        int points = 0;
+        for(int i = 0; i < usersContests.size(); i++) {
+            points += usersContests.get(i).getInt("points");
+        }
+        return points;
     }
 }

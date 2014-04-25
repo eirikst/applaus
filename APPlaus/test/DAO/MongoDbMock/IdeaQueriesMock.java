@@ -16,6 +16,8 @@ import org.bson.types.ObjectId;
  */
 public class IdeaQueriesMock implements IdeaQueries {
     public List<DBObject> ideas = new ArrayList<>();
+    public List<DBObject> usersIdeas = new ArrayList<>();
+    public List<String> likes = new ArrayList<>();
     
     /**
      * Creates an idea based on the input, stores in the ideas list
@@ -164,12 +166,12 @@ public class IdeaQueriesMock implements IdeaQueries {
 
     @Override
     public int getNumberOfIdeas(String username, Date from, Date to) throws InputException {
-        return 10;
+        return usersIdeas.size();
     }
 
     @Override
     public int getNumberOfIdeaLikes(String username, Date from, Date to) throws InputException {
-        return 25;
+        return likes.size();
     }
 
     @Override

@@ -652,21 +652,7 @@ public class UserQueriesImpl implements UserQueries{
             return true;
         }
     }
-    
-    
-    public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException {
-        if(contestId == null) {
-            throw new InputException("Some of the input is null");
-        }
         
-        DBCollection userColl = db.getCollection("user");
-        String json = "{contests: {$in:['" + contestId + "']}}";
-        DBObject query = (DBObject) JSON.parse(json);
-        Iterable<DBObject> it = userColl.find(query);
-        
-        return it.iterator();
-    }
-    
     /**
      * Gets a String Iterator with the usernames of all the active users in the 
      * system

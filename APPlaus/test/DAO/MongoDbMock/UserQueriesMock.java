@@ -191,21 +191,7 @@ public class UserQueriesMock implements UserQueries {
         if(username == null || from == null || to == null) {
             throw new InputException("One or more input values is null");
         }
-        if(assignments.size() < 4) {
-            throw new RuntimeException("To test, the public assignments list "
-                    + "must have a size of 4 or more.");
-        }
-        List<DBObject> assignToRet = new ArrayList();
-        for(int i = 0; i < 4; i++) {
-            for(int a = 0; a < 2; a++) {
-                DBObject obj = new BasicDBObject();
-                obj.put("_id", assignments.get(i).get("_id").toString());
-                obj.put("date_end", new Date());
-                obj.put("comment", "comment" + i + "" + a);
-                assignToRet.add(obj);
-            }
-        }
-        return assignToRet.iterator();
+        return assignments.iterator();
     }
     
     @Override
@@ -259,12 +245,6 @@ public class UserQueriesMock implements UserQueries {
 
     @Override
     public boolean editAssignment(String contestId, String comment, Date date_done, String username) throws InputException, MongoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    @Override
-    public Iterator<DBObject> listParticipants(String contestId) throws InputException, MongoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

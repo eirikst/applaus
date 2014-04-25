@@ -516,30 +516,6 @@ public class APPlausServlet extends HttpServlet {
                 }
             }
             
-            // returns a list of participants of a selected contest
-            else if(action.equals("listParticipants")) {
-                if(!isUser(roleId)) {
-                    response.sendError(401);//internal error
-                    return;
-                }
-                String contestId = request.getParameter("contestId");
-                if(contestId == null) {
-                    LOGGER.log(Level.INFO, "contestId parameter is null.");
-                    response.setStatus(400);//bad request
-                    return;
-                }
-                String toReturn = assignMan.listParticipants(contestId);
-                if(toReturn != null) {
-                    out.println(toReturn);
-                    response.setStatus(200);//success
-                    return;
-                }
-                else {
-                    response.sendError(500);//internal error
-                    return;
-                }
-            }
-            
             // declare a winner of a contest
             else if(action.equals("declareWinner")) {
                 if(!isUser(roleId)) {
@@ -643,24 +619,6 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
                 if(ok == 1) {
-                    response.setStatus(200);//success
-                    return;
-                }
-                else {
-                    response.setStatus(500);//internal error
-                    return;
-                }
-            }
-
-            //userActiveContList
-            else if(action.equals("userActiveContList")) {
-                if(!isUser(roleId)) {
-                    response.sendError(401);//internal error
-                    return;
-                }
-                String responseStr = contMan.userActiveContList(username);
-                if(responseStr != null) {
-                    out.print(responseStr);
                     response.setStatus(200);//success
                     return;
                 }

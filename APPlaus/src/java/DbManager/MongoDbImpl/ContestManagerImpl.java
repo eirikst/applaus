@@ -116,29 +116,6 @@ public class ContestManagerImpl implements ContestManager {
     }
     
     /**
-     * Calls UserQueriesImpl.userActiveContList to find the list of contests
-     * the user are participating in.
-     * @param username of given user
-     * @return JSON serialized array of contests or null on fail.
-     */
-    @Override
-    public String userActiveContList(String username){
-        try {
-            return JSON.serialize(userQ.userActiveContList(username));
-        }
-        catch(InputException e) {
-            LOGGER.log(Level.INFO, "Exception while trying to get active "
-                    + "contest list", e);
-            return null;
-        }
-        catch(MongoException e) {
-            LOGGER.log(Level.WARNING, "Exception while trying to get active "
-                    + "contest list", e);
-            return null;
-        }
-    }
-    
-    /**
      * Deletes a contest from the database if it matches the given contest id 
      * and contest is still active(end date is later than this date)
      * @param objId contest object id represented by a String

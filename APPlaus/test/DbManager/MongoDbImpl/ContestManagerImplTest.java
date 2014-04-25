@@ -55,26 +55,27 @@ public class ContestManagerImplTest {
     public void testGetActiveContests() {
         System.out.println("getActiveContests");
         
+        //init mock and test class
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        ContestManagerImpl instance = new ContestManagerImpl(contQMock, userQMock);        
+        
+        //exp obj
         List<DBObject> contests = new ArrayList<>();
         DBObject expObj = new BasicDBObject();
         expObj.put("contestId", "000000000000000000000000");
         expObj.put("title", "title");
         expObj.put("desc", "desc");
         expObj.put("prize", "prize");
-        expObj.put("dateEnd", new Date());
+        expObj.put("dateEnd", new Date(0));
         expObj.put("points", 10);
         contests.add(expObj);
-        
-        //init mock and test class
-        ContestQueriesMock contQMock = new ContestQueriesMock();
-        UserQueriesMock userQMock = new UserQueriesMock();
-        ContestManagerImpl instance = new ContestManagerImpl(contQMock, userQMock);        
-        
-        //exp
+                
+        //exp res
         String expResult = JSON.serialize(contests);
         
         //result
-        String result = JSON.serialize(instance.getActiveContests());
+        String result = instance.getActiveContests();
         assertEquals(expResult, result);
     }
 
@@ -92,7 +93,7 @@ public class ContestManagerImplTest {
         expObj.put("title", "title");
         expObj.put("desc", "desc");
         expObj.put("prize", "prize");
-        expObj.put("dateEnd", new Date());
+        expObj.put("dateEnd", new Date(0));
         expObj.put("points", 10);
         contests.add(expObj);
         
@@ -105,7 +106,7 @@ public class ContestManagerImplTest {
         String expResult = JSON.serialize(contests);
         
         //result
-        String result = JSON.serialize(instance.getInactiveContests(skip));
+        String result = instance.getInactiveContests(skip);
         assertEquals(expResult, result);
     }
 
@@ -154,36 +155,6 @@ public class ContestManagerImplTest {
     }
 
     /**
-     * Test of userActiveContList method, of class ContestManagerImpl.
-     */
-    @Test
-    public void testUserActiveContList() {
-        System.out.println("userActiveContList");
-        
-        List<DBObject> contests = new ArrayList<>();
-        BasicDBList activeContests = new BasicDBList();
-        
-        String username = "username";
-        DBObject obj = new BasicDBObject();
-        obj.put("username", username);
-        obj.put("contests", 1);
-        obj.put("_id", 0);
-        activeContests.add(obj);
-        
-        //init mock and test class
-        ContestQueriesMock contQMock = new ContestQueriesMock();
-        UserQueriesMock userQMock = new UserQueriesMock();
-        ContestManagerImpl instance = new ContestManagerImpl(contQMock, userQMock);    
-        
-        // result
-        String expResult = JSON.serialize(activeContests);
-        
-        //result
-        String result = JSON.serialize(instance.userActiveContList(username));
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of deleteContest method, of class ContestManagerImpl.
      * Testing on successful deleteContest method
      */
@@ -202,6 +173,27 @@ public class ContestManagerImplTest {
         
         //result
         int result = instance.deleteContest(objId);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of deleteContest method, of class ContestManagerImpl.
+     * Testing with null input
+     */
+    @Test
+    public void testDeleteContestNullInput() {
+        System.out.println("deleteContest");
+        
+        //init mock and test class
+        ContestQueriesMock contQMock = new ContestQueriesMock();
+        UserQueriesMock userQMock = new UserQueriesMock();
+        ContestManagerImpl instance = new ContestManagerImpl(contQMock, userQMock);
+        
+        //exp
+        int expResult = -1;
+        
+        //result
+        int result = instance.deleteContest(null);
         assertEquals(expResult, result);
     }
 
@@ -225,7 +217,7 @@ public class ContestManagerImplTest {
         ContestManagerImpl instance = new ContestManagerImpl(contQMock, userQMock);
         
         //exp
-        ObjectId expResult = new ObjectId("000000000000000000000000");
+        String expResult = JSON.serialize(new ObjectId("000000000000000000000000"));
         
         //result
         String result = instance.createContest(title, desc, prize, dateEnd, points, username);
@@ -308,7 +300,7 @@ public class ContestManagerImplTest {
         ContestManagerImpl instance = new ContestManagerImpl(contQMock, userQMock);
         
          //exp
-        boolean expResult = true;
+        boolean expResult = false;
         
         //result
         boolean result = instance.editContest(null, title, desc, prize, dateEnd, points);
@@ -323,41 +315,6 @@ public class ContestManagerImplTest {
         assertEquals(expResult, result);
         result = instance.editContest(contestId, title, desc, prize, dateEnd, -1);
         assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of deleteContest method, of class ContestManagerImpl.
-     */
-    @Test
-    public void testDeleteContest() {
-        System.out.println("deleteContest");
-        String objId = "";
-        ContestManagerImpl instance = null;
-        int expResult = 0;
-        int result = instance.deleteContest(objId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of createContest method, of class ContestManagerImpl.
-     */
-    @Test
-    public void testCreateContest() {
-        System.out.println("createContest");
-        String title = "";
-        String desc = "";
-        String prize = "";
-        Date dateEnd = null;
-        int points = 0;
-        String username = "";
-        ContestManagerImpl instance = null;
-        String expResult = "";
-        String result = instance.createContest(title, desc, prize, dateEnd, points, username);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
