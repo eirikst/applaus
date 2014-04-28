@@ -31,4 +31,8 @@ public interface ContestQueries{
             throws InputException, MongoException;
     public int getContestPointsUser(String username, Date from, Date to) 
             throws InputException;
+    public int getParticipationUser(String username) 
+            throws InputException;
+    public int getWinsUser(String username) 
+            throws InputException;
 }

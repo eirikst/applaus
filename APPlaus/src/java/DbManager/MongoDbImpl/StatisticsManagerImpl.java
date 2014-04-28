@@ -322,10 +322,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean participateAchievement(String username) throws InputException{
         int size = 0;
         try {
-            /**
-            BasicDBList contests = userQ.userActiveContList(username);
-            size = Lists.newArrayList(contests).size();
-            */
+            size = contQ.getParticipationUser(username);
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -348,12 +345,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
     public boolean contestWinnerAchievement(String username) throws InputException{
         int size = 0;
         try {
-            List<DBObject> contests = contQ.getInactiveContests(0);
-            for(int i=0; i < contests.size(); i++){
-                if(username.equals(contests.get(i).get("winner"))){
-                    size += 1;
-                }
-            }
+            size = contQ.getWinsUser(username);
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -398,14 +390,13 @@ public class StatisticsManagerImpl implements StatisticsManager {
         return true;
     }
     
-    public boolean likeIdeaAchievement(String username) throws InputException{
+    public boolean likeIdeaAchievement(String writer) throws InputException{
         int size = 0;
         try {
-            /**
             Date epoch = new Date();
             epoch.setTime(0);
-            size = ideaQ.getNumberOfIdeaLikes(username, epoch, new Date());
-            */
+            size = ideaQ.getNumberOfIdeaLikes(writer, epoch, new Date());
+            System.out.println("Size: " + size + ", Username: " + writer);
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -416,7 +407,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         try {
             if(checkSize(length, size)){
                 String name = "Recieved likes";
-                userQ.addAchievement(username, name, size);
+                userQ.addAchievement(writer, name, size);
             }
         }
         catch(IllegalArgumentException e) {
@@ -425,13 +416,12 @@ public class StatisticsManagerImpl implements StatisticsManager {
         return true;
     }
     
-    public boolean commentIdeaAchievement(String username) throws InputException{
+    public boolean commentIdeaAchievement(String writer) throws InputException{
         int size = 0;
         try {
-            /**
-            List<DBObject> ideas = ideaQ.getIdeas(0);
-            size = Lists.newArrayList(ideas).size();
-            */
+            Date epoch = new Date();
+            epoch.setTime(0);
+            size = ideaQ.getNumberOfIdeaComments(writer, epoch, new Date());
         }
         catch(IllegalArgumentException e) {
             return false;
@@ -442,7 +432,7 @@ public class StatisticsManagerImpl implements StatisticsManager {
         try {
             if(checkSize(length, size)){
                 String name = "Recieved comments";
-                userQ.addAchievement(username, name, size);
+                userQ.addAchievement(writer, name, size);
             }
         }
         catch(IllegalArgumentException e) {

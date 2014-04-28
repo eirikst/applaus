@@ -24,4 +24,5 @@ public interface IdeaQueries {
     public int getNumberOfIdeaLikes(String username, Date from, Date to) throws InputException;
     public DBObject getMostIdeaLikesInfo(String username) throws InputException;
     public DBObject getMostCommentsInfo(String username) throws InputException;
+    public int getNumberOfIdeaComments(String username, Date from, Date to) throws InputException;
 }

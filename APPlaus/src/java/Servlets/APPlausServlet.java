@@ -531,6 +531,11 @@ public class APPlausServlet extends HttpServlet {
                     return;
                 }
                 boolean toReturn = contMan.declareWinner(contestId, winner);
+                try{
+                    boolean achievement = statsMan.contestWinnerAchievement(username);
+                } catch (InputException e) {
+                    LOGGER.info("Could not read username " + e);
+                }
                 if(toReturn) {
                     response.setStatus(200);//success
                     return;
@@ -1076,6 +1081,13 @@ public class APPlausServlet extends HttpServlet {
                 }
 
                 String responseStr = ideaMan.addComment(ideaId, username, text);
+                
+                try{
+                    boolean achievement = statsMan.commentIdeaAchievement(request.getParameter("writer"));
+                }catch (InputException e){
+                    LOGGER.info("Username is null.");
+                }
+                
                 if(responseStr != null) {
                     out.println(responseStr);
                     response.setStatus(200);//success
@@ -1127,6 +1139,12 @@ public class APPlausServlet extends HttpServlet {
                     LOGGER.info("like post variable not 0 or 1.");
                     response.sendError(400);//bad request
                     return;
+                }
+                
+                try{
+                    boolean achievement = statsMan.likeIdeaAchievement(request.getParameter("writer"));
+                }catch (InputException e){
+                    LOGGER.info("Username is null.");
                 }
                 
                 if(ideaMan.likeIdea(ideaId, username, likeBool)) {

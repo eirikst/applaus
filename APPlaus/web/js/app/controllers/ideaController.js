@@ -38,7 +38,7 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, $cookies,
 
     //add idea to server
     $scope.addComment = function(idea, comment) {
-        IdeaService.addComment(idea._id.$oid, comment)
+        IdeaService.addComment(idea._id.$oid, comment, idea.username)
                 .success(function(data, status, headers, config) {
                     console.log("Success on http action=addIdeaComment");
                     if(idea.comments == undefined) idea.comments = new Array();
@@ -67,7 +67,7 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, $cookies,
 
     //Like idea
     $scope.likeIdea = function(idea, like) {
-        IdeaService.likeIdea(idea, like)
+        IdeaService.likeIdea(idea, like, idea.username)
                 .success(function(data, status, headers, config) {
                     if(idea.likes === undefined) idea.likes = new Array();
                     if(like == 1) {

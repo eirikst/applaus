@@ -36,22 +36,22 @@ services.service('IdeaService', function($http) {
     
     
     //http call to add a comment to an idea
-    this.addComment = function(id, comment) {
+    this.addComment = function(id, comment, writer) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=addIdeaComment&ideaId=" + id + "&text=" + comment,
+            data: "action=addIdeaComment&ideaId=" + id + "&text=" + comment + "&writer=" + writer,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;
     };
     
     //http call to like an idea
-    this.likeIdea = function(idea, like) {
+    this.likeIdea = function(idea, like, writer) {
         var promise = $http({
             url: 'APPlausServlet',
             method: "POST",
-            data: "action=likeIdea&ideaId=" + idea._id.$oid + "&like=" + like,
+            data: "action=likeIdea&ideaId=" + idea._id.$oid + "&like=" + like + "&writer=" + writer,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
         return promise;

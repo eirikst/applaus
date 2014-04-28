@@ -416,4 +416,36 @@ public class ContestQueriesImpl implements ContestQueries {
         }
         return 0;
     }
+    
+    
+    public int getParticipationUser(String username) 
+            throws InputException {
+        if(username == null) {
+            throw new InputException("Some of the input is null");
+        }
+        DBCollection collection = db.getCollection("contest");
+        
+        DBObject query = new BasicDBObject();
+        query.put("participants", username);
+        
+        DBCursor cursor = collection.find(query);
+        
+        return cursor.size();
+    }
+    
+    public int getWinsUser(String username) 
+            throws InputException {
+        if(username == null) {
+            throw new InputException("Some of the input is null");
+        }
+        DBCollection collection = db.getCollection("contest");
+        
+        DBObject query = new BasicDBObject();
+        query.put("winner", username);
+        
+        DBCursor cursor = collection.find(query);
+        
+        System.out.println("Length: " + cursor.size());
+        return cursor.size();
+    }
 }

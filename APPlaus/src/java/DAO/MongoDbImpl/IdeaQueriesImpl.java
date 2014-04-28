@@ -437,4 +437,38 @@ public class IdeaQueriesImpl implements IdeaQueries {
         }
         return null;
     }
+    
+    
+    public int getNumberOfIdeaComments(String username, Date from, Date to) throws InputException {
+        if(username == null || from == null) {
+            throw new InputException("Username or date object is null.");
+        }
+        DBCollection collection = db.getCollection("idea");
+        
+        DBObject match = new BasicDBObject();
+        match.put("username", username);
+        
+        DBObject dateEnd = new BasicDBObject();
+        dateEnd.put("$gte", from);
+        dateEnd.put("$lte", to);
+        
+        match.put("date", dateEnd);
+        
+        DBObject group = new BasicDBObject();
+        group.put("_id", "null");
+        group.put("num", new BasicDBObject("$sum", 1));
+        
+        AggregationOutput output = collection.aggregate(new BasicDBObject
+        ("$match", match), new BasicDBObject("$unwind", "$comments"), new 
+        BasicDBObject("$group", group));
+        
+        Iterator i = output.results().iterator();
+        int numOfComments = 0;
+        if(i.hasNext()) {
+            numOfComments = ((BasicDBObject)i.next()).getInt("num");
+            return numOfComments;
+        }
+        return 0;
+    }
+    
 }
