@@ -2,15 +2,15 @@
 
     <!--reg form-->
     <form name="registerUserForm">
-        <h4 class="text-center">Registrer ny bruker</h4>
+        <h4 class="text-center">Register user</h4>
         <p>
-            <input ng-model="user.usr" name="usr" class="form-control" type="text" placeholder="Brukernavn"  required="true" ng-class="{red:registerUserForm.usr.$error.required && registerUserForm.usr.$dirty, green:!registerUserForm.usr.$error.required && registerUserForm.usr.$dirty}">
+            <input ng-model="user.usr" name="usr" class="form-control form-control-custom form-control-big" type="text" placeholder="Username"  required="true" ng-class="{red:registerUserForm.usr.$error.required && registerUserForm.usr.$dirty, green:!registerUserForm.usr.$error.required && registerUserForm.usr.$dirty}">
         </p>
         <p>
-            <input ng-model="user.pwd" name="pwd" class="form-control" type="password" placeholder="Passord" required="true" ng-class="{red:registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty, green:!registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty}">
+            <input ng-model="user.pwd" name="pwd" class="form-control form-control-custom form-control-big" type="password" placeholder="Password" required="true" ng-class="{red:registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty, green:!registerUserForm.pwd.$error.required && registerUserForm.pwd.$dirty}">
         </p>
         <p>
-            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control" type="Password" placeholder="Gjenta passord" required="true" ng-class="{red:(registerUserForm.pwdRepeat.$error.required || user.pwd !== user.pwdRepeat) && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty && user.pwd === user.pwdRepeat}">
+            <input ng-model="user.pwdRepeat" name="pwdRepeat" class="form-control form-control-custom form-control-big" type="Password" placeholder="Repeat password" required="true" ng-class="{red:(registerUserForm.pwdRepeat.$error.required || user.pwd !== user.pwdRepeat) && registerUserForm.pwdRepeat.$dirty, green:!registerUserForm.pwdRepeat.$error.required && registerUserForm.pwdRepeat.$dirty && user.pwd === user.pwdRepeat}">
         </p>
         <p ng-show="user.pwd !== user.pwdRepeat && registerUserForm.pwdRepeat.$dirty">
             <span class="redMsg">
@@ -18,13 +18,13 @@
             </span>
         </p>
         <p>
-            <input ng-model="user.fname" name="fname" class="form-control" type="text" placeholder="Fornavn" required="true" ng-class="{red:registerUserForm.fname.$error.required && registerUserForm.fname.$dirty, green:!registerUserForm.fname.$error.required && registerUserForm.fname.$dirty}">
+            <input ng-model="user.fname" name="fname" class="form-control form-control-custom form-control-big" type="text" placeholder="First name" required="true" ng-class="{red:registerUserForm.fname.$error.required && registerUserForm.fname.$dirty, green:!registerUserForm.fname.$error.required && registerUserForm.fname.$dirty}">
         </p>
         <p>
-            <input ng-model="user.lname" name="lname" class="form-control" type="text" placeholder="Etternavn" required="true" ng-class="{red:registerUserForm.lname.$error.required && registerUserForm.lname.$dirty, green:!registerUserForm.lname.$error.required && registerUserForm.lname.$dirty}">
+            <input ng-model="user.lname" name="lname" class="form-control form-control-custom form-control-big" type="text" placeholder="Last name" required="true" ng-class="{red:registerUserForm.lname.$error.required && registerUserForm.lname.$dirty, green:!registerUserForm.lname.$error.required && registerUserForm.lname.$dirty}">
         </p>
         <p>
-            <input ng-model="user.email" name="email" class="form-control" type="email" placeholder="e-post" required="true" ng-class="{red:(registerUserForm.email.$error.required || registerUserForm.email.$error.email) && registerUserForm.email.$dirty, green:!registerUserForm.email.$error.required && !registerUserForm.email.$error.email && registerUserForm.email.$dirty}">
+            <input ng-model="user.email" name="email" class="form-control form-control-custom form-control-big" type="email" placeholder="email" required="true" ng-class="{red:(registerUserForm.email.$error.required || registerUserForm.email.$error.email) && registerUserForm.email.$dirty, green:!registerUserForm.email.$error.required && !registerUserForm.email.$error.email && registerUserForm.email.$dirty}">
         </p>
 
         <p>
@@ -33,7 +33,7 @@
             </select>
         </p>
         <p>
-            <button class="form-control" ng-click="registerUser(user, selSection._id.$oid)" ng-disabled="registerUserForm.$invalid">Registrer</button>
+            <button class="form-control form-control-custom form-control-big" ng-click="registerUser(user, selSection._id.$oid)" ng-disabled="registerUserForm.$invalid">Register</button>
         </p>
     </form>
     <span class="greenMsg">
@@ -45,6 +45,6 @@
     <!--end reg form-->
 
     <p>
-        <a class="stdLink" href="#login">Tilbake</a>
+        <a class="stdLink" href="#login">To login</a>
     </p>
 </div>

@@ -5,12 +5,18 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    if (session.getAttribute("username") != null) {
+        response.sendRedirect("index.jsp");
+    }
+%>
+
 <!DOCTYPE html>
 <html ng-app="loginApp">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <title>APPlaus</title>
+        <title>APPlause</title>
 
         <!--css-->
         <link rel="stylesheet" href="css/bootstrap.css"/>
@@ -33,7 +39,7 @@
         <!--static navbar-->
         <div class="navigation" role="navigation">
             <div class="navigationInner">
-                <h4>Velkommen til APPlaus!</h4>
+                <h4>Welcome to APPlause!</h4>
             </div>
         </div>
         <!--end static navbar-->

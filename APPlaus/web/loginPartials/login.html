@@ -1,15 +1,15 @@
 <div class="container container-512">
     <!--login form-->
     <form name="loginForm">
-        <h4 class="text-center">Logg inn</h4>
+        <h4 class="text-center">Login</h4>
         <p>
-            <input ng-model="usr" name="usr" class="form-control form-control-custom form-control-big" type="text" placeholder="Brukernavn"  required="true" ng-class="{red:loginForm.usr.$error.required && loginForm.usr.$dirty, green:!loginForm.usr.$error.required && loginForm.usr.$dirty}">
+            <input ng-model="usr" name="usr" class="form-control form-control-custom form-control-big" type="text" placeholder="Username"  required="true" ng-class="{red:loginForm.usr.$error.required && loginForm.usr.$dirty, green:!loginForm.usr.$error.required && loginForm.usr.$dirty}">
         </p>
         <p>
-            <input ng-model="pwd" name="pwd" class="form-control form-control-custom form-control-big" type="password" placeholder="Passord"  required="true" ng-class="{red:loginForm.pwd.$error.required && loginForm.pwd.$dirty, green:!loginForm.pwd.$error.required && loginForm.pwd.$dirty}">
+            <input ng-model="pwd" name="pwd" class="form-control form-control-custom form-control-big" type="password" placeholder="Password"  required="true" ng-class="{red:loginForm.pwd.$error.required && loginForm.pwd.$dirty, green:!loginForm.pwd.$error.required && loginForm.pwd.$dirty}">
         </p>
         <p>
-            <button class="form-control form-control-custom form-control-big" ng-click="login(usr, pwd)"  ng-disabled="loginForm.$invalid">Logg inn</button>
+            <button class="form-control form-control-custom form-control-big" ng-click="login(usr, pwd)"  ng-disabled="loginForm.$invalid">Login</button>
         </p>
     </form>
     <!--end login form-->
@@ -19,9 +19,9 @@
     </span>
     <br>
     <p>
-        <a class="stdLink" href="#regUser">Registrer deg</a>
+        <a class="stdLink" href="#regUser">Register user</a>
     </p>
     <p>
-        <a class="stdLink" href="#newPwd">Glemt passord</a>
+        <a class="stdLink" href="#newPwd">Forgotten password</a>
     </p>
 </div>

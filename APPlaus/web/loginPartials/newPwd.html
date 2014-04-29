@@ -1,13 +1,13 @@
 <div class="container container-512">
-    <h4 class="text-center">Nytt passord</h4>
+    <h4 class="text-center">New password</h4>
 
     <!--newpwd form-->
     <form name="newPwdForm">
         <p>
-            <input class="form-control" ng-model="email" name="email" type="text" placeholder="e-post" required="true" ng-class="{red:newPwdForm.email.$error.required && newPwdForm.email.$dirty, green:!newPwdForm.email.$error.required && newPwdForm.email.$dirty}">
+            <input class="form-control form-control-custom form-control-big" ng-model="email" name="email" type="text" placeholder="email" required="true" ng-class="{red:newPwdForm.email.$error.required && newPwdForm.email.$dirty, green:!newPwdForm.email.$error.required && newPwdForm.email.$dirty}">
         </p>
         <p>
-            <button class="form-control" ng-click="newPassword(email)" ng-disabled="newPwdForm.$invalid">Send nytt passord</button>
+            <button class="form-control form-control-custom form-control-big" ng-click="newPassword(email)" ng-disabled="newPwdForm.$invalid">Submit</button>
         </p>
     </form>
     <!--end newpwd form-->
@@ -20,6 +20,6 @@
     </span>
 
     <p>
-        <a class="stdLink" href="#login">Tilbake</a>
+        <a class="stdLink" href="#login">To login</a>
     </p>
 </div>
