@@ -28,6 +28,18 @@ services.service('LoginService', function($http) {
         return promise;
     };
     
+    //http call to register a new user to the system via facebook
+    this.regUserFb = function(user) {
+        var promise = $http({
+            url: 'http://www.facebook.com/dialog/oauth',
+            method: "POST",
+            data: "client_id=294235794072909",
+            redirect_uri: "http://localhost:8080/APPlaus/APPlausServlet?action=fbReg&scope=email",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+        return promise;
+    };
+    
     //http call to register a new user to the system
     this.newPassword = function(email) {
         var promise = $http({

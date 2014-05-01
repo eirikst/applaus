@@ -1,6 +1,6 @@
 var controllers = angular.module('loginApp.controllers');
 
-controllers.controller('LoginCtrl', function($scope, $location, $window, $timeout, LoginService) {
+controllers.controller('LoginCtrl', function($scope, $location, $window, $timeout, LoginService, $http) {
         
     $scope.login = function(usr, pwd) {
         LoginService.login(usr, pwd)
@@ -82,6 +82,15 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
         });
     };
     
+    $scope.regUserFb = function(user) {
+        LoginService.regUserFb(user)
+                .success(function(data, status, headers, config) {
+            console.log("Successul http call action=newPassword");
+        }).error(function(data, status, headers, config) {
+            console.log("Failed http action=newPassword");
+        });
+    };
+    
     getSections = function() {
         LoginService.getSections()
         .success(function(data, status, headers, config) {
@@ -93,6 +102,27 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
         });
     }
     
+    $scope.updateFaceUri = function() {
+        var uri = "http://www.facebook.com/dialog/oauth?client_id=294235794072909&redirect_uri=";
+        uri += encodeURI("http://localhost:8080/APPlaus/APPlausServlet?action=fbReg&usr=gege&sectionId=533a7502bee45e22ec667aee");
+        uri+= "&scope=email";
+        console.log(uri);
+        $scope.faceUri = uri;
+    }
+    
+    $scope.regFace = function() {
+        var uri = "http://www.facebook.com/dialog/oauth?client_id=294235794072909&redirect_uri=";
+        uri += encodeURI("http://localhost:8080/APPlaus/APPlausServlet?action=fbReg&usr=gege&sectionId=533a7502bee45e22ec667aee");
+        uri+= "&scope=email";
+        console.log(uri);
+        $scope.faceUri = uri;
+
+        var promise = $http({
+            url: 'http://www.facebook.com/dialog/oauth',
+            method: "POST",
+            data: uri,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });    }
     
     //init
     $scope.sections = new Array();

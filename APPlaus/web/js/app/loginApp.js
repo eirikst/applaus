@@ -16,16 +16,20 @@ loginApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider
             .when('/login', 
     {templateUrl: 'loginPartials/login.html', controller: 'LoginCtrl'}
-            );
+    );
     $routeProvider
             .when('/regUser', 
     {templateUrl: 'loginPartials/regUser.html', controller: 'LoginCtrl'}
-            );
+    );
     $routeProvider
             .when('/newPwd', 
     {templateUrl: 'loginPartials/newPwd.html', controller: 'LoginCtrl'}
-            );
+    );
+    $routeProvider
+            .when('/regUserFb', 
+    {templateUrl: 'loginPartials/regUserFb.html', controller: 'LoginCtrl'}
+    );
     $routeProvider
             .otherwise({redirectTo: '/login'}
-            );
+    );
 }]);

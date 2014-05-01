@@ -10,6 +10,11 @@
         response.sendRedirect("index.jsp");
     }
 %>
+<%@page import="java.net.URLEncoder"%>
+<%
+    String fbURL = "http://www.facebook.com/dialog/oauth?client_id=294235794072909&redirect_uri=" + URLEncoder.encode("http://localhost:8080/APPlaus/APPlausServlet?action=fbReg&usr=hei&sectionId=533a7502bee45e22ec667aee") + "&scope=email";
+%>
+
 
 <!DOCTYPE html>
 <html ng-app="loginApp">
@@ -46,6 +51,9 @@
 
         <!--content-->
         <div class="content">
+        <p>
+            <a href="<%= fbURL %>">u</a>
+        </p>
 
             <!--partial-->
             <div ng-view="" class="reveal-animation"></div>

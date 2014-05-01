@@ -24,14 +24,20 @@ import DbManager.StatisticsManager;
 import Tools.DateTools;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -41,6 +47,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -104,6 +112,7 @@ public class APPlausServlet extends HttpServlet {
         
         try (PrintWriter out = response.getWriter()) {
             String action = request.getParameter("action");
+            System.out.println(action);
             if(action == null) {
                 LOGGER.log(Level.INFO, "Bad request. POST action is NULL.");
                 response.sendError(400);//bad request
@@ -182,7 +191,8 @@ public class APPlausServlet extends HttpServlet {
                 }
                 
                 int res = authMan.registerUser(username, password, pwdRepeat, 
-                        firstname, lastname, email, sectionId);
+                        firstname, lastname, email, sectionId, null);//null 
+                                                    //because no facebook user
                 if(res == 1 || res == -1 || res == -2 || res == -3) {
                     out.println(res);
                     response.setStatus(200);//success
@@ -207,6 +217,211 @@ public class APPlausServlet extends HttpServlet {
                     response.setStatus(200);
                     return;
                 }
+            }
+            
+            else if(action.equals("fbReg")) {
+                String username = request.getParameter("usr");
+                String sectionId = request.getParameter("sectionId");
+                System.out.println("sectionid: " + sectionId);
+                System.out.println("username: " + username);
+                
+                
+                
+                System.out.println("i fb-reg servlet");
+                String code = request.getParameter("code");
+                System.out.println(code);
+                if (code == null || code.equals("")) {
+                    // an error occurred, handle this
+                    System.out.println("code er " + code);
+                }
+
+                String token = null;
+                try {
+                    String g = "https://graph.facebook.com/oauth/access_token?client_id=294235794072909&redirect_uri=" + URLEncoder.encode("http://localhost:8080/APPlaus/APPlausServlet?action=" + action + "&usr=" + username + "&sectionId=" + sectionId, "UTF-8") + "&client_secret=fce2ac5c6e666c307b6dd5095b40097f&code=" + code;
+                    URL u = new URL(g);
+                    URLConnection c = u.openConnection();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                    String inputLine;
+                    StringBuffer b = new StringBuffer();
+                    while ((inputLine = in.readLine()) != null)
+                        b.append(inputLine + "\n");            
+                    in.close();
+                    token = b.toString();
+                    if (token.startsWith("{"))
+                        throw new Exception("error on requesting token: " + token + " with code: " + code);
+                } catch (Exception e) {
+                        // an error occurred, handle this
+                    System.out.println("Exception l46");
+                    System.out.println(e);
+                    response.sendError(500);
+                    return;
+                }
+
+                String graph = null;
+                try {
+                    String g = "https://graph.facebook.com/me?" + token;
+                    URL u = new URL(g);
+                    URLConnection c = u.openConnection();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                    String inputLine;
+                    StringBuffer b = new StringBuffer();
+                    while ((inputLine = in.readLine()) != null)
+                        b.append(inputLine + "\n");            
+                    in.close();
+                    graph = b.toString();
+                } catch (Exception e) {
+                        // an error occurred, handle this
+                    System.out.println("Exception l65");
+                    response.sendError(500);
+                    return;
+                }
+
+                String facebookId;
+                String firstName;
+                String lastName;
+                String email;
+                try {
+                    JSONObject json = new JSONObject(graph);
+                    facebookId = json.getString("id");
+                    firstName = json.getString("first_name");
+                    lastName = json.getString("last_name");
+                    email = json.getString("email");
+                } catch (JSONException e) {
+                    // an error occurred, handle this
+                    System.out.println("Exception l87");
+                    response.sendError(500);
+                    return;
+                }
+                System.out.println("okupd: " + authMan.registerUser(username, 
+                        null, null, firstName, lastName, email, sectionId, facebookId));
+                response.sendRedirect("index.jsp");
+                return;
+            }
+            
+            // register user
+            else if(action.equals("registerUser")) {
+                String username = request.getParameter("usr");
+                String password = request.getParameter("pwd");
+                String pwdRepeat = request.getParameter("pwdRepeat");
+                String firstname = request.getParameter("fname");
+                String lastname = request.getParameter("lname");
+                String email = request.getParameter("email");
+                String sectionId = request.getParameter("sectionId");
+                
+                if(username == null && password == null && pwdRepeat == null ||
+                        firstname == null || lastname == null || email == null 
+                        || sectionId == null) 
+                {
+                    response.sendError(400);//bad request
+                    return;
+                }
+                
+                int res = authMan.registerUser(username, password, pwdRepeat, 
+                        firstname, lastname, email, sectionId, null);//null 
+                                                    //because no facebook user
+                if(res == 1 || res == -1 || res == -2 || res == -3) {
+                    out.println(res);
+                    response.setStatus(200);//success
+                    return;
+                }
+                else {
+                    response.sendError(500);//internal error
+                    return;
+                }
+            }
+            
+            
+            // get sections
+            else if(action.equals("getSections")) {
+                String retString = authMan.getSections();
+                if(retString == null) {
+                    response.sendError(500);//internal error
+                    return;
+                }
+                else {
+                    out.print(retString);
+                    response.setStatus(200);
+                    return;
+                }
+            }
+            
+            else if(action.equals("fbLogin")) {
+                request.getSession().invalidate();
+                String code = request.getParameter("code");
+                System.out.println(code);
+                if (code == null || code.equals("")) {
+                    // an error occurred, handle this
+                    System.out.println("code er " + code);
+                }
+
+                String token = null;
+                try {
+                    String g = "https://graph.facebook.com/oauth/access_token?client_id=294235794072909&redirect_uri=" + URLEncoder.encode("http://localhost:8080/APPlaus/APPlausServlet?action=" + action, "UTF-8") + "&client_secret=fce2ac5c6e666c307b6dd5095b40097f&code=" + code;
+                    URL u = new URL(g);
+                    URLConnection c = u.openConnection();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                    String inputLine;
+                    StringBuffer b = new StringBuffer();
+                    while ((inputLine = in.readLine()) != null)
+                        b.append(inputLine + "\n");            
+                    in.close();
+                    token = b.toString();
+                    if (token.startsWith("{"))
+                        throw new Exception("error on requesting token: " + token + " with code: " + code);
+                } catch (Exception e) {
+                        // an error occurred, handle this
+                    System.out.println("Exception l46");
+                    System.out.println(e);
+                    response.sendError(500);
+                    return;
+                }
+
+                String graph = null;
+                try {
+                    String g = "https://graph.facebook.com/me?" + token;
+                    URL u = new URL(g);
+                    URLConnection c = u.openConnection();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                    String inputLine;
+                    StringBuffer b = new StringBuffer();
+                    while ((inputLine = in.readLine()) != null)
+                        b.append(inputLine + "\n");            
+                    in.close();
+                    graph = b.toString();
+                } catch (Exception e) {
+                        // an error occurred, handle this
+                    System.out.println("Exception l65");
+                    response.sendError(500);
+                    return;
+                }
+
+                String facebookId;
+                String firstName;
+                String lastName;
+                String email;
+                try {
+                    JSONObject json = new JSONObject(graph);
+                    facebookId = json.getString("id");
+                    firstName = json.getString("first_name");
+                    lastName = json.getString("last_name");
+                    email = json.getString("email");
+                } catch (JSONException e) {
+                    // an error occurred, handle this
+                    System.out.println("Exception l87");
+                    response.sendError(500);
+                    return;
+                }
+                Map userInfo = authMan.getFbUserInfo(facebookId);
+                System.out.println(userInfo);
+                if(userInfo != null) {
+                    setSession(request, (String)userInfo.get("username"), (Integer)userInfo.get("role_id"));
+                    setCookie(response, (Integer)userInfo.get("role_id"), (String)userInfo.get("username"));
+                    response.sendRedirect("index.jsp");
+                }
+                else {
+                    response.sendRedirect("login.jsp");
+                }
+                return;
             }
             
             

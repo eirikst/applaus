@@ -10,6 +10,7 @@ import Tools.*;
 import APPlausException.InputException;
 import DAO.SectionQueries;
 import DbManager.AuthenticationManager;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -54,15 +55,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     @Override
     public int registerUser(String username, String password, 
             String pwdRepeat, String firstname, String lastname, String email, 
-            String sectionId) {
-        if(password == null || pwdRepeat == null) {
-            return -5;  //null value input(bad input, just like inputexception
-                        //below, samme error)
-        }
-        if (password.equals(pwdRepeat)){
+            String sectionId, String facebookId) {
+        if ((password == null && facebookId != null) || password.equals(pwdRepeat)){
             try {
                 return userQ.registerUser(username, password, firstname, 
-                        lastname, email, sectionId);
+                        lastname, email, sectionId, facebookId);
             }
             catch(InputException e) {
                 LOGGER.log(Level.INFO, "Exception while registering user.", e);
@@ -151,5 +148,21 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             LOGGER.log(Level.WARNING, "Exception while getting sections.", e);
             return null;
         }
+    }
+    
+    /**
+     * Gets a map containing username and role_id of a facebook user
+     * @return map containing username and role_id of a facebook user or null 
+     * if user does not exist
+     */
+    @Override
+    public Map getFbUserInfo(String facebookId) {
+        DBObject userInfo = userQ.getFbUserInfo(facebookId);
+        Object usernameObj = userInfo.get("username");
+        Object roleObj = userInfo.get("role_id");
+        if(usernameObj == null || roleObj == null) {
+            return null;
+        }
+        return userInfo.toMap();
     }
 }

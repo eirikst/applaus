@@ -14,12 +14,17 @@
     </form>
     <!--end login form-->
 
+    <a href="http://www.facebook.com/dialog/oauth?client_id=294235794072909&redirect_uri=http://localhost:8080/APPlaus/APPlausServlet?action=fbLogin&scope=email"><img src="img/FB-f-Logo__blue_29.png"> Login</a>
+    
     <span class="redMsg">
         {{loginErr}}
     </span>
     <br>
     <p>
         <a class="stdLink" href="#regUser">Register user</a>
+    </p>
+    <p>
+        <a class="stdLink" href="#regUserFb">Register with Facebook</a>
     </p>
     <p>
         <a class="stdLink" href="#newPwd">Forgotten password</a>

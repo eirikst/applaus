@@ -276,17 +276,35 @@ public class UserQueriesImpl implements UserQueries{
     
     @Override
     public int registerUser(String username, String password, 
-            String firstname, String lastname, String email, String sectionId)
+            String firstname, String lastname, String email, String sectionId, 
+            String facebookId)
             throws InputException, MongoException {
-        if(username == null || password == null || firstname == null || 
-                lastname == null || email == null || sectionId == null) {
-            throw new InputException("Some of the input is null");
+        if(username == null || firstname == null || lastname == null || 
+                email == null || sectionId == null) {
+            throw new InputException("username, firstname, lastname, email or "
+                    + "sectionId cannot be null.");
         }
-        if(username.trim().isEmpty() || password.trim().isEmpty() || 
-                firstname.trim().isEmpty() || lastname.trim().isEmpty() || 
-                email.trim().isEmpty() || sectionId.trim().isEmpty()) {
-            return -4;
+        else if(username.trim().isEmpty() || firstname.trim().isEmpty() || 
+                lastname.trim().isEmpty() || email.trim().isEmpty() || 
+                sectionId.trim().isEmpty()) {
+            throw new InputException("username, firstname, lastname, email or "
+                    + "sectionId cannot be empty strings.");
         }
+        
+        if(password == null || password.isEmpty()) {
+            if(facebookId == null || facebookId.isEmpty()) {
+                throw new InputException("Both password and facebookId cannot be "
+                        + "null or empty at the same time");
+            }
+        }
+        if(password != null && !password.isEmpty()) {
+            if(facebookId != null && !facebookId.isEmpty()) {
+                throw new InputException("Either password or facebookId must "
+                        + "be null. Cannot register both password and facebook "
+                        + "user");
+            }
+        }
+        
         ObjectId sectionObjId;
         try {
             sectionObjId = new ObjectId(sectionId);
@@ -295,7 +313,7 @@ public class UserQueriesImpl implements UserQueries{
             throw new InputException("sessionId not on Object ID format.");
         }
         
-        if (userExist(username)){
+        if (password != null && !password.isEmpty() && userExist(username)){
             return -1;
         }
         if(emailExist(email)) {
@@ -304,20 +322,27 @@ public class UserQueriesImpl implements UserQueries{
         if(!sectionExist(sectionObjId)) {
             return -3;
         }
-        else {
-            DBCollection coll = db.getCollection("user");
-            BasicDBObject query = new BasicDBObject();
-            query.put("username", username);
-            query.put("email", email);
-            query.put("password", password);
-            query.put("firstname", firstname);
-            query.put("lastname", lastname);
-            query.put("section", sectionObjId);
-            query.put("role_id", 3);
-         
-            coll.insert(query);
-            return 1;
+        if(facebookId != null && !facebookId.isEmpty() && facebookUserExist(facebookId)) {
+            return -4;
         }
+        
+        DBCollection coll = db.getCollection("user");
+        BasicDBObject query = new BasicDBObject();
+        query.put("username", username);
+        query.put("email", email);
+        if(password != null && !password.isEmpty()) {
+            query.put("password", password);
+        }
+        else {
+            query.put("facebookId", facebookId);
+        }
+        query.put("firstname", firstname);
+        query.put("lastname", lastname);
+        query.put("section", sectionObjId);
+        query.put("role_id", 3);
+
+        coll.insert(query);
+        return 1;
     }
     
     @Override
@@ -334,6 +359,44 @@ public class UserQueriesImpl implements UserQueries{
         try(DBCursor cursor = coll.find(query)) {
             return cursor.hasNext();
         }
+    }
+    
+    @Override
+    public boolean facebookUserExist(String facebookId)
+            throws InputException {
+        if(facebookId == null) {
+            throw new InputException("Some input is invalid.");
+        }
+
+        DBCollection coll = db.getCollection("user");
+        BasicDBObject query = new BasicDBObject();
+	query.put("facebookId", facebookId);
+        
+        try(DBCursor cursor = coll.find(query)) {
+            return cursor.hasNext();
+        }
+    }
+    
+    /**
+     * Gets username and role-id from a user with a facebook id registered.
+     * @param facebookId user's id on Facebook
+     * @return BasicDBObject with username and role_id from
+     */
+    @Override
+    public DBObject getFbUserInfo(String facebookId) {
+        DBObject query = new BasicDBObject("facebookId", facebookId);
+        DBObject toFetch = new BasicDBObject();
+        toFetch.put("username", 1);
+        toFetch.put("role_id", 1);
+
+        DBCollection collection = db.getCollection("user");
+        
+        try(DBCursor cursor = collection.find(query, toFetch)) {
+            if(cursor.hasNext()) {
+                return cursor.next();
+            }
+        }
+        return null;
     }
     
     //only username, firstname, lastname, role_id

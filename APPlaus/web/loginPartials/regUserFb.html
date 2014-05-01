@@ -1,0 +1,32 @@
+<div class="container container-512">
+
+    <!--reg form-->
+    <form name="registerUserForm">
+        <h4 class="text-center">Register with Facebook</h4>
+        <p>
+            Please provide a username and the section you belong to.
+        </p>
+        <p>
+            <input ng-model="user.usr" name="usr" class="form-control form-control-custom form-control-big" type="text" placeholder="Username"  required="true" ng-class="{red:registerUserForm.usr.$error.required && registerUserForm.usr.$dirty, green:!registerUserForm.usr.$error.required && registerUserForm.usr.$dirty}">
+        </p>
+        <p>
+            <select class="form-control" 
+                     ng-options="selSection.name for selSection in sections" ng-model="selSection">
+            </select>
+        </p>
+    </form>
+    <p>
+        <button class="form-control form-control-medium form-control-custom" ng-click="updateFaceUri()" ng-href="{{faceUri}}">Register</button>
+    </p>
+    <span class="greenMsg">
+        {{msg}}
+    </span>
+    <span class="redMsg">
+        {{errMsg}}
+    </span>
+    <!--end reg form-->
+
+    <p>
+        <a class="stdLink" href="#login">To login</a>
+    </p>
+</div>

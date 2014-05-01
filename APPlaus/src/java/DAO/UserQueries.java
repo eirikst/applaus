@@ -18,12 +18,16 @@ public interface UserQueries {
     public int checkLogin(String username, String password)
             throws InputException, MongoException;
     public int registerUser(String username, String password,
-            String firstname, String lastname, String email, String sectionId)
+            String firstname, String lastname, String email, String sectionId, 
+            String facebookId)
             throws InputException, MongoException;
     public int newPassword(String email, String password)
             throws InputException, MongoException;
     public boolean userExist(String username)
             throws InputException, MongoException;
+    public boolean facebookUserExist(String facebookId)
+            throws InputException;
+    public DBObject getFbUserInfo(String facebookId);
     public List<DBObject> getUserInfo() throws InputException, MongoException;
     public boolean emailExist(String username)
             throws InputException, MongoException;
