@@ -5,7 +5,7 @@
 
     <!--active cont-->
     <div class="col-sm-6">
-        <h2>Inactive contests</h2>
+        <h2>Active contests</h2>
         <div class="drop" ng-show="(roleCookie == 1 || roleCookie == 2)">
             <div class="dropHeading">
                 <a class="glyphicon" ng-class="{'glyphicon-chevron-down': dropCreate, 'glyphicon-chevron-right': !dropCreate}"></a>
@@ -61,7 +61,7 @@
                     </p>
                     <p>
                         <span ng-show="editable">
-                            <input placeholder="Tittel" name="editTitle" class="form-control" ng-class="{red:editContForm.editTitle.$error.required, green:!editContForm.editTitle.$error.required}" ng-model="editableContest.title" required="true">
+                            <input placeholder="Title" name="editTitle" class="form-control" ng-class="{red:editContForm.editTitle.$error.required, green:!editContForm.editTitle.$error.required}" ng-model="editableContest.title" required="true">
                         </span>
                     </p>
                     <p>
@@ -69,7 +69,7 @@
                             Description: {{contest.desc}}
                         </span>
                         <span ng-show="editable">
-                            <textarea placeholder="Beskrivelse" name="editDesc" class="form-control" ng-class="{red:editContForm.editDesc.$error.required, green:!editContForm.editDesc.$error.required}" ng-model="editableContest.desc" required="true"></textarea>
+                            <textarea placeholder="Description" name="editDesc" class="form-control" ng-class="{red:editContForm.editDesc.$error.required, green:!editContForm.editDesc.$error.required}" ng-model="editableContest.desc" required="true"></textarea>
                         </span>
                     </p>
                     <p>
@@ -77,7 +77,7 @@
                             Prize: {{contest.prize}}
                         </span>
                         <span ng-show="editable">
-                            <textarea placeholder="Premie" name="editPrize" class="form-control" ng-class="{red:editContForm.editPrize.$error.required, green:!editContForm.editPrize.$error.required}" ng-model="editableContest.prize" required="true"></textarea>
+                            <textarea placeholder="Prize" name="editPrize" class="form-control" ng-class="{red:editContForm.editPrize.$error.required, green:!editContForm.editPrize.$error.required}" ng-model="editableContest.prize" required="true"></textarea>
                         </span>
                     </p>
                     <p>
@@ -85,7 +85,7 @@
                             Points {{contest.points}}
                         </span>
                         <span ng-show="editable">
-                            <input placeholder="Poeng" type="number" name="editPoints" class="form-control" ng-class="{red:editContForm.editPoints.$error.required || editContForm.editPoints.$error.min, green:!editContForm.editPoints.$error.required && !editContForm.editPoints.$error.min}" ng-model="editableContest.points" min="1" required="true">
+                            <input placeholder="Points" type="number" name="editPoints" class="form-control" ng-class="{red:editContForm.editPoints.$error.required || editContForm.editPoints.$error.min, green:!editContForm.editPoints.$error.required && !editContForm.editPoints.$error.min}" ng-model="editableContest.points" min="1" required="true">
                         </span>
                     </p>
                     <p>
@@ -107,8 +107,8 @@
 
                 <!--admin features-->
                 <a class="stdLink" type="button" ng-show="!editable && (roleCookie == 1 || roleCookie == 2)" ng-click="editable = !editable;
-                        editableContest = copyContest(contest);">Change</a>
-                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Undo change</a>
+                        editableContest = copyContest(contest);">Edit</a>
+                <a class="stdLink" type="button" ng-show="editable" ng-click="editable = !editable">Undo edit</a>
                 <div ng-init="toDelete = false">
                     <a class="stdLink" type="button" ng-show="!toDelete && (roleCookie == 1 || roleCookie == 2)" ng-click="toDelete = !toDelete">Delete</a>
                     <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Undo delete</a>
@@ -161,7 +161,7 @@
                     Administrator: {{contest.username}}
                 </p>
                 <p>
-                    Description {{contest.desc}}
+                    Description: {{contest.desc}}
                 </p>
                 <p>
                     Prize: {{contest.prize}}

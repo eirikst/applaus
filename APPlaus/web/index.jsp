@@ -37,7 +37,7 @@
         <script src="js/libs/ui-bootstrap-tpls-0.10.0.js"></script>
         <!--end lib js scripts-->
 
-        <title>APPlaus</title>
+        <title>APPlause</title>
     </head>
 
     <body style="background-color:white">
@@ -67,7 +67,7 @@
                         <ul class="nav pull-right">
                             <li class="dropdown">
                                 <a style="color:white" class="dropdown-toggle" ng-class="glyphicon - chevron - down" data-toggle="dropdown">
-                                    Mer
+                                    More
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu pull-right">

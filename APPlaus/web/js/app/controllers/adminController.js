@@ -9,8 +9,8 @@ controllers.controller('AdminCtrl', function($scope, AdminService) {
                     console.log("getAdminList success");
                 })
                 .error(function(data, status, headers, config) {
-                    $scope.adminListErr = "En feil skjedde under lasting. Vennligst"
-                            + "prøv igjen.";
+                    $scope.adminListErr = "An error occurred during loading of user list. Please"
+                            + "try again.";
                     console.log("http error getAdminList");
                 });
     };
@@ -22,7 +22,7 @@ controllers.controller('AdminCtrl', function($scope, AdminService) {
                     console.log("http error setRole");
                 })
                 .error(function(data, status, headers, config) {
-                    $scope.adminListErr = "En feil skjedde. Vennligst prøv igjen.";
+                    $scope.adminListErr = "An error occurred. Please try again.";
                     console.log("http error setRole");
                 });
     };
@@ -34,8 +34,8 @@ controllers.controller('AdminCtrl', function($scope, AdminService) {
                     $scope.assignmentTypeList = data;//sets assignment table with info from DB
                     console.log("getAssignmentTypes success");
                 }).error(function(data, status, headers, config) {
-                    $scope.assignmentTypeListErr = "En feil skjedde under lasting. Vennligst"
-                            + "prøv igjen.";
+                    $scope.assignmentTypeListErr = "An error occurred during loading. Please"
+                            + "try again.";
             console.log("Failed http action=getAssignmentsTypes");
         });
     };
@@ -48,7 +48,7 @@ controllers.controller('AdminCtrl', function($scope, AdminService) {
             console.log("editAssignment success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=editAssignment");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
 
@@ -58,7 +58,7 @@ controllers.controller('AdminCtrl', function($scope, AdminService) {
                 .success(function(data, status, headers, config) { 
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteAssignment");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     

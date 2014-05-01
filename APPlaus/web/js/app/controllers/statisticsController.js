@@ -146,7 +146,7 @@ controllers.controller('StatisticsCtrl', function($scope, $location, StatisticsS
                     $scope.achievements = data;//sets assignment table with info from DB
                     console.log("getAchievements success");
                 }).error(function(data, status, headers, config) {
-            $scope.fetchErrMsg = "Det skjedde en feil under henting av achievements. Vennligst prøv igjen.";
+            $scope.fetchErrMsg = "An error occurred during loading of achievements. Please try again.";
             console.log("Failed http action=getAchievements");
         });
     };

@@ -19,11 +19,11 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
             }
             else {
                 console.log("Usr/pwd don't match.");
-                $scope.loginErr = "Kunne ikke finne kombinasjonen av brukernavn"
-                + " og passord. Vennligst prøv igjen.";
+                $scope.loginErr = "Could not find combination of username"
+                + " and password. Please try again.";
             }
         }).error(function(data, status, headers, config) {
-                $scope.loginErr = "En uventet feil skjedde. Vennligst prøv igjen";
+                $scope.loginErr = "An error occurred. Please try again.";
                 console.log("Failed http action=login");
         });
     };
@@ -41,26 +41,26 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
             .success(function(data, status, headers, config) {
                 console.log(data);
                 if(data == 1) {
-                    $scope.msg = "Ny bruker er registrert. Du blir sendt videre til logg inn-siden.";
+                    $scope.msg = "New user registered. Redirecting to login page.";
                     console.log("Register successful");
                     $timeout(function(){//redirect after timeout
                         $location.path('login');
                     }, 3000);
                 }
                 else if (data == -1) {
-                    $scope.errMsg = "Brukernavnet er allerede i bruk. Vennligst fyll inn et nytt brukernavn.";
+                    $scope.errMsg = "Username is already in use. Please fill-in a new username.";
                     console.log("Username exists");
                 } else if (data == -2) {
-                    $scope.errMsg = "Epost er allerede i bruk. Vennligst fyll inn et nytt epost.";
+                    $scope.errMsg = "Email is already in use. Please fill-in a new email.";
                     console.log("Email exists");
                 } else if (data == -8) {
-                    $scope.errMsg = "Passord stemmer ikke overens.";
+                    $scope.errMsg = "Passwords do not match.";
                     console.log("Invalid password");
                 } else {
                     $scope.errMsg = "An error occured. Please try again.";
                 }
             }).error(function(data, status, headers, config) {
-                $scope.errMsg = "En uforutsett feil oppsto. Vennligst prøv igjen.";
+                $scope.errMsg = "An unexpected error occurred. Please try again.";
                 console.log("Failed http action=registerUser");
             });
         }
@@ -70,11 +70,11 @@ controllers.controller('LoginCtrl', function($scope, $location, $window, $timeou
         LoginService.newPassword(email)
         .success(function(data, status, headers, config) {
             if(data == 1) {
-                $scope.msg = "Nytt passord er sendt til din epost.";
+                $scope.msg = "New password is sent to your email.";
                 console.log("New password sent by email");
             }
             else {
-                $scope.errMsg = "Fant ikke din epost i systemet. Vennligst prøv igjen.";
+                $scope.errMsg = "Could not find your email in the system. Please try again.";
                 console.log("Invalid email");
             }
         }).error(function(data, status, headers, config) {

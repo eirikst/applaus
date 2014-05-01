@@ -261,10 +261,10 @@
                         </p>
                         <form name="goalForm">
                             <p>
-                                <input name="points" ng-model="goalToSet" type="number" class="form-control" placeholder="Poeng" min="1" required="true" ng-class="{red:(goalForm.points.$error.required || goalForm.points.$error.min) && goalForm.points.$dirty, green:!(goalForm.points.$error.required || goalForm.points.$error.min) && goalForm.points.$dirty}" ng-model="newCont.points">
+                                <input name="points" ng-model="goalToSet" type="number" class="form-control" placeholder="Points" min="1" required="true" ng-class="{red:(goalForm.points.$error.required || goalForm.points.$error.min) && goalForm.points.$dirty, green:!(goalForm.points.$error.required || goalForm.points.$error.min) && goalForm.points.$dirty}" ng-model="newCont.points">
                             </p>
                             <p>
-                                <button ng-click="setGoal(goalToSet)" class="form-control" ng-disabled="goalForm.$invalid">Legg til</button>
+                                <button ng-click="setGoal(goalToSet)" class="form-control" ng-disabled="goalForm.$invalid">Add</button>
                             </p>
                         </form>
                         <span class="redMsg">
@@ -322,7 +322,7 @@
                         </p>
                         <p>
                             <button class="form-control" ng-click="addIdea(idea);
-                                clearMsg();" ng-disabled="ideabankForm.$invalid">ADd</button>
+                                clearMsg();" ng-disabled="ideabankForm.$invalid">Add</button>
                         </p>
                         <span class="redMsg">
                             {{ideaErr}}<!--idea error message-->
@@ -415,7 +415,7 @@
             <div class="innerDrop" ng-show="dropNewStory">
                 <form name="addNewsForm">
                     <p>
-                        <input name="newsTitle" type="text" class="form-control" ng-model="story.title" placeholder="Tittel" required="true" ng-class="{red:addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty, green:!addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty}">
+                        <input name="newsTitle" type="text" class="form-control" ng-model="story.title" placeholder="Title" required="true" ng-class="{red:addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty, green:!addNewsForm.newsTitle.$error.required && addNewsForm.newsTitle.$dirty}">
                     </p>
                     <p>
                         <textarea name="newsText" class="form-control" ng-model="story.text" placeholder="Text" required="true" ng-class="{red:addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty, green:!addNewsForm.newsText.$error.required && addNewsForm.newsText.$dirty}"></textarea>
@@ -455,8 +455,8 @@
                     {{article.text}}
                 </p>
                 <div ng-init="toDelete = false">
-                <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Slett</a>
-                <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Angre sletting</a>
+                <a class="stdLink" type="button" ng-show="!toDelete" ng-click="toDelete = !toDelete">Delete</a>
+                <a class="stdLink" type="button" ng-show="toDelete" ng-click="toDelete = !toDelete">Undo delete</a>
                 <div class="alert alert-info" ng-show="toDelete">
                     <a  ng-click="deleteNews(article);
                             clearMsg();" class="alert-link">Confirm</a>

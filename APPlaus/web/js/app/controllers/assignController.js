@@ -10,9 +10,9 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                     console.log("createAssignment success");
                     assignment._id = data._id;
                     $scope.selectedOptions.unshift(assignment);
-                    $scope.createMsg = "Oppgave lagt til!";
+                    $scope.createMsg = "Assignment added!";
                 }).error(function(data, status, headers, config) {
-            $scope.createErrMsg = "En feil skjedde. Vennligst prøv igjen.";
+            $scope.createErrMsg = "An error occurred. Please try again.";
             console.log("Failed http action=createAssignment");
         });
     };
@@ -28,15 +28,15 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                     mergeOneUserAssign(assignment, id);
                     $scope.allAssignments.unshift(assignment);
                     $scope.skip ++;
-                    $scope.regMsg = "Oppgave registrert!";
+                    $scope.regMsg = "Assignment registered!";
                     console.log("registerAssignment success");
                     }
                     else if(data == -1) {
-                        $scope.regErrMsg = "Du kan bare registrere for dager tidligere denne uka eller idag";
+                        $scope.regErrMsg = "You can only register for days earlier this week or today";
                         console.log("Date not this week.");
                     }
                 }).error(function(data, status, headers, config) {
-            $scope.regErrMsg = "En feil skjedde. Vennligst prøv igjen.";
+            $scope.regErrMsg = "An error occurred. Please try again.";
             console.log("Failed http action=registerAssignment");
         });
     };
@@ -52,7 +52,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                     mergeUserAssign(skip);
                     console.log("getAllAssignments success");
                 }).error(function(data, status, headers, config) {
-            $scope.fetchErrMsg = "Det skjedde en feil under henting av oppgaver. Vennligst prøv igjen.";
+            $scope.fetchErrMsg = "An error occurred during loading of assignments. Please try again.";
             console.log("Failed http action=getAllAssignmentsUser");
         });
     };
@@ -66,7 +66,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                     console.log("getAssignmentTypes success");
                     $scope.getAllAssignments($scope.skip);//WARNING:should use promise
                 }).error(function(data, status, headers, config) {
-            $scope.fetchErrMsg = "Det skjedde en feil under henting av oppgaver. Vennligst prøv igjen.";
+            $scope.fetchErrMsg = "An error occurred during loading of assignments. Please try again.";
             console.log("Failed http action=getAssignmentsTypes");
         });
     };
@@ -99,11 +99,11 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
         assignment.dateSec = (new Date(assignment.date_done.$date)).getTime();//long format
         AssignService.editAssignment(assignment)
                 .success(function(data, status, headers, config) {
-                    $scope.activeMsg = "Oppgave er endret!";
+                    $scope.activeMsg = "Assignment edited!";
             console.log("editAssignment success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=editAssignment");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
 
@@ -116,7 +116,7 @@ controllers.controller('AssignCtrl', function($scope, $location, $route, $cookie
                 
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteAssignment");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     

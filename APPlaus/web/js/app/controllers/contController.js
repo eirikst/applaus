@@ -16,8 +16,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
                 }
             console.log("getActiveContests success");
         }).error(function(data, status, headers, config) {
-            $scope.errFetchMsg = "En feil skjedde under lesing av " + 
-     "konkurranser.";
+            $scope.errFetchMsg = "An error occurred during loading of contests. Please try again.";
             console.log("Failed http action=getActiveContests");
         });
     };
@@ -32,8 +31,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             $scope.skipNext += 7;
             console.log("getInactiveContests success");
         }).error(function(data, status, headers, config) {
-            $scope.errFetchMsg = "En feil skjedde under lesing av " + 
-     "konkurranser";
+            $scope.errFetchMsg = "An error occurred during loading of contests. Please try again."
             console.log("Failed http action=getInactiveContests");
         });
     };
@@ -53,7 +51,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
                     console.log("participate success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=participate");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     
@@ -70,7 +68,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             }
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=dontParticipate");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     
@@ -87,7 +85,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             }
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteContest");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
 
@@ -101,11 +99,11 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
                     $scope.activeCont.unshift(contest);
                     $scope.skipNext ++;
                     //route reload
-                    $scope.createSuccessMsg = "Konkurranse er lagt til!";
+                    $scope.createSuccessMsg = "Contest added!";
             console.log("createContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=createContest");
-            $scope.createErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.createErrMsg = "An error occurred. Please try again.";
         });
     };
     
@@ -115,11 +113,11 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
         console.log(contest);
         ContestService.editContest(contest)
                 .success(function(data, status, headers, config) {
-                    $scope.activeMsg = "Konkurranse er endret!";
+                    $scope.activeMsg = "Contest edited!";
             console.log("editContest success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=editContest");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     
@@ -130,7 +128,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             console.log("participantList success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=participantList");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     
@@ -141,7 +139,7 @@ controllers.controller('ContCtrl', function($scope, $location, $route, $cookies,
             console.log("declareWinner success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=declareWinner");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     

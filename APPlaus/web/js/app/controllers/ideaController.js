@@ -14,7 +14,7 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, $cookies,
                 })
                 .error(function(data, status, headers, config) {
                     console.log("Failed http action=getIdeas");
-                    $scope.getIdeasErrMsg = "En feil oppsto. Vennligst prøv igjen";
+                    $scope.getIdeasErrMsg = "An error occurred. Please try again.";
                 });
     };
 
@@ -27,12 +27,12 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, $cookies,
                     idea.username = data.username;
                     $scope.bank.unshift(idea);
                     $scope.skip ++;
-                    $scope.createMsg = "Ide registrert!";
+                    $scope.createMsg = "Idea registered!";
                     console.log("addIdea success");
                 })
                 .error(function(data, status, headers, config) {
                     console.log("Failed http action=addIdea");
-                    $scope.createErrMsg = "En feil oppsto. Vennligst prøv igjen";
+                    $scope.createErrMsg = "An error occurred. Please try again.";
                 });
     };
 
@@ -61,7 +61,7 @@ controllers.controller('IdeaCtrl', function($scope, $route, $location, $cookies,
             console.log("deleteIdea success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteIdea");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
 

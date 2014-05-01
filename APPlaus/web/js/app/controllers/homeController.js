@@ -15,8 +15,8 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     
                     getGoals();//WARNING:should prob use promises
                 }).error(function(data, status, headers, config) {
-            $scope.genError = "Det skjedde en feil ved oppdatering av " +
-                    "poeng. Vennligst prøv igjen senere.";
+            $scope.genError = "An error occurred during updating of points. "
+                    + "Please try again.";
             console.log("failed http getPointsHome");
         });
     };
@@ -82,8 +82,8 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     $scope.goal = goal;
                     $scope.progress = ($scope.week / $scope.goal) * 100;
                 }).error(function(data, status, headers, config) {
-            $scope.setGoalErr = "Det skjedde en feil ved oppdatering av " +
-                    "målsetting. Vennligst prøv igjen senere.";
+            $scope.setGoalErr = "An error occurred during updating of goal-setting. "
+                    + "Please try again.";
                     console.log("Failed http action=setGoal");
         });
     };
@@ -97,8 +97,8 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                      $scope.goalLast = data[1];//sets assignment table with info from DB
                      $scope.progress = ($scope.week / $scope.goal) * 100;
                  }).error(function(data, status, headers, config) {
-             $scope.genError = "Det skjedde en feil ved henting av " +
-                     "mål. Vennligst prøv igjen senere.";
+             $scope.genError = "An error occurred during loading of goal. "
+                    + "Please try again.";
              console.log("failed http getWeekGoal");
          });
      }
@@ -113,8 +113,8 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     }
                     console.log("getNews success");
                 }).error(function(data, status, headers, config) {
-            $scope.genError = "Det skjedde en feil under henting av nyheter. "
-                    + "Vennligst prøv igjen senere";
+            $scope.genError = "An error occurred during loading of news stories. "
+                    + "Please try again.";
             console.log("Failed http action=getNews");
         });
     };
@@ -128,11 +128,10 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
                     story.writer = data.writer;
                     $scope.news.unshift(story);
                     skip ++;
-                    $scope.addNews = "Du la til en nyhet!";
+                    $scope.addNews = "News story added!";
                     console.log("addNewsAll success");
                 }).error(function(data, status, headers, config) {
-            $scope.addNewsErr = "Det skjedde en feil. "
-                    + "Vennligst prøv igjen senere";
+            $scope.addNewsErr = "An error occurred. Please try again.";
             console.log("Failed http action=addNewsAll");
         });
     };
@@ -141,13 +140,13 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         HomeService.deleteNews(article)
                 .success(function(data, status, headers, config) {
                     
-                    $scope.createMsg = "Nyhet slettet";
+                    $scope.createMsg = "News story deleted!";
                     console.log("deleteNews success");
 
             console.log("deleteNews success");
         }).error(function(data, status, headers, config) {
             console.log("Failed http action=deleteNews");
-            $scope.activeErrMsg = "En feil oppsto. Vennligst prøv igjen";
+            $scope.activeErrMsg = "An error occurred. Please try again.";
         });
     };
     
@@ -158,15 +157,14 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
     $scope.addIdea = function(idea) {
         IdeaService.addIdea(idea)
                 .success(function(data, status, headers, config) {
-                $scope.ideaMsg = "Ide lagt til i idebank!";
+                $scope.ideaMsg = "Idea added to the ideabank!";
                 $scope.week += 20;//IDEA POINTS!
                 $scope.month += 20;//IDEA POINTS!
                 $scope.year += 20;//IDEA POINTS!
                 $scope.progress = ($scope.week / $scope.goal) * 100;
             console.log("addIdea success");
                 }).error(function(data, status, headers, config) {
-            $scope.ideaErr = "Det skjedde en feil. "
-                    + "Vennligst prøv igjen senere";
+            $scope.ideaErr = "An error occurred. Please try again.";
             console.log("Failed http action=addIdea");
         });
     };
@@ -181,18 +179,18 @@ controllers.controller('HomeCtrl', function($scope, $location, $route, $cookies,
         AssignService.registerAssignment(type._id.$oid, assignment)
                 .success(function(data, status, headers, config) {
                     if(data == 1) {
-                        $scope.assignMsg = "Oppgave lagt til!";
+                        $scope.assignMsg = "Assignment added!";
                         $scope.week += type.points;
                         $scope.month += type.points;
                         $scope.year += type.points;
                         $scope.progress = ($scope.week / $scope.goal) * 100;
                     }
                     else if(data == -1) {
-                        $scope.assignErrMsg = "Du kan bare registrere for dager tidligere denne uka eller idag";
+                        $scope.assignErrMsg = "You can only register for days earlier this week or today";
                     }
             console.log("registerAssignment success");
         }).error(function(data, status, headers, config) {
-            $scope.assignErrMsg = "Det skjedde en feil. Vennligst prøv igjen.";
+            $scope.assignErrMsg = "An error occurred. Please try again.";
             console.log("Failed http action=registerAssignment");
         });
     };
